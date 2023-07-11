@@ -9,6 +9,7 @@ module.exports = {
     fontFamily: {
       'mona-sans': ['Mona-sans', 'sans-serif'],
     },
+    colors: {},
     extend: {
       colors: {
         white: '#FFFFFF',
@@ -16,12 +17,15 @@ module.exports = {
         purple: '#8840FF',
         pink: '#FF22BB',
         gray: {
+          100: '#F2F3F4',
+          700: '#424242',
           900: '#060201',
         },
       },
       backgroundImage: {
         'sign-up': "url('/bg-signup.svg')",
-      }
+        'avatar': "url('/bg-avatar.svg')",
+      },
     },
   },
   plugins: [],
