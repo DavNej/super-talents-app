@@ -1,8 +1,8 @@
 import Image from 'next/image'
 
-export default function Login() {
+export default function LoginPage() {
   return (
-    <main className='flex flex-row gap-x-4 min-h-screen p-24 bg-gray-900 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
+    <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>
         <Image
           className='relative '
@@ -16,23 +16,23 @@ export default function Login() {
           Sharing the Future of Work with Web3 and AI
         </h3>
         <ul>
-          <li className='flex flex-col my-7'>
-            <strong className='uppercase text-2xl text-blue'>talents</strong>
-            <span className='font-normal text-lg opacity-60'>
+          <li className='my-7'>
+            <p className='uppercase text-2xl text-blue'>talents</p>
+            <p className='font-normal text-lg opacity-60'>
               Truly own your profile and career
-            </span>
+            </p>
           </li>
-          <li className='flex flex-col my-7'>
-            <strong className='uppercase text-2xl text-purple'>clients</strong>
-            <span className='font-normal text-lg opacity-60'>
+          <li className='my-7'>
+            <p className='uppercase text-2xl text-purple'>clients</p>
+            <p className='font-normal text-lg opacity-60'>
               Connect with the best talent in Web3 and AI
-            </span>
+            </p>
           </li>
-          <li className='flex flex-col my-7'>
-            <strong className='uppercase text-2xl text-pink'>supporters</strong>
-            <span className='font-normal text-lg opacity-60'>
+          <li className='my-7'>
+            <p className='uppercase text-2xl text-pink'>supporters</p>
+            <p className='font-normal text-lg opacity-60'>
               Support the talent you believe in and earn together
-            </span>
+            </p>
           </li>
         </ul>
       </div>

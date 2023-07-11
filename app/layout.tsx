@@ -1,5 +1,5 @@
-import './globals.css'
 import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'SuperTalents',
@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className='font-mona-sans text-white'>{children}</body>
+      <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>{children}</body>
     </html>
   )
 }
