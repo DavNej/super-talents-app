@@ -2,6 +2,7 @@
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 import Image from 'next/image'
+import UploadFile from './UploadFile'
 
 export default function AvatarPage() {
   return (
@@ -10,18 +11,7 @@ export default function AvatarPage() {
         <div className='flex-col w-1/2'>
           <BackLink />
           <h3 className='font-semibold text-5xl'>Create Your Avatar</h3>
-          <div className='flex flex-col p-4 mt-12 gap-y-2 bg-gray-700 rounded-[30px] items-center'>
-            <Image
-              className='relative'
-              src='/download.svg'
-              alt='Download'
-              width={32}
-              height={32}
-              priority
-            />
-            <p className='font-light'>Upload your photo</p>
-            <p className='font-light opacity-40'>Up to 24 mb</p>
-          </div>
+          <UploadFile />
           <Button
             className='mt-5'
             caption='Generate avatar'
@@ -31,7 +21,6 @@ export default function AvatarPage() {
 
         <div className='flex justify-center w-1/2'>
           <Image
-            // className='relative'
             src='/avatar-placeholder.png'
             alt='Avatar'
             width={520}
