@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback } from 'react'
 import heic2any from 'heic2any'
 
 type DropEvent = React.DragEvent<HTMLDivElement>
@@ -22,15 +22,19 @@ function validateFile(file: File) {
   return true
 }
 
-export default function useDropzone() {
+export default function useDropzone({
+  onSuccess,
+}: {
+  onSuccess: (f: File) => unknown
+}) {
   const [file, setFile] = useState<File | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFile = useCallback((file: File | null) => {
     if (!file || !validateFile(file)) return
 
     if (!['image/heic', 'image/heif'].includes(file.type)) {
       setFile(file)
+      onSuccess(file)
       return
     }
 
@@ -43,6 +47,7 @@ export default function useDropzone() {
         const blobParts = Array.isArray(blob) ? blob : [blob]
         const newFile = new File(blobParts, file.name, { type: 'image/jpeg' })
         setFile(newFile)
+        onSuccess(newFile)
       })
       .catch(e => {
         console.error(e)
@@ -55,9 +60,9 @@ export default function useDropzone() {
       event.preventDefault()
 
       let files = event.dataTransfer.files
-      if (files.length) {
-        handleFile(files.item(0))
-      }
+      if (!files.length) return
+
+      handleFile(files.item(0))
     },
     [handleFile]
   )
@@ -65,10 +70,6 @@ export default function useDropzone() {
   const handleDragOver = useCallback((event: DropEvent) => {
     event.preventDefault()
     event.dataTransfer.dropEffect = 'copy'
-  }, [])
-
-  const handleClick = useCallback(() => {
-    fileInputRef.current?.click()
   }, [])
 
   const handleFileChange = useCallback(
@@ -81,10 +82,8 @@ export default function useDropzone() {
 
   return {
     file,
-    fileInputRef,
     handleDrop,
     handleDragOver,
-    handleClick,
     handleFileChange,
   }
 }

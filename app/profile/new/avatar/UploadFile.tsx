@@ -4,25 +4,31 @@ import Image from 'next/image'
 
 import useImageCrop from './useImageCrop'
 import useDropzone from './useDropzone'
+import React from 'react'
 
-export default function UploadFile() {
-  const {
-    file,
-    fileInputRef,
-    handleDrop,
-    handleDragOver,
-    handleClick,
-    handleFileChange,
-  } = useDropzone()
+export default function UploadFile({
+  onSuccess,
+}: {
+  onSuccess: (f: File) => unknown
+}) {
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  const { file, handleDrop, handleDragOver, handleFileChange } = useDropzone({
+    onSuccess,
+  })
 
   const dataUrl = useImageCrop({ file })
+
+  function handleClick() {
+    fileInputRef.current?.click()
+  }
 
   return (
     <div
       className='flex p-4 mt-12 bg-gray-700 rounded-[30px] justify-center cursor-pointer'
-      onClick={handleClick}
       onDrop={handleDrop}
-      onDragOver={handleDragOver}>
+      onDragOver={handleDragOver}
+      onClick={handleClick}>
       <input
         ref={fileInputRef}
         type='file'
