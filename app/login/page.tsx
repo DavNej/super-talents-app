@@ -36,7 +36,7 @@ export default function LoginPage() {
           </li>
         </ul>
       </div>
-      <div className='flex flex-1 justify-center align-middle'>
+      <div className='flex flex-1 justify-center items-center'>
         <div className='bg-blue w-[519px] h-[644px]'></div>
       </div>
     </main>
