@@ -32,11 +32,9 @@ export default function AvatarPage() {
           <BackLink />
           <h3 className='font-semibold text-5xl'>Create Your Avatar</h3>
           <UploadFile onSuccess={onUploadSuccess} />
-          <Button
-            className='mt-5'
-            caption='Generate avatar'
-            onClick={() => console.log(base64Image)}
-          />
+          <Button className='mt-5' onClick={() => console.log(base64Image)}>
+            Generate avatar
+          </Button>
         </div>
 
         <div className='flex justify-center w-1/2'>
