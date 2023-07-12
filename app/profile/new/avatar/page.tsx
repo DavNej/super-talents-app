@@ -1,28 +1,30 @@
 'use client'
+
+import axios from 'axios'
+import Image from 'next/image'
+import React from 'react'
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
-import Image from 'next/image'
-import UploadFile from './UploadFile'
-import React from 'react'
 
-async function encodeImageToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      const base64String = reader.result as string
-      resolve(base64String)
-    }
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
-}
+import Dialog from './Dialog'
+import UploadFile from './UploadFile'
+
+import type { APIResponse } from './generate/config'
 
 export default function AvatarPage() {
-  const [base64Image, setBase64Image] = React.useState('')
+  const [showDialog, setShowDialog] = React.useState(false)
   const [error, setError] = React.useState('')
+  const [jobId, setJobId] = React.useState('')
+  const [base64Data, setBase64Data] = React.useState('')
 
   function onUploadSuccess(dataUrl: string) {
-    setBase64Image(dataUrl)
+    const fileExtension = dataUrl.substring(
+      dataUrl.indexOf('/') + 1,
+      dataUrl.indexOf(';')
+    )
+    const regex = new RegExp(`^data:image\/${fileExtension};base64,`)
+    const data = dataUrl.replace(regex, '')
+    setBase64Data(data)
   }
 
   return (
@@ -35,8 +37,29 @@ export default function AvatarPage() {
             onSuccess={onUploadSuccess}
             onError={err => setError(err)}
           />
-          <Button className='mt-5' onClick={() => console.log(base64Image)}>
+          <Button
+            className='mt-5'
+            onClick={() => {
+              axios
+                .post<APIResponse>('/profile/new/avatar/generate', {
+                  image: base64Data,
+                })
+                .then(res => {
+                  setJobId(res.data.id)
+                })
+            }}>
             Generate avatar
+          </Button>
+          <Button
+            className='mt-5'
+            onClick={() => {
+              axios
+                .get<APIResponse>(`/profile/new/avatar/generate?id=${jobId}`)
+                .then(res => {
+                  console.log(res.data)
+                })
+            }}>
+            GET
           </Button>
         </div>
 
