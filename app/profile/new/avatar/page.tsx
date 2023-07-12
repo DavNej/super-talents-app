@@ -19,19 +19,22 @@ async function encodeImageToBase64(file: File): Promise<string> {
 
 export default function AvatarPage() {
   const [base64Image, setBase64Image] = React.useState('')
+  const [error, setError] = React.useState('')
 
-  async function onUploadSuccess(file: File) {
-    const encodedImage = await encodeImageToBase64(file)
-    setBase64Image(encodedImage)
+  function onUploadSuccess(dataUrl: string) {
+    setBase64Image(dataUrl)
   }
 
   return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
-      <div className='flex flex-row gap-x-24 items-start'>
+      <div className='flex flex-row flex-1 gap-x-24 items-start'>
         <div className='flex-col w-1/2'>
           <BackLink />
           <h3 className='font-semibold text-5xl'>Create Your Avatar</h3>
-          <UploadFile onSuccess={onUploadSuccess} />
+          <UploadFile
+            onSuccess={onUploadSuccess}
+            onError={err => setError(err)}
+          />
           <Button className='mt-5' onClick={() => console.log(base64Image)}>
             Generate avatar
           </Button>

@@ -2,22 +2,29 @@
 
 import Image from 'next/image'
 
-import useImageCrop from './useImageCrop'
+import useImageProcessing from './useImageProcessing'
 import useDropzone from './useDropzone'
 import React from 'react'
 
 export default function UploadFile({
+  onError,
   onSuccess,
 }: {
-  onSuccess: (f: File) => unknown
+  onSuccess: (dataUrl: string) => unknown
+  onError: (error: string) => unknown
 }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const { file, handleDrop, handleDragOver, handleFileChange } = useDropzone({
-    onSuccess,
+    onError,
   })
 
-  const dataUrl = useImageCrop({ file })
+  const dataUrl = useImageProcessing({ file, onError })
+
+  React.useEffect(() => {
+    if (!dataUrl) return
+    onSuccess(dataUrl)
+  }, [dataUrl, onSuccess])
 
   function handleClick() {
     fileInputRef.current?.click()
