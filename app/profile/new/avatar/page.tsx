@@ -1,20 +1,27 @@
 'use client'
 
 import axios from 'axios'
-import Image from 'next/image'
 import React from 'react'
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 
-import Dialog from './Dialog'
 import UploadFile from './UploadFile'
 
 import type { APIResponse } from './generate/config'
+import ImagePreview from './ImagePreview'
+import Link from 'next/link'
 
 export default function AvatarPage() {
-  const [showDialog, setShowDialog] = React.useState(false)
+  const [imageOutputs, setImageOutputs] = React.useState([
+    '/_avatar.jpg',
+    '/bg-avatar.svg',
+    '/avatar-placeholder.png',
+    '/bg-signup.svg',
+  ])
+  // const [imageOutputs, setImageOutputs] = React.useState([])
   const [error, setError] = React.useState('')
   const [jobId, setJobId] = React.useState('')
+  const [isAvatarSelected, setIsAvatarSelected] = React.useState(false)
   const [base64Data, setBase64Data] = React.useState('')
 
   function onUploadSuccess(dataUrl: string) {
@@ -37,41 +44,51 @@ export default function AvatarPage() {
             onSuccess={onUploadSuccess}
             onError={err => setError(err)}
           />
-          <Button
-            className='mt-5'
-            onClick={() => {
-              axios
-                .post<APIResponse>('/profile/new/avatar/generate', {
-                  image: base64Data,
-                })
-                .then(res => {
-                  setJobId(res.data.id)
-                })
-            }}>
-            Generate avatar
-          </Button>
-          <Button
-            className='mt-5'
-            onClick={() => {
-              axios
-                .get<APIResponse>(`/profile/new/avatar/generate?id=${jobId}`)
-                .then(res => {
-                  console.log(res.data)
-                })
-            }}>
-            GET
-          </Button>
+          {isAvatarSelected ? (
+            <Link
+              className='mt-5 py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-xl bg-white text-pink'
+              href='/profile/new/info'>
+              Next
+            </Link>
+          ) : (
+            <>
+              <Button
+                className='mt-5'
+                onClick={() => {
+                  axios
+                    .post<APIResponse>('/profile/new/avatar/generate', {
+                      image: base64Data,
+                    })
+                    .then(res => {
+                      setJobId(res.data.id)
+                    })
+                }}>
+                Generate avatar
+              </Button>
+              <Button
+                className='mt-5'
+                onClick={() => {
+                  axios
+                    .get<APIResponse | string[]>(
+                      `/profile/new/avatar/generate?id=${jobId}`
+                    )
+                    .then(res => {
+                      if (Array.isArray(res.data)) {
+                        setImageOutputs(res.data)
+                      }
+                      console.log(res.data)
+                    })
+                }}>
+                GET
+              </Button>
+            </>
+          )}
         </div>
 
-        <div className='flex justify-center w-1/2'>
-          <Image
-            src='/avatar-placeholder.png'
-            alt='Avatar'
-            width={520}
-            height={600}
-            priority
-          />
-        </div>
+        <ImagePreview
+          images={imageOutputs}
+          onSelect={_dataUrl => setIsAvatarSelected(Boolean(_dataUrl))}
+        />
       </div>
     </main>
   )
