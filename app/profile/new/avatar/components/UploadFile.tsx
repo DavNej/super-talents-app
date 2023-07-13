@@ -1,10 +1,10 @@
 'use client'
 
 import Image from 'next/image'
-
-import useImageProcessing from './useImageProcessing'
-import useDropzone from './useDropzone'
 import React from 'react'
+
+import useImageProcessing from '../hooks/useImageProcessing'
+import useDropzone from '../hooks/useDropzone'
 
 export default function UploadFile({
   onError,

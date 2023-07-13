@@ -4,6 +4,10 @@ import React from 'react'
 import Dialog from './Dialog'
 import clsx from 'clsx'
 
+function dataToUrl(data: string) {
+  return `data:image/jpeg;base64,` + data
+}
+
 export default function ImagePreview({
   images,
   onSelect,
@@ -34,42 +38,41 @@ export default function ImagePreview({
       <div className='flex flex-col justify-center items-center w-1/2'>
         <h3 className='font-semibold text-center text-4xl'>Select avatar</h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>
-          {images.map(dataUrl => {
-            const isSelected = dataUrl === selectedImage
+          {images.map((data, idx) => {
+            const isSelected = data === selectedImage
+            const dataUrl = dataToUrl(data)
             return (
-              <>
-                <div key={dataUrl} className='relative'>
-                  <Image
-                    className='absolute bottom-4 left-4 cursor-pointer '
-                    src={isSelected ? '/check.svg' : '/expand.svg'}
-                    alt={isSelected ? 'Selected' : 'Expand'}
-                    width={44}
-                    height={44}
-                    priority
-                    onClick={() => {
-                      setShowDialog(true)
-                      setDialogImage(dataUrl)
-                    }}
-                  />
+              <div key={idx} className='relative'>
+                <Image
+                  className='absolute bottom-4 left-4 cursor-pointer '
+                  src={isSelected ? '/check.svg' : '/expand.svg'}
+                  alt={isSelected ? 'Selected' : 'Expand'}
+                  width={44}
+                  height={44}
+                  priority
+                  onClick={() => {
+                    setShowDialog(true)
+                    setDialogImage(dataUrl)
+                  }}
+                />
 
-                  <Image
-                    className={clsx(
-                      'rounded-[28px]',
-                      isSelected && 'border-white border-[6px]'
-                    )}
-                    src={dataUrl}
-                    alt='Avatar'
-                    width={248}
-                    height={248}
-                    priority
-                    onClick={() => {
-                      const _dataUrl = !isSelected ? dataUrl : ''
-                      setSelectedImage(_dataUrl)
-                      onSelect(_dataUrl)
-                    }}
-                  />
-                </div>
-              </>
+                <Image
+                  className={clsx(
+                    'rounded-[28px]',
+                    isSelected && 'border-white border-[6px]'
+                  )}
+                  src={dataUrl}
+                  alt='Avatar'
+                  width={248}
+                  height={248}
+                  priority
+                  onClick={() => {
+                    const _data = !isSelected ? data : ''
+                    setSelectedImage(_data)
+                    onSelect(dataUrl)
+                  }}
+                />
+              </div>
             )
           })}
         </div>

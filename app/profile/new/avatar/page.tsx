@@ -2,14 +2,17 @@
 
 import axios from 'axios'
 import React from 'react'
+import Link from 'next/link'
+import { useInterval, useLocalStorage } from 'usehooks-ts'
+
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 
-import UploadFile from './UploadFile'
-
-import type { APIResponse } from './generate/config'
-import ImagePreview from './ImagePreview'
 import Link from 'next/link'
+
+import AvatarLoader from './components/AvatarLoader'
+import ImagePreview from './components/ImagePreview'
+import UploadFile from './components/UploadFile'
 
 export default function AvatarPage() {
   const [imageOutputs, setImageOutputs] = React.useState([
@@ -34,6 +37,39 @@ export default function AvatarPage() {
     setBase64Data(data)
   }
 
+  const hasImageOutputs = imageOutputs.length > 0
+
+  async function generateImage() {
+    console.log('posting image')
+    if (hasImageOutputs) {
+      setImageOutputs([])
+    }
+    await axios
+      .post<APIResponse>('/profile/new/avatar/generate', {
+        image: base64Data,
+      })
+      .then(res => {
+        setJobId(res.data.id)
+      })
+  }
+
+  async function checkStatus() {
+    console.log('checking status')
+    await axios
+      .get<APIResponse>(`/profile/new/avatar/generate?id=${jobId}`)
+      .then(res => {
+        const images = res.data.results
+        if (images) {
+          setImageOutputs(images)
+          saveToLocalStorage(images)
+        }
+        console.log(res.data)
+      })
+  }
+
+  const delay = !jobId || hasImageOutputs || Boolean(error) ? null : 5000
+  useInterval(checkStatus, delay)
+
   return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-row flex-1 gap-x-24 items-start'>
@@ -51,37 +87,9 @@ export default function AvatarPage() {
               Next
             </Link>
           ) : (
-            <>
-              <Button
-                className='mt-5'
-                onClick={() => {
-                  axios
-                    .post<APIResponse>('/profile/new/avatar/generate', {
-                      image: base64Data,
-                    })
-                    .then(res => {
-                      setJobId(res.data.id)
-                    })
-                }}>
-                Generate avatar
-              </Button>
-              <Button
-                className='mt-5'
-                onClick={() => {
-                  axios
-                    .get<APIResponse | string[]>(
-                      `/profile/new/avatar/generate?id=${jobId}`
-                    )
-                    .then(res => {
-                      if (Array.isArray(res.data)) {
-                        setImageOutputs(res.data)
-                      }
-                      console.log(res.data)
-                    })
-                }}>
-                GET
-              </Button>
-            </>
+            <Button className='mt-5' onClick={() => generateImage()}>
+              {hasImageOutputs ? 'Regenerate avatar' : 'Generate avatar'}
+            </Button>
           )}
         </div>
 

@@ -1,4 +1,4 @@
-'use-client';
+'use-client'
 
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -12,7 +12,13 @@ export default function BackLink() {
       onClick={() => {
         router.back()
       }}>
-      <Image src='/arrow-left.svg' alt='Back arrow' width={22} height={22} />
+      <Image
+        src='/arrow-left.svg'
+        alt='Back arrow'
+        width={22}
+        height={22}
+        priority
+      />
       <p className='ml-6 uppercase font-medium text-xl '>back</p>
     </div>
   )

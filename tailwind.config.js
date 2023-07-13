@@ -13,6 +13,7 @@ module.exports = {
     extend: {
       colors: {
         black: '#000000',
+        red: '#DC2626',
         white: '#FFFFFF',
         blue: '#3632FE',
         purple: '#8840FF',
@@ -25,7 +26,7 @@ module.exports = {
       },
       backgroundImage: {
         'sign-up': "url('/bg-signup.svg')",
-        'avatar': "url('/bg-avatar.svg')",
+        avatar: "url('/bg-avatar.svg')",
       },
     },
   },
