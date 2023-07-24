@@ -1,9 +1,18 @@
+import { ApiError } from '@/lib/error-utils'
+
 export type ImageOutput = { image: string }
 
-export interface APIResponse {
+export interface RunpodResponse {
   id: string
   status: string
   output?: ImageOutput[]
+}
+
+export interface RouteResponse {
+  id?: string
+  status?: string
+  results?: string[]
+  error?: ApiError
 }
 
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL as string

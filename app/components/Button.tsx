@@ -6,13 +6,18 @@ export default function Button({
   children,
   className,
   onClick,
+  isDisabled,
+  type = 'button',
 }: {
   children: React.ReactNode
   className?: string
-  onClick: () => unknown
+  isDisabled?: boolean
+  onClick?: () => unknown
+  type?: 'button' | 'submit' | 'reset'
 }) {
   return (
     <button
+      type={type}
       className={clsx(
         'py-5',
         'px-8',
@@ -22,9 +27,10 @@ export default function Button({
         'font-medium',
         'text-xl',
         'bg-white',
-        'text-pink',
+        isDisabled ? 'text-gray-400' : 'text-pink',
         className
       )}
+      disabled={isDisabled}
       onClick={onClick}>
       {children}
     </button>

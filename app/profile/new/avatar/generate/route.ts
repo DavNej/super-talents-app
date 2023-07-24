@@ -1,49 +1,45 @@
 import axios from 'axios'
 import { NextResponse } from 'next/server'
 import { API_BASE_URL, headers, buildPayload } from './config'
-import type { APIResponse } from './config'
+import type { RouteResponse, RunpodResponse } from './config'
 import { parseApiError } from '@/lib/error-utils'
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request
+): Promise<NextResponse<RouteResponse>> {
   const body = await request.json()
   const payload = buildPayload(body.image)
-  let data = null
 
   try {
-    const response = await axios.post<APIResponse>(
+    const response = await axios.post<RunpodResponse>(
       `${API_BASE_URL}/run`,
       payload,
       { headers }
     )
-    data = response.data
-  } catch (error) {
-    data = parseApiError(error)
+    const { id, status } = response.data
+    return NextResponse.json({ id, status })
+  } catch (err) {
+    return NextResponse.json({ error: parseApiError(err) })
   }
-
-  return NextResponse.json(data)
 }
 
 export async function GET(request: Request) {
   const jobId = request.url.split('=').at(-1)
 
-  let data = null
-
   try {
-    const response = await axios.get<APIResponse>(
+    const response = await axios.get<RunpodResponse>(
       `${API_BASE_URL}/status/${jobId}`,
       { headers }
     )
+    const { id, status, output = [] } = response.data
 
-    data = response.data
-    const hasResults = data.status === 'COMPLETED' && !!data.output?.length
-
-    if (hasResults) {
-      const outputImages = data.output?.map(o => o.image) || []
-      if (outputImages.length > 0) return NextResponse.json(outputImages)
+    if (status !== 'COMPLETED') {
+      return NextResponse.json({ id, status, results: null })
+    } else if (output.length > 0) {
+      const results = output.map(o => o.image)
+      return NextResponse.json({ id, results })
     }
-  } catch (error) {
-    data = parseApiError(error)
+  } catch (err) {
+    return NextResponse.json({ error: parseApiError(err) })
   }
-
-  return NextResponse.json(data)
 }

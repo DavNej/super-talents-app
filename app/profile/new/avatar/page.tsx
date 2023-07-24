@@ -7,25 +7,30 @@ import { useInterval, useLocalStorage } from 'usehooks-ts'
 
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
+import Toast from '@/app/components/Toast'
 
-import Link from 'next/link'
+import type { RouteResponse } from './generate/config'
 
 import AvatarLoader from './components/AvatarLoader'
 import ImagePreview from './components/ImagePreview'
 import UploadFile from './components/UploadFile'
 
 export default function AvatarPage() {
-  const [imageOutputs, setImageOutputs] = React.useState([
-    '/_avatar.jpg',
-    '/bg-avatar.svg',
-    '/avatar-placeholder.png',
-    '/bg-signup.svg',
-  ])
-  // const [imageOutputs, setImageOutputs] = React.useState([])
-  const [error, setError] = React.useState('')
   const [jobId, setJobId] = React.useState('')
-  const [isAvatarSelected, setIsAvatarSelected] = React.useState(false)
-  const [base64Data, setBase64Data] = React.useState('')
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [error, setError] = React.useState('')
+  const [base64UploadedImage, setBase64UploadedImage] = React.useState('')
+
+  const [imageOutputs, setImageOutputs] = useLocalStorage<string[]>(
+    'avatars',
+    []
+  )
+  const [selectedAvatar, setSelectedAvatar] = useLocalStorage(
+    'selectedAvatar',
+    ''
+  )
+
+  const hasImageOutputs = imageOutputs.length > 0
 
   function onUploadSuccess(dataUrl: string) {
     const fileExtension = dataUrl.substring(
@@ -34,40 +39,54 @@ export default function AvatarPage() {
     )
     const regex = new RegExp(`^data:image\/${fileExtension};base64,`)
     const data = dataUrl.replace(regex, '')
-    setBase64Data(data)
+    setBase64UploadedImage(data)
   }
-
-  const hasImageOutputs = imageOutputs.length > 0
 
   async function generateImage() {
     console.log('posting image')
+    setIsLoading(true)
     if (hasImageOutputs) {
       setImageOutputs([])
     }
     await axios
-      .post<APIResponse>('/profile/new/avatar/generate', {
-        image: base64Data,
+      .post<RouteResponse>('/profile/new/avatar/generate', {
+        image: base64UploadedImage,
       })
       .then(res => {
-        setJobId(res.data.id)
+        const err = res.data.error
+        if (!!err) {
+          console.error(err)
+          setError(err.message)
+        }
+
+        const id = res.data.id
+        if (id) {
+          setJobId(id)
+        }
       })
   }
 
   async function checkStatus() {
     console.log('checking status')
     await axios
-      .get<APIResponse>(`/profile/new/avatar/generate?id=${jobId}`)
+      .get<RouteResponse>(`/profile/new/avatar/generate?id=${jobId}`)
       .then(res => {
-        const images = res.data.results
-        if (images) {
-          setImageOutputs(images)
-          saveToLocalStorage(images)
+        const err = res.data.error
+        if (!!err) {
+          console.error(err)
+          setError(err.message)
+          setIsLoading(false)
         }
-        console.log(res.data)
+
+        const images = res.data.results
+        if (!!images?.length) {
+          setImageOutputs(images)
+          setIsLoading(false)
+        }
       })
   }
 
-  const delay = !jobId || hasImageOutputs || Boolean(error) ? null : 5000
+  const delay = isLoading ? 5000 : null
   useInterval(checkStatus, delay)
 
   return (
@@ -80,24 +99,37 @@ export default function AvatarPage() {
             onSuccess={onUploadSuccess}
             onError={err => setError(err)}
           />
-          {isAvatarSelected ? (
+          {!!selectedAvatar ? (
             <Link
               className='mt-5 py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-xl bg-white text-pink'
               href='/profile/new/info'>
               Next
             </Link>
           ) : (
-            <Button className='mt-5' onClick={() => generateImage()}>
+            <Button
+              className='mt-5'
+              onClick={() => generateImage()}
+              isDisabled={!base64UploadedImage || isLoading}>
               {hasImageOutputs ? 'Regenerate avatar' : 'Generate avatar'}
             </Button>
           )}
         </div>
 
-        <ImagePreview
-          images={imageOutputs}
-          onSelect={_dataUrl => setIsAvatarSelected(Boolean(_dataUrl))}
-        />
+        {isLoading ? (
+          <AvatarLoader />
+        ) : (
+          <ImagePreview images={imageOutputs} onSelect={setSelectedAvatar} />
+        )}
       </div>
+
+      {!!error && (
+        <Toast
+          message={error}
+          onClose={() => {
+            setError('')
+          }}
+        />
+      )}
     </main>
   )
 }
