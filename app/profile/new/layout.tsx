@@ -1,3 +1,6 @@
+'use client'
+import { usePathname } from 'next/navigation'
+
 function Step({ isActive, caption }: { isActive: boolean; caption: string }) {
   return isActive ? (
     <div className='flex-1'>
@@ -12,17 +15,35 @@ function Step({ isActive, caption }: { isActive: boolean; caption: string }) {
   )
 }
 
-export default function ProgressBar({
+export default function ProgressBarLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathname = usePathname()
+
   return (
     <>
       <div className='pt-12 px-24 flex flex-row gap-7'>
-        <Step caption='Create avatar' isActive />
-        <Step caption='Profile info' isActive={false} />
-        <Step caption='Mint your profile NFT' isActive={false} />
+        <Step
+          caption='Create avatar'
+          isActive={
+            pathname === '/profile/new/avatar' ||
+            pathname === '/profile/new/info' ||
+            pathname === '/profile/new/preview'
+          }
+        />
+        <Step
+          caption='Profile info'
+          isActive={
+            pathname === '/profile/new/info' ||
+            pathname === '/profile/new/preview'
+          }
+        />
+        <Step
+          caption='Mint your profile NFT'
+          isActive={pathname === '/profile/new/preview'}
+        />
       </div>
       {children}
     </>
