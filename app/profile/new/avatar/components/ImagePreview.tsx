@@ -59,7 +59,9 @@ export default function ImagePreview({
                 <Image
                   className={clsx(
                     'rounded-[28px]',
-                    isSelected && 'border-white border-[6px]'
+                    'border-white',
+                    'border-[6px]',
+                    isSelected ? 'border-opacity-100' : 'border-opacity-0'
                   )}
                   src={dataUrl}
                   alt='Avatar'
