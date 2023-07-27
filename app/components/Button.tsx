@@ -12,7 +12,7 @@ export default function Button({
   children: React.ReactNode
   className?: string
   isDisabled?: boolean
-  onClick?: () => unknown
+  onClick: () => void
   type?: 'button' | 'submit' | 'reset'
 }) {
   return (
@@ -27,6 +27,8 @@ export default function Button({
         'font-medium',
         'text-xl',
         'bg-white',
+        'border-2',
+        'border-white',
         isDisabled ? 'text-gray-400' : 'text-pink',
         className
       )}
