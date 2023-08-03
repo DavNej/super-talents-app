@@ -1,18 +1,27 @@
+import type {
+  ChatCompletionRequestMessage,
+  ChatCompletionResponseMessage,
+} from 'openai'
 import { Configuration, OpenAIApi } from 'openai'
-import type { ChatCompletionRequestMessage } from 'openai'
 
-import { parseApiError } from './error-utils'
+import type { ApiError } from '@/lib/error-utils'
+import { parseApiError } from '@/lib/error-utils'
 
 export type MessageHistory = Array<ChatCompletionRequestMessage>
 
 const configuration = new Configuration({
-  organization: process.env.ORGANISATION,
+  organization: process.env.OPENAI_ORGANIZATION,
   apiKey: process.env.OPENAI_API_KEY,
 })
 
 const openai = new OpenAIApi(configuration)
 
-export async function askGPT(prompt: string) {
+export interface AskGPTResponse {
+  message: ChatCompletionResponseMessage | null
+  error: ApiError | null
+}
+
+export async function askGPT(prompt: string): Promise<AskGPTResponse> {
   try {
     const defaultResponse = {
       message: null,

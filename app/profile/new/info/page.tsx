@@ -7,6 +7,8 @@ import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 
 import Image from 'next/image'
+import axios from 'axios'
+import type { AskGPTResponse } from './improve-bio/chat-gpt'
 
 const labelClassNames = ['text-sm', 'font-light', 'opacity-70']
 const inputClassNames = [
@@ -31,6 +33,10 @@ export default function InfoPage() {
   const skillRef = React.useRef<HTMLInputElement>(null)
   const [skills, setSkills] = React.useState<string[]>([])
 
+  const [improvedBio, setImprovedBio] = React.useState('')
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [error, setError] = React.useState('')
+
   function addSkill(event: React.FormEvent) {
     event.preventDefault()
     if (formRef.current && skillRef.current) {
@@ -40,6 +46,40 @@ export default function InfoPage() {
       skillRef.current.value = ''
     }
   }
+
+  async function improveBio() {
+    if (formRef.current) {
+      const data = new FormData(formRef.current)
+      const bio = String(data.get('bio') || '')
+
+      console.log('improve bio')
+      setIsLoading(true)
+      await axios
+        .post<AskGPTResponse>('/profile/new/info/improve-bio', {
+          bio,
+        })
+        .then(res => {
+          const err = res.data.error
+          if (!!err) {
+            console.error(err)
+            setError(err.message)
+          }
+
+          const bio = res.data.message?.content
+          if (bio) {
+            setImprovedBio(bio)
+          }
+        })
+        .catch(err => {
+          if (!!err) {
+            console.error(err)
+            setError(err.message)
+          }
+        })
+    }
+  }
+
+  console.log(improvedBio)
 
   function removeSkill(skill: string) {
     setSkills(prev => prev.filter(s => s !== skill))
@@ -71,27 +111,32 @@ export default function InfoPage() {
                 className={clsx(inputClassNames)}
                 type='text'
                 name='handle'
-                placeholder='Choose a profile handle'
+                placeholder='Choose a profile handle (ex @alanturing)'
               />
             </label>
 
             <label>
-              <p className={clsx(labelClassNames)}>Name</p>
+              <p className={clsx(labelClassNames)}>Display Name</p>
               <input
                 className={clsx(inputClassNames)}
                 type='text'
                 name='name'
-                placeholder='Full name'
+                placeholder='Choose a Fulle Name (ex Alan Turing)'
               />
             </label>
 
             <label className='flex-1 flex flex-col'>
               <p className={clsx(labelClassNames)}>Bio</p>
-              <textarea
-                className={clsx(...inputClassNames, 'flex-1')}
-                name='bio'
-                placeholder='Write something about you'
-              />
+              <div className={clsx(...inputClassNames, 'flex-1')}>
+                <textarea
+                  className='resize-none w-full bg-white bg-opacity-0 outline-none'
+                  name='bio'
+                  placeholder='Write a bio or some keywords'
+                />
+                <Button className='bg-opacity-0 scale-75' onClick={improveBio}>
+                  Improve bio with AI
+                </Button>
+              </div>
             </label>
 
             <label>
@@ -100,7 +145,7 @@ export default function InfoPage() {
                 ref={skillRef}
                 className={clsx(inputClassNames)}
                 type='text'
-                name='skill'
+                name='skills'
                 placeholder='Graphic design (then press Enter)'
               />
             </label>
