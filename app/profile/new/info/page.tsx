@@ -9,6 +9,7 @@ import Chip from '@/app/components/Chip'
 import Image from 'next/image'
 import axios from 'axios'
 import type { AskGPTResponse } from './improve-bio/chat-gpt'
+import Dialog from '@/app/components/Dialog'
 
 const labelClassNames = ['text-sm', 'font-light', 'opacity-70']
 const inputClassNames = [
@@ -28,13 +29,24 @@ const inputClassNames = [
   'focus:border-opacity-100',
 ]
 
+
+function splitBios(bios: string): string[] {
+  const regex = /Option \d+:/g
+  return bios
+    .split(regex)
+    .map(str => str.trim())
+    .filter(Boolean)
+}
+
 export default function InfoPage() {
   const formRef = React.useRef<HTMLFormElement>(null)
   const skillRef = React.useRef<HTMLInputElement>(null)
   const [skills, setSkills] = React.useState<string[]>([])
 
+  const [GPTProposals, setGPTProposals] = React.useState<string[] | null>(null)
   const [improvedBio, setImprovedBio] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
+  const [openDialog, setOpenDialog] = React.useState(false)
   const [error, setError] = React.useState('')
 
   function addSkill(event: React.FormEvent) {
@@ -51,8 +63,6 @@ export default function InfoPage() {
     if (formRef.current) {
       const data = new FormData(formRef.current)
       const bio = String(data.get('bio') || '')
-
-      console.log('improve bio')
       setIsLoading(true)
       await axios
         .post<AskGPTResponse>('/profile/new/info/improve-bio', {
@@ -65,9 +75,10 @@ export default function InfoPage() {
             setError(err.message)
           }
 
-          const bio = res.data.message?.content
-          if (bio) {
-            setImprovedBio(bio)
+          const content = res.data.message?.content
+          if (content) {
+            setGPTProposals(splitBios(content))
+            setOpenDialog(true)
           }
         })
         .catch(err => {
@@ -78,8 +89,6 @@ export default function InfoPage() {
         })
     }
   }
-
-  console.log(improvedBio)
 
   function removeSkill(skill: string) {
     setSkills(prev => prev.filter(s => s !== skill))
@@ -129,7 +138,7 @@ export default function InfoPage() {
               <p className={clsx(labelClassNames)}>Bio</p>
               <div className={clsx(...inputClassNames, 'flex-1')}>
                 <textarea
-                  className='resize-none w-full bg-white bg-opacity-0 outline-none'
+                  className='w-full h-52 bg-white bg-opacity-0 outline-none'
                   name='bio'
                   placeholder='Write a bio or some keywords'
                 />
@@ -220,6 +229,73 @@ export default function InfoPage() {
             <Button onClick={handleSubmit}>Next</Button>
           </div>
         </form>
+
+        <Dialog
+          open={Boolean(GPTProposals) && openDialog}
+          onClose={() => {
+            setOpenDialog(false)
+          }}>
+          <div
+            className={clsx(
+              'p-10',
+              'w-4xl',
+              'rounded-[32px]',
+              'font-light',
+              'bg-white',
+              'backdrop-blur-xl',
+              'bg-opacity-20'
+            )}>
+            <h3 className='font-semibold text-5xl text-center'>
+              Choose your bio
+            </h3>
+            <div className={clsx('my-8', 'flex', 'flex-col', 'gap-4')}>
+              {GPTProposals?.map(option => (
+                <div
+                  key={option}
+                  className={clsx(
+                    'px-4',
+                    'py-5',
+                    'rounded-[26px]',
+                    'cursor-pointer',
+                    'border-white',
+                    'border-2',
+                    option === improvedBio
+                      ? 'border-opacity-100'
+                      : 'border-opacity-0'
+                  )}
+                  onClick={() => {
+                    setImprovedBio(option)
+                  }}>
+                  <div className='flex gap-3'>
+                    <div className='h-6 w-6 border-white border-2 rounded-full'>
+                      {option === improvedBio ? (
+                        <div className='h-full w-full bg-pink rounded-full border-2' />
+                      ) : null}
+                    </div>
+
+                    <div className='flex flex-col'>
+                      {option.split('\n').map(line => (
+                        <p key={line}>{line}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Button
+              onClick={() => {
+                const textarea = formRef.current?.elements.namedItem(
+                  'bio'
+                ) as HTMLTextAreaElement
+                if (!!textarea) {
+                  textarea.value = improvedBio
+                }
+                setOpenDialog(false)
+              }}>
+              Done
+            </Button>
+          </div>
+        </Dialog>
       </div>
     </main>
   )
