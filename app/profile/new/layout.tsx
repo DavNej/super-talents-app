@@ -24,7 +24,7 @@ export default function ProgressBarLayout({
 
   return (
     <>
-      <div className='pt-12 px-24 flex flex-row gap-7'>
+      <div className='py-12 px-24 flex flex-row gap-7'>
         <Step
           caption='Create avatar'
           isActive={

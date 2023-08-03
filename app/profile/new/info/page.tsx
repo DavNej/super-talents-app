@@ -114,7 +114,7 @@ export default function InfoPage() {
                 className={clsx(inputClassNames)}
                 type='text'
                 name='handle'
-                placeholder='Choose a profile handle (ex @alanturing)'
+                placeholder='Choose a profile handle (ex: alanturing)'
               />
             </label>
 
@@ -124,7 +124,7 @@ export default function InfoPage() {
                 className={clsx(inputClassNames)}
                 type='text'
                 name='name'
-                placeholder='Choose a Fulle Name (ex Alan Turing)'
+                placeholder='Choose a Fulle Name (ex: Alan Turing)'
               />
             </label>
 
