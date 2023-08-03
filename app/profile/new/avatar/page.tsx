@@ -1,6 +1,5 @@
 'use client'
 
-import axios from 'axios'
 import React from 'react'
 import Link from 'next/link'
 import { useInterval, useLocalStorage } from 'usehooks-ts'
@@ -8,6 +7,7 @@ import { useInterval, useLocalStorage } from 'usehooks-ts'
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 import Toast from '@/app/components/Toast'
+import fetcher from '@/lib/fetcher'
 
 import type { RouteResponse } from './generate/config'
 
@@ -48,42 +48,42 @@ export default function AvatarPage() {
     if (hasImageOutputs) {
       setImageOutputs([])
     }
-    await axios
-      .post<RouteResponse>('/profile/new/avatar/generate', {
+    const res = await fetcher.POST<RouteResponse>(
+      '/profile/new/avatar/generate',
+      {
         image: base64UploadedImage,
-      })
-      .then(res => {
-        const err = res.data.error
-        if (!!err) {
-          console.error(err)
-          setError(err.message)
-        }
+      }
+    )
 
-        const id = res.data.id
-        if (id) {
-          setJobId(id)
-        }
-      })
+    if (!res.ok) {
+      setError(res.error.message)
+      setIsLoading(false)
+      return
+    }
+    
+    const id = res.data.id
+    if (id) {
+      setJobId(id)
+    }
   }
 
   async function checkStatus() {
     console.log('checking status')
-    await axios
-      .get<RouteResponse>(`/profile/new/avatar/generate?id=${jobId}`)
-      .then(res => {
-        const err = res.data.error
-        if (!!err) {
-          console.error(err)
-          setError(err.message)
-          setIsLoading(false)
-        }
+    const res = await fetcher.GET<RouteResponse>(
+      `/profile/new/avatar/generate?id=${jobId}`
+    )
 
-        const images = res.data.results
-        if (!!images?.length) {
-          setImageOutputs(images)
-          setIsLoading(false)
-        }
-      })
+    if (!res.ok) {
+      setError(res.error.message)
+      setIsLoading(false)
+      return
+    }
+
+    const images = res.data.results
+    if (!!images?.length) {
+      setImageOutputs(images)
+      setIsLoading(false)
+    }
   }
 
   const delay = isLoading ? 5000 : null

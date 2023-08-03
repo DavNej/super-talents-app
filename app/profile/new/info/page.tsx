@@ -7,9 +7,9 @@ import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 
 import Image from 'next/image'
-import axios from 'axios'
-import type { AskGPTResponse } from './improve-bio/chat-gpt'
+import fetcher from '@/lib/fetcher'
 import Dialog from '@/app/components/Dialog'
+import { ChatCompletionResponseMessage } from 'openai'
 
 const labelClassNames = ['text-sm', 'font-light', 'opacity-70']
 const inputClassNames = [
@@ -64,29 +64,23 @@ export default function InfoPage() {
       const data = new FormData(formRef.current)
       const bio = String(data.get('bio') || '')
       setIsLoading(true)
-      await axios
-        .post<AskGPTResponse>('/profile/new/info/improve-bio', {
-          bio,
-        })
-        .then(res => {
-          const err = res.data.error
-          if (!!err) {
-            console.error(err)
-            setError(err.message)
-          }
+      const res = await fetcher.POST<ChatCompletionResponseMessage>(
+        '/profile/new/info/improve-bio',
+        { bio }
+      )
 
-          const content = res.data.message?.content
-          if (content) {
-            setGPTProposals(splitBios(content))
-            setOpenDialog(true)
-          }
-        })
-        .catch(err => {
-          if (!!err) {
-            console.error(err)
-            setError(err.message)
-          }
-        })
+      if (!res.ok) {
+        setError(res.error.message)
+        setIsLoading(false)
+        return
+      }
+
+      const content = res.data.content
+      if (content) {
+        setGPTProposals(splitBios(content))
+        setOpenDialog(true)
+        setIsLoading(false)
+      }
     }
   }
 
