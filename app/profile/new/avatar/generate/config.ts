@@ -15,10 +15,10 @@ export interface RouteResponse {
   error?: ApiError
 }
 
-export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL as string
-export const API_KEY = process.env.REACT_APP_API_KEY as string
+export const AVATAR_SERVICE_BASE_URL = process.env.AVATAR_SERVICE_BASE_URL as string
+export const AVATAR_SERVICE_API_KEY = process.env.AVATAR_SERVICE_AVATAR_SERVICE_API_KEY as string
 
-export const headers = { Authorization: `Bearer ${API_KEY}` }
+export const headers = { Authorization: `Bearer ${AVATAR_SERVICE_API_KEY}` }
 
 export function buildPayload(image: string) {
   return {

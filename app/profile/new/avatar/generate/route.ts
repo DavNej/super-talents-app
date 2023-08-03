@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { NextResponse } from 'next/server'
-import { API_BASE_URL, headers, buildPayload } from './config'
+import { AVATAR_SERVICE_BASE_URL, headers, buildPayload } from './config'
 import type { RouteResponse, RunpodResponse } from './config'
 import { parseApiError } from '@/lib/error-utils'
 
@@ -12,7 +12,7 @@ export async function POST(
 
   try {
     const response = await axios.post<RunpodResponse>(
-      `${API_BASE_URL}/run`,
+      `${AVATAR_SERVICE_BASE_URL}/run`,
       payload,
       { headers }
     )
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await axios.get<RunpodResponse>(
-      `${API_BASE_URL}/status/${jobId}`,
+      `${AVATAR_SERVICE_BASE_URL}/status/${jobId}`,
       { headers }
     )
     const { id, status, output = [] } = response.data
