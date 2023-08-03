@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
 
-import Dialog from './Dialog'
+import Dialog from '@/app/components/Dialog'
 import clsx from 'clsx'
 
 function dataToUrl(data: string) {

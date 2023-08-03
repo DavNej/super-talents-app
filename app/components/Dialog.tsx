@@ -40,7 +40,7 @@ export default function Dialog({
           e.stopPropagation()
         }}>
         <Image
-          className='absolute top-6 right-6 cursor-pointer'
+          className='absolute top-6 right-6 cursor-pointer z-50'
           src='/cross.svg'
           alt='Close'
           width={44}
