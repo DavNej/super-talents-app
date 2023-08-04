@@ -16,11 +16,15 @@ module.exports = {
         red: '#DC2626',
         white: '#FFFFFF',
         blue: '#3632FE',
-        purple: '#8840FF',
+        purple: {
+          400: '#8840FF',
+          500: '#5214D6',
+        },
         pink: '#FF22BB',
         gray: {
           100: '#F2F3F4',
           700: '#424242',
+          400: '#A3A3A3',
           900: '#060201',
         },
       },

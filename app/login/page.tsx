@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import LoginForm from './components/LoginForm'
 
 export default function LoginPage() {
   return (
@@ -23,7 +24,7 @@ export default function LoginPage() {
             </p>
           </li>
           <li className='my-7'>
-            <p className='uppercase text-2xl text-purple'>clients</p>
+            <p className='uppercase text-2xl text-purple-400'>clients</p>
             <p className='font-normal text-lg opacity-60'>
               Connect with the best talent in Web3 and AI
             </p>
@@ -36,9 +37,7 @@ export default function LoginPage() {
           </li>
         </ul>
       </div>
-      <div className='flex flex-1 justify-center items-center'>
-        <div className='bg-blue w-[519px] h-[644px]'></div>
-      </div>
+      <LoginForm />
     </main>
   )
 }
