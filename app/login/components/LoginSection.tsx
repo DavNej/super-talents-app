@@ -5,16 +5,11 @@ import React from 'react'
 
 import Loader from '@/app/components/Loader'
 import EmailForm from './EmailForm'
-import { web3auth, loginProviders, login } from '@/lib/web3auth'
+import { useWeb3Auth } from '@/lib/web3auth'
+import { loginProviders } from '@/lib/web3auth/config'
 
 export default function LoginSection() {
-  const [isReady, setIsReady] = React.useState(false)
-
-  React.useEffect(() => {
-    web3auth.init().then(() => {
-      setIsReady(true)
-    })
-  }, [])
+  const { login, isReady } = useWeb3Auth()
 
   if (!isReady) return <Loader size={440} />
 

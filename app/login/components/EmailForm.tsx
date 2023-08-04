@@ -5,8 +5,8 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import React from 'react'
 
-import { login } from '@/lib/web3auth'
 import Button from '@/app/components/Button'
+import { useWeb3Auth } from '@/lib/web3auth'
 
 const labelClassNames = ['text-sm', 'font-light', 'opacity-70']
 const inputClassNames = [
@@ -27,6 +27,8 @@ const inputClassNames = [
 ]
 
 export default function EmailForm() {
+  const { login } = useWeb3Auth()
+
   return (
     <Formik
       initialValues={{ email: '' }}

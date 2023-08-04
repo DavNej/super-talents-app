@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Web3AuthProvider } from '@/lib/web3auth'
+
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>{children}</body>
+      <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
+        <Web3AuthProvider>{children}</Web3AuthProvider>
+      </body>
     </html>
   )
 }
