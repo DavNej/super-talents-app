@@ -2,14 +2,16 @@
 
 import clsx from 'clsx'
 import React from 'react'
+import type { ChatCompletionResponseMessage } from 'openai'
+
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 
 import Image from 'next/image'
 import fetcher from '@/lib/fetcher'
-import Dialog from '@/app/components/Dialog'
-import { ChatCompletionResponseMessage } from 'openai'
+
+import ChooseBioDialog from './components/ChooseBioDialog'
 
 const labelClassNames = ['text-sm', 'font-light', 'opacity-70']
 const inputClassNames = [
@@ -43,11 +45,10 @@ export default function InfoPage() {
   const skillRef = React.useRef<HTMLInputElement>(null)
   const [skills, setSkills] = React.useState<string[]>([])
 
-  const [GPTProposals, setGPTProposals] = React.useState<string[] | null>(null)
-  const [improvedBio, setImprovedBio] = React.useState('')
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [error, setError] = React.useState('')
+  const [isLoading, setIsLoading] = React.useState(false)
 
   function addSkill(event: React.FormEvent) {
     event.preventDefault()
@@ -77,7 +78,7 @@ export default function InfoPage() {
 
       const content = res.data.content
       if (content) {
-        setGPTProposals(JSON.parse(content))
+        setGPTOptions(JSON.parse(content.trim()))
         setOpenDialog(true)
         setIsLoading(false)
       }
@@ -224,72 +225,14 @@ export default function InfoPage() {
           </div>
         </form>
 
-        <Dialog
-          open={Boolean(GPTProposals) && openDialog}
+        <ChooseBioDialog
+          open={Boolean(GPTOptions) && openDialog}
+          options={GPTOptions}
+          formRef={formRef}
           onClose={() => {
             setOpenDialog(false)
-          }}>
-          <div
-            className={clsx(
-              'p-10',
-              'rounded-[32px]',
-              'font-light',
-              'bg-white',
-              'backdrop-blur-xl',
-              'bg-opacity-20'
-            )}>
-            <h3 className='font-semibold text-5xl text-center'>
-              Choose your bio
-            </h3>
-            <div className={clsx('my-8', 'flex', 'flex-col', 'gap-4')}>
-              {GPTProposals?.map(option => (
-                <div
-                  key={option}
-                  className={clsx(
-                    'px-4',
-                    'py-5',
-                    'rounded-[26px]',
-                    'max-w-3xl',
-                    'cursor-pointer',
-                    'border-white',
-                    'border-2',
-                    option === improvedBio
-                      ? 'border-opacity-100'
-                      : 'border-opacity-0'
-                  )}
-                  onClick={() => {
-                    setImprovedBio(option)
-                  }}>
-                  <div className='flex gap-3'>
-                    <div className='h-6 w-6 border-white border-2 rounded-full p-1'>
-                      {option === improvedBio ? (
-                        <div className='h-full w-full bg-pink rounded-full' />
-                      ) : null}
-                    </div>
-
-                    <div className='flex-1 flex flex-col'>
-                      {option.split('\n').map(line => (
-                        <p key={line}>{line}</p>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button
-              onClick={() => {
-                const textarea = formRef.current?.elements.namedItem(
-                  'bio'
-                ) as HTMLTextAreaElement
-                if (!!textarea) {
-                  textarea.value = improvedBio
-                }
-                setOpenDialog(false)
-              }}>
-              Done
-            </Button>
-          </div>
-        </Dialog>
+          }}
+        />
       </div>
     </main>
   )
