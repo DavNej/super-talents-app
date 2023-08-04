@@ -7,13 +7,15 @@ export default function Button({
   className,
   onClick,
   isDisabled,
+  isLoading,
   type = 'button',
 }: {
   children: React.ReactNode
   className?: string
+  isLoading?: boolean
   isDisabled?: boolean
-  onClick: () => void
-  type?: 'button' | 'submit' | 'reset'
+  onClick?: () => void
+  type?: 'button' | 'submit'
 }) {
   return (
     <button
@@ -29,12 +31,12 @@ export default function Button({
         'bg-white',
         'border-2',
         'border-white',
-        isDisabled ? 'text-gray-400' : 'text-pink',
+        isDisabled || isLoading ? 'text-gray-400' : 'text-pink',
         className
       )}
-      disabled={isDisabled}
+      disabled={isDisabled || isLoading}
       onClick={onClick}>
-      {children}
+      {isLoading ? 'Loading...' : children}
     </button>
   )
 }
