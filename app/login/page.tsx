@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import LoginForm from './components/LoginForm'
+import LoginSection from './components/LoginSection'
 
 export default function LoginPage() {
   return (
@@ -37,7 +37,7 @@ export default function LoginPage() {
           </li>
         </ul>
       </div>
-      <LoginForm />
+      <LoginSection />
     </main>
   )
 }
