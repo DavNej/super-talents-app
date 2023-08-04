@@ -77,7 +77,7 @@ export default function InfoPage() {
 
       const content = res.data.content
       if (content) {
-        setGPTProposals(splitBios(content))
+        setGPTProposals(JSON.parse(content))
         setOpenDialog(true)
         setIsLoading(false)
       }
@@ -232,7 +232,6 @@ export default function InfoPage() {
           <div
             className={clsx(
               'p-10',
-              'w-4xl',
               'rounded-[32px]',
               'font-light',
               'bg-white',
@@ -250,6 +249,7 @@ export default function InfoPage() {
                     'px-4',
                     'py-5',
                     'rounded-[26px]',
+                    'max-w-3xl',
                     'cursor-pointer',
                     'border-white',
                     'border-2',
@@ -261,13 +261,13 @@ export default function InfoPage() {
                     setImprovedBio(option)
                   }}>
                   <div className='flex gap-3'>
-                    <div className='h-6 w-6 border-white border-2 rounded-full'>
+                    <div className='h-6 w-6 border-white border-2 rounded-full p-1'>
                       {option === improvedBio ? (
-                        <div className='h-full w-full bg-pink rounded-full border-2' />
+                        <div className='h-full w-full bg-pink rounded-full' />
                       ) : null}
                     </div>
 
-                    <div className='flex flex-col'>
+                    <div className='flex-1 flex flex-col'>
                       {option.split('\n').map(line => (
                         <p key={line}>{line}</p>
                       ))}
