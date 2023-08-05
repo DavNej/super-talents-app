@@ -1,18 +1,17 @@
 'use client'
 
+import React from 'react'
 import Image from 'next/image'
 import LoginSection from './components/LoginSection'
 import { useWeb3Auth } from '@/lib/web3auth'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 export default function LoginPage() {
-  const { isReady, isConnected } = useWeb3Auth()
-  const { push } = useRouter()
+  const { isReady } = useWeb3Auth()
 
-  if (!isReady) return push('/')
-  if (isConnected) return push('/profile/address')
-
-  return (
+  return !isReady ? (
+    redirect('/')
+  ) : (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>
         <Image

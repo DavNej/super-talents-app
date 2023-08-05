@@ -2,16 +2,12 @@
 
 import Image from 'next/image'
 import React from 'react'
-
-import Loader from '@/app/components/Loader'
-import EmailForm from './EmailForm'
 import { useWeb3Auth } from '@/lib/web3auth'
 import { loginProviders } from '@/lib/web3auth/config'
+import EmailForm from './EmailForm'
 
 export default function LoginSection() {
-  const { login, isReady } = useWeb3Auth()
-
-  if (!isReady) return <Loader size={440} />
+  const { login } = useWeb3Auth()
 
   return (
     <div className='px-14 py-16 bg-gradient-to-b from-purple-500 to-pink h-[644px] w-[521px] rounded-[50px]'>

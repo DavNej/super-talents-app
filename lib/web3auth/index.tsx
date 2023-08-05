@@ -6,7 +6,7 @@ import type { Web3AuthNoModal } from '@web3auth/no-modal'
 import { web3auth as _web3auth } from './config'
 import type { LoginProvider } from './config'
 import { ethers } from 'ethers'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 const Web3AuthContext = React.createContext<{
   web3auth: Web3AuthNoModal
@@ -39,8 +39,6 @@ export function useWeb3Auth() {
 export function Web3AuthProvider(props: React.PropsWithChildren) {
   const web3authRef = React.useRef(_web3auth)
   const web3auth = web3authRef.current
-
-  const { push } = useRouter()
 
   const [isReady, setIsReady] = React.useState(false)
   const [isConnected, setIsConnected] = React.useState(false)
@@ -76,11 +74,11 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
 
       await web3auth
         .connectTo(WALLET_ADAPTERS.OPENLOGIN, loginParams)
-        .then(provider => provider)
+        .then(res => {
+          redirect('/login')
+        })
         .catch(e => {
           console.log(e)
-          console.log(web3auth)
-          return null
         })
     },
     [web3auth]
@@ -91,9 +89,9 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
       await web3auth.logout()
       setSigner(null)
       setIsConnected(false)
-      push('/login')
+      redirect('/login')
     }
-  }, [push, web3auth])
+  }, [web3auth])
 
   const value = React.useMemo(
     () => ({

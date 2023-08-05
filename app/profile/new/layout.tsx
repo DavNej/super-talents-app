@@ -2,22 +2,8 @@
 
 import LogoutButton from '@/app/components/LogoutButton'
 import { useWeb3Auth } from '@/lib/web3auth'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, redirect } from 'next/navigation'
 import React from 'react'
-
-function Step({ isActive, caption }: { isActive: boolean; caption: string }) {
-  return isActive ? (
-    <div className='flex-1'>
-      <p className='font-medium text-xl text-center'>{caption}</p>
-      <div className='mt-3 h-3 rounded-full bg-pink'></div>
-    </div>
-  ) : (
-    <div className='flex-1'>
-      <p className='font-medium text-xl text-center opacity-70'>{caption}</p>
-      <div className='mt-3 h-3 rounded-full bg-gray-700' />
-    </div>
-  )
-}
 
 export default function ProgressBarLayout({
   children,
@@ -26,15 +12,12 @@ export default function ProgressBarLayout({
 }) {
   const pathname = usePathname()
   const { isReady, isConnected } = useWeb3Auth()
-  const { push } = useRouter()
 
   React.useEffect(() => {
-    if (isReady) {
-      push(isConnected ? '/profile/address' : '/login')
-    } else {
-      push('/')
-    }
-  }, [isConnected, isReady, push])
+    redirect(isConnected ? '/profile/address' : '/login')
+  }, [isConnected, isReady])
+
+  if (!isReady) return redirect('/')
 
   return (
     <>
@@ -62,5 +45,19 @@ export default function ProgressBarLayout({
       </div>
       {children}
     </>
+  )
+}
+
+function Step({ isActive, caption }: { isActive: boolean; caption: string }) {
+  return isActive ? (
+    <div className='flex-1'>
+      <p className='font-medium text-xl text-center'>{caption}</p>
+      <div className='mt-3 h-3 rounded-full bg-pink'></div>
+    </div>
+  ) : (
+    <div className='flex-1'>
+      <p className='font-medium text-xl text-center opacity-70'>{caption}</p>
+      <div className='mt-3 h-3 rounded-full bg-gray-700' />
+    </div>
   )
 }
