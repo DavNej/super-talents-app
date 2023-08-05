@@ -6,9 +6,11 @@ import type { Web3AuthNoModal } from '@web3auth/no-modal'
 import { web3auth as _web3auth } from './config'
 import type { LoginProvider } from './config'
 import { ethers } from 'ethers'
+import { useRouter } from 'next/navigation'
 
 const Web3AuthContext = React.createContext<{
   web3auth: Web3AuthNoModal
+  init: Function
   logout: Function
   login: Function
   getSigner: Function
@@ -17,6 +19,7 @@ const Web3AuthContext = React.createContext<{
   isConnected: boolean
 }>({
   web3auth: _web3auth,
+  init: () => {},
   getSigner: () => {},
   logout: () => {},
   login: () => {},
@@ -34,7 +37,11 @@ export function useWeb3Auth() {
 }
 
 export function Web3AuthProvider(props: React.PropsWithChildren) {
-  const [web3auth, _] = React.useState(_web3auth)
+  const web3authRef = React.useRef(_web3auth)
+  const web3auth = web3authRef.current
+
+  const { push } = useRouter()
+
   const [isReady, setIsReady] = React.useState(false)
   const [isConnected, setIsConnected] = React.useState(false)
   const [signer, setSigner] = React.useState<ethers.JsonRpcSigner | null>(null)
@@ -47,14 +54,17 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
     }
   }, [web3auth.provider])
 
-  React.useEffect(() => {
-    web3auth.init().then(() => {
-      setIsReady(true)
-      if (web3auth.status === 'connected') {
-        setIsConnected(true)
-        getSigner()
-      }
-    })
+  const init = React.useCallback(async () => {
+    if (web3auth.status === 'disconnected' || web3auth.status === 'not_ready') {
+      console.log('🦋 | React.useEffect | web3auth', web3auth)
+      web3auth.init().then(() => {
+        setIsReady(true)
+        if (web3auth.status === 'connected') {
+          setIsConnected(true)
+          getSigner()
+        }
+      })
+    }
   }, [web3auth, getSigner])
 
   const login = React.useCallback(
@@ -81,12 +91,14 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
       await web3auth.logout()
       setSigner(null)
       setIsConnected(false)
+      push('/login')
     }
-  }, [web3auth])
+  }, [push, web3auth])
 
   const value = React.useMemo(
     () => ({
       web3auth,
+      init,
       logout,
       login,
       signer,
@@ -94,7 +106,7 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
       isConnected,
       getSigner,
     }),
-    [web3auth, logout, login, signer, isReady, isConnected, getSigner]
+    [web3auth, init, logout, login, signer, isReady, isConnected, getSigner]
   )
 
   return <Web3AuthContext.Provider value={value} {...props} />

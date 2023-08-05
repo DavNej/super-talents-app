@@ -1,5 +1,9 @@
 'use client'
-import { usePathname } from 'next/navigation'
+
+import LogoutButton from '@/app/components/LogoutButton'
+import { useWeb3Auth } from '@/lib/web3auth'
+import { usePathname, useRouter } from 'next/navigation'
+import React from 'react'
 
 function Step({ isActive, caption }: { isActive: boolean; caption: string }) {
   return isActive ? (
@@ -21,6 +25,16 @@ export default function ProgressBarLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const { isReady, isConnected } = useWeb3Auth()
+  const { push } = useRouter()
+
+  React.useEffect(() => {
+    if (isReady) {
+      push(isConnected ? '/profile/address' : '/login')
+    } else {
+      push('/')
+    }
+  }, [isConnected, isReady, push])
 
   return (
     <>
@@ -44,6 +58,7 @@ export default function ProgressBarLayout({
           caption='Mint your profile NFT'
           isActive={pathname === '/profile/new/preview'}
         />
+        <LogoutButton />
       </div>
       {children}
     </>

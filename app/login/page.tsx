@@ -1,7 +1,17 @@
+'use client'
+
 import Image from 'next/image'
 import LoginSection from './components/LoginSection'
+import { useWeb3Auth } from '@/lib/web3auth'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
+  const { isReady, isConnected } = useWeb3Auth()
+  const { push } = useRouter()
+
+  if (!isReady) return push('/')
+  if (isConnected) return push('/profile/address')
+
   return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>
