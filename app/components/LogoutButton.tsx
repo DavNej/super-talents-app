@@ -9,7 +9,7 @@ export default function LogoutButton() {
 
   return (
     <button
-      className='bg-pink rounded-sm'
+      className='px-5 py-2 bg-pink rounded-xl'
       onClick={async () => {
         await logout()
       }}>
