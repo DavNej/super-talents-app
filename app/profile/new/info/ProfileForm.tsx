@@ -2,12 +2,13 @@ import React from 'react'
 import { useFormik } from 'formik'
 import clsx from 'clsx'
 
-import { initialValues, validationSchema } from './form-utils'
+import { IFormValues, initialValues, validationSchema } from './form-utils'
 import Button from '@/app/components/Button'
 import fetcher from '@/lib/fetcher'
 import type { ChatCompletionResponseMessage } from 'openai'
 import ChooseBioDialog from './components/ChooseBioDialog'
 import Chip from '@/app/components/Chip'
+import Image from 'next/image'
 
 const inputClassNames = [
   'py-4',
@@ -81,21 +82,37 @@ export default function ProfileForm() {
     formik.setFieldValue('skills', newSkillSet)
   }
 
+  function fieldError(fieldName: keyof IFormValues) {
+    return formik.touched[fieldName] && formik.errors[fieldName]
+  }
+  function SimpleLabel({
+    name,
+    children,
+  }: {
+    name: keyof IFormValues
+    children: React.ReactNode
+  }) {
+    return (
+      <label
+        className={clsx(
+          'text-sm font-light opacity-70',
+          fieldError(name) && 'text-red'
+        )}
+        htmlFor={name}>
+        {fieldError(name) || children}
+      </label>
+    )
+  }
+
   return (
     <>
       <form onSubmit={formik.handleSubmit}>
         <fieldset>
-          <label
-            className={clsx(
-              'text-sm font-light opacity-70',
-              formik.errors.handle && 'text-red'
-            )}
-            htmlFor='handle'>
-            {formik.errors.handle ? formik.errors.handle : 'Handle'}
-          </label>
+          <SimpleLabel name='handle'>Handle</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             type='text'
             name='handle'
             placeholder='Choose a profile handle (ex: alanturing)'
@@ -103,17 +120,11 @@ export default function ProfileForm() {
         </fieldset>
 
         <fieldset>
-          <label
-            className={clsx(
-              'text-sm font-light opacity-70',
-              formik.errors.name && 'text-red'
-            )}
-            htmlFor='name'>
-            {formik.errors.name ? formik.errors.name : 'Name'}
-          </label>
+          <SimpleLabel name='name'>Name</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             type='text'
             name='name'
             placeholder='Choose a Full Name (ex: Alan Turing)'
@@ -121,19 +132,13 @@ export default function ProfileForm() {
         </fieldset>
 
         <fieldset className='flex flex-col'>
-          <label
-            className={clsx(
-              'text-sm font-light opacity-70',
-              formik.errors.bio && 'text-red'
-            )}
-            htmlFor='bio'>
-            {formik.errors.bio ? formik.errors.bio : 'Bio'}
-          </label>
+          <SimpleLabel name='bio'>Bio</SimpleLabel>
           <div className={clsx(inputClassNames, 'flex flex-col')}>
             <textarea
               className=' h-52 bg-transparent outline-none flex-1'
               name='bio'
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.bio}
               placeholder='Write a bio or some keywords'
             />
@@ -148,18 +153,11 @@ export default function ProfileForm() {
         </fieldset>
 
         <fieldset>
-          <label
-            className={clsx(
-              'text-sm font-light opacity-70',
-              formik.errors.skills && 'text-red'
-            )}
-            htmlFor='skills'>
-            {formik.errors.skills ? formik.errors.skills : 'Add your skills'}
-          </label>
-
+          <SimpleLabel name='skills'>Skills</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
             onChange={e => setSkill(e.currentTarget.value)}
+            onBlur={formik.handleBlur}
             value={skill}
             onKeyDown={addSkill}
             type='text'
@@ -179,37 +177,26 @@ export default function ProfileForm() {
         </fieldset>
 
         <fieldset>
-          <label
-            className={clsx(
-              'text-sm font-light opacity-70',
-              formik.errors.portefolio && 'text-red'
-            )}
-            htmlFor='portefolio'>
-            {formik.errors.portefolio ? formik.errors.portefolio : 'Link'}
-          </label>
+          <SimpleLabel name='portefolio'>Link</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
             type='text'
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             name='portefolio'
             placeholder='Add portefolio'
           />
         </fieldset>
         <fieldset>
           {formik.errors.twitter && (
-            <label
-              className={clsx(
-                'text-sm font-light opacity-70',
-                formik.errors.twitter && 'text-red'
-              )}
-              htmlFor='twitter'>
-              {formik.errors.twitter}
-            </label>
+            <SimpleLabel name='twitter'>{formik.errors.twitter}</SimpleLabel>
           )}
+
           <input
             className={clsx(inputClassNames)}
             type='text'
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             name='twitter'
             placeholder='Add Twitter link'
           />
@@ -217,19 +204,14 @@ export default function ProfileForm() {
 
         <fieldset>
           {formik.errors.github && (
-            <label
-              className={clsx(
-                'text-sm font-light opacity-70',
-                formik.errors.github && 'text-red'
-              )}
-              htmlFor='github'>
-              {formik.errors.github}
-            </label>
+            <SimpleLabel name='github'>{formik.errors.github}</SimpleLabel>
           )}
+
           <input
             className={clsx(inputClassNames)}
             type='text'
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             name='github'
             placeholder='Add Github link'
           />
@@ -237,19 +219,15 @@ export default function ProfileForm() {
 
         <fieldset>
           {formik.errors.otherLink && (
-            <label
-              className={clsx(
-                'text-sm font-light opacity-70',
-                formik.errors.otherLink && 'text-red'
-              )}
-              htmlFor='otherLink'>
+            <SimpleLabel name='otherLink'>
               {formik.errors.otherLink}
-            </label>
+            </SimpleLabel>
           )}
           <input
             className={clsx(inputClassNames)}
             type='text'
             onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             name='otherLink'
             placeholder='Add other link'
           />
