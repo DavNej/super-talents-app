@@ -12,6 +12,7 @@ module.exports = {
     colors: {},
     extend: {
       colors: {
+        transparent: 'transparent',
         black: '#000000',
         red: '#DC2626',
         white: '#FFFFFF',
@@ -34,5 +35,4 @@ module.exports = {
       },
     },
   },
-  plugins: [],
 }

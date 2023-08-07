@@ -7,12 +7,12 @@ import Button from '@/app/components/Button'
 import Dialog from '@/app/components/Dialog'
 
 export default function ChooseBioDialog({
-  formRef,
+  onSelectBio,
   onClose,
   options,
   open,
 }: {
-  formRef: React.RefObject<HTMLFormElement>
+  onSelectBio: (bio: string) => void
   onClose: () => void
   options: string[] | null
   open: boolean
@@ -68,12 +68,7 @@ export default function ChooseBioDialog({
         </div>
         <Button
           onClick={() => {
-            const textarea = formRef.current?.elements.namedItem(
-              'bio'
-            ) as HTMLTextAreaElement
-            if (!!textarea) {
-              textarea.value = improvedBio
-            }
+            onSelectBio(improvedBio)
             onClose()
           }}>
           Done
