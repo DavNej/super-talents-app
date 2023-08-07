@@ -10,7 +10,7 @@ export default function Chip({
   onDelete: () => void
 }) {
   return (
-    <div className='p-3 mr-3 flex flex-row bg-pink rounded-full'>
+    <div className='p-3 flex flex-row bg-pink rounded-full'>
       <p className='text-white text-sm font-light'>
         {caption}
       </p>

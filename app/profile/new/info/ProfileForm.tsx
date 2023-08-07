@@ -107,8 +107,8 @@ export default function ProfileForm() {
 
   return (
     <>
-      <form onSubmit={formik.handleSubmit}>
-        <fieldset>
+      <form onSubmit={formik.handleSubmit} className='grid grid-cols-2 gap-8'>
+        <fieldset id='handle'>
           <SimpleLabel name='handle'>Handle</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
@@ -119,8 +119,7 @@ export default function ProfileForm() {
             placeholder='Choose a profile handle (ex: alanturing)'
           />
         </fieldset>
-
-        <fieldset>
+        <fieldset id='name'>
           <SimpleLabel name='name'>Name</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
@@ -131,10 +130,9 @@ export default function ProfileForm() {
             placeholder='Choose a Full Name (ex: Alan Turing)'
           />
         </fieldset>
-
-        <fieldset className='flex flex-col'>
+        <fieldset id='bio' className='flex flex-col'>
           <SimpleLabel name='bio'>Bio</SimpleLabel>
-          <div className={clsx(inputClassNames, 'flex flex-col')}>
+          <div className={clsx(inputClassNames, 'flex flex-col flex-1')}>
             <textarea
               className=' h-52 bg-transparent outline-none flex-1'
               name='bio'
@@ -152,32 +150,7 @@ export default function ProfileForm() {
             </Button>
           </div>
         </fieldset>
-
-        <fieldset>
-          <SimpleLabel name='skills'>Skills</SimpleLabel>
-          <input
-            className={clsx(inputClassNames)}
-            onChange={e => setSkill(e.currentTarget.value)}
-            onBlur={formik.handleBlur}
-            value={skill}
-            onKeyDown={addSkill}
-            type='text'
-            name='skills'
-            placeholder='Graphic design (then press Enter)'
-          />
-
-          <div className='flex gap-2 flex-wrap'>
-            {formik.values.skills.map(skill => (
-              <Chip
-                key={skill}
-                caption={skill}
-                onDelete={() => removeSkill(skill)}
-              />
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset>
+        <fieldset id='links'>
           <SimpleLabel name='portefolio'>Links</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
@@ -187,9 +160,7 @@ export default function ProfileForm() {
             name='portefolio'
             placeholder='Add portefolio'
           />
-        </fieldset>
 
-        <fieldset>
           {formik.errors.twitter && (
             <SimpleLabel name='twitter'>{formik.errors.twitter}</SimpleLabel>
           )}
@@ -202,9 +173,7 @@ export default function ProfileForm() {
             name='twitter'
             placeholder='Add Twitter link'
           />
-        </fieldset>
 
-        <fieldset>
           {formik.errors.github && (
             <SimpleLabel name='github'>{formik.errors.github}</SimpleLabel>
           )}
@@ -217,9 +186,7 @@ export default function ProfileForm() {
             name='github'
             placeholder='Add Github link'
           />
-        </fieldset>
 
-        <fieldset>
           {formik.errors.otherLink && (
             <SimpleLabel name='otherLink'>
               {formik.errors.otherLink}
@@ -234,12 +201,34 @@ export default function ProfileForm() {
             placeholder='Add other link'
           />
         </fieldset>
-
-        <fieldset>
+        <fieldset id='skills' className='row-span-2'>
+          <SimpleLabel name='skills'>Skills</SimpleLabel>
+          <input
+            className={clsx(inputClassNames)}
+            onChange={e => setSkill(e.currentTarget.value)}
+            onBlur={formik.handleBlur}
+            value={skill}
+            onKeyDown={addSkill}
+            type='text'
+            name='skills'
+            placeholder='Graphic design (then press Enter)'
+          />
+          <div className='flex flex-row items-start gap-2 flex-wrap mt-2'>
+            {formik.values.skills.map(skill => (
+              <Chip
+                key={skill}
+                caption={skill}
+                onDelete={() => removeSkill(skill)}
+              />
+            ))}
+          </div>
+        </fieldset>
+        <fieldset id='role'>
           <SimpleLabel name='role'>Role</SimpleLabel>
           <div className='relative mt-2'>
             <select
               name='role'
+              defaultValue=''
               className={clsx(
                 'appearance-none',
                 inputClassNames,
@@ -248,7 +237,7 @@ export default function ProfileForm() {
               )}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}>
-              <option disabled selected>
+              <option disabled value=''>
                 -- Choose role --
               </option>
               <option value='seller'>Talent seeking project</option>
