@@ -4,6 +4,7 @@ import clsx from 'clsx'
 
 import { IFormValues, initialValues, validationSchema } from './form-utils'
 import Button from '@/app/components/Button'
+import { handleExists } from '@/lib/talent-layer/utils'
 import fetcher from '@/lib/fetcher'
 import type { ChatCompletionResponseMessage } from 'openai'
 import ChooseBioDialog from './components/ChooseBioDialog'
@@ -40,7 +41,7 @@ export default function ProfileForm() {
   const [openDialog, setOpenDialog] = React.useState(false)
   const [error, setError] = React.useState('')
   const [isBioLoading, setIsBioLoading] = React.useState(false)
-
+  const [isHandleAvailable, setIsHandleAvailable] = React.useState(false)
   const [skill, setSkill] = React.useState('')
 
   async function improveBio() {
@@ -109,11 +110,29 @@ export default function ProfileForm() {
     <>
       <form onSubmit={formik.handleSubmit} className='grid grid-cols-2 gap-8'>
         <fieldset id='handle'>
-          <SimpleLabel name='handle'>Handle</SimpleLabel>
+          <SimpleLabel name='handle'>
+            <div className='flex justify-between'>
+              <span>Handle</span>
+              {isHandleAvailable && (
+                <span className='text-sm text-green'>Handle available</span>
+              )}
+            </div>
+          </SimpleLabel>
           <input
             className={clsx(inputClassNames)}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            onBlur={async e => {
+              formik.handleBlur(e)
+              if (formik.errors.handle) return
+
+              const isHandleTaken = await handleExists(e.currentTarget.value)
+              if (typeof isHandleTaken === 'boolean') {
+                setIsHandleAvailable(!isHandleTaken)
+                if (isHandleTaken) {
+                  formik.setFieldError('handle', 'Handle already taken')
+                }
+              }
+            }}
             type='text'
             name='handle'
             placeholder='Choose a profile handle (ex: alanturing)'
