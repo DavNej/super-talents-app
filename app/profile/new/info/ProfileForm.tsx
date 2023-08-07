@@ -85,6 +85,7 @@ export default function ProfileForm() {
   function fieldError(fieldName: keyof IFormValues) {
     return formik.touched[fieldName] && formik.errors[fieldName]
   }
+
   function SimpleLabel({
     name,
     children,
@@ -177,7 +178,7 @@ export default function ProfileForm() {
         </fieldset>
 
         <fieldset>
-          <SimpleLabel name='portefolio'>Link</SimpleLabel>
+          <SimpleLabel name='portefolio'>Links</SimpleLabel>
           <input
             className={clsx(inputClassNames)}
             type='text'
@@ -187,6 +188,7 @@ export default function ProfileForm() {
             placeholder='Add portefolio'
           />
         </fieldset>
+
         <fieldset>
           {formik.errors.twitter && (
             <SimpleLabel name='twitter'>{formik.errors.twitter}</SimpleLabel>
@@ -232,6 +234,40 @@ export default function ProfileForm() {
             placeholder='Add other link'
           />
         </fieldset>
+
+        <fieldset>
+          <SimpleLabel name='role'>Role</SimpleLabel>
+          <div className='relative mt-2'>
+            <select
+              name='role'
+              className={clsx(
+                'appearance-none',
+                inputClassNames,
+                'mt-0',
+                'relative'
+              )}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}>
+              <option disabled selected>
+                -- Choose role --
+              </option>
+              <option value='seller'>Talent seeking project</option>
+              <option value='buyer'>Client seeking talent</option>
+              <option value='both'>Both</option>
+            </select>
+
+            <div className='pointer-events-none absolute inset-y-0 right-8 flex items-center'>
+              <Image
+                src='/chevron-down.svg'
+                alt='Arrow'
+                className='w-5 h-5 text-gray-400'
+                width={5}
+                height={5}
+              />
+            </div>
+          </div>
+        </fieldset>
+
         <Button
           onClick={formik.handleSubmit}
           isDisabled={!formik.dirty || !formik.isValid || formik.isSubmitting}>

@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 
-interface IFormValues {
+export interface IFormValues {
   handle: string
   name: string
   bio: string
@@ -9,6 +9,7 @@ interface IFormValues {
   github: string
   twitter: string
   portefolio: string
+  role: 'buyer' | 'seller' | 'both' | ''
 }
 
 export const initialValues: IFormValues = {
@@ -20,6 +21,7 @@ export const initialValues: IFormValues = {
   otherLink: '',
   portefolio: '',
   twitter: '',
+  role: '',
 }
 
 export const validationSchema = Yup.object().shape({
@@ -45,4 +47,5 @@ export const validationSchema = Yup.object().shape({
   otherLink: Yup.string().url('Must be a url').trim(),
   portefolio: Yup.string().url('Must be a url').trim(),
   twitter: Yup.string().url('Must be a twitter url').trim(),
+  role: Yup.string().required(),
 })
