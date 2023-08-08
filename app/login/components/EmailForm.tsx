@@ -7,7 +7,7 @@ import React from 'react'
 
 import Button from '@/app/components/Button'
 import { useWeb3Auth } from '@/lib/web3auth'
-import { inputClassNames } from '@/app/profile/new/info/ProfileForm'
+import { inputClassNames } from '@/app/profile/new/info/components/ProfileForm'
 import clsx from 'clsx'
 
 export default function EmailForm() {

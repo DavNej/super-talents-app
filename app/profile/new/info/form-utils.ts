@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 export interface IFormValues {
   handle: string
   name: string
-  bio: string
+  about: string
   skills: string[]
   otherLink: string
   github: string
@@ -11,11 +11,23 @@ export interface IFormValues {
   portefolio: string
   role: 'buyer' | 'seller' | 'both' | ''
 }
+export interface IProfileData {
+  name: string
+  about: string
+  skills: string[]
+  // skills_raw: string
+  github: string
+  otherLink: string
+  portefolio: string
+  twitter: string
+  picture: string
+  role: 'buyer' | 'seller' | 'both' | ''
+}
 
 export const initialValues: IFormValues = {
   handle: '',
   name: '',
-  bio: '',
+  about: '',
   skills: [],
   github: '',
   otherLink: '',
@@ -34,11 +46,11 @@ export const validationSchema = Yup.object().shape({
     .max(140, 'Name too long')
     .trim()
     .required(),
-  bio: Yup.string()
+  about: Yup.string()
     .min(20, 'Bio too short')
     .max(500, 'Bio too long')
     .trim()
-    .required(),
+    .required('Bio is a required field'),
   skills: Yup.array()
     .min(1, 'Add at least one skill')
     .max(15, 'Skill set should be less than 15')

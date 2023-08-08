@@ -6,18 +6,18 @@ import Button from '@/app/components/Button'
 
 import Dialog from '@/app/components/Dialog'
 
-export default function ChooseBioDialog({
-  onSelectBio,
+export default function ChooseAboutDialog({
+  onSelectAbout,
   onClose,
   options,
   open,
 }: {
-  onSelectBio: (bio: string) => void
+  onSelectAbout: (about: string) => void
   onClose: () => void
   options: string[] | null
   open: boolean
 }) {
-  const [improvedBio, setImprovedBio] = React.useState('')
+  const [improvedAbout, setImprovedAbout] = React.useState('')
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -30,7 +30,9 @@ export default function ChooseBioDialog({
           'backdrop-blur-xl',
           'bg-opacity-20'
         )}>
-        <h3 className='font-semibold text-5xl text-center whitespace-nowrap'>Choose your bio</h3>
+        <h3 className='font-semibold text-5xl text-center whitespace-nowrap'>
+          Choose your about
+        </h3>
         <div className={clsx('my-8', 'flex', 'flex-col', 'gap-4')}>
           {options?.map(option => (
             <div
@@ -43,16 +45,16 @@ export default function ChooseBioDialog({
                 'cursor-pointer',
                 'border-white',
                 'border-2',
-                option === improvedBio
+                option === improvedAbout
                   ? 'border-opacity-100'
                   : 'border-opacity-0'
               )}
               onClick={() => {
-                setImprovedBio(option)
+                setImprovedAbout(option)
               }}>
               <div className='flex gap-3'>
                 <div className='h-6 w-6 border-white border-2 rounded-full p-1'>
-                  {option === improvedBio ? (
+                  {option === improvedAbout ? (
                     <div className='h-full w-full bg-pink rounded-full' />
                   ) : null}
                 </div>
@@ -68,7 +70,7 @@ export default function ChooseBioDialog({
         </div>
         <Button
           onClick={() => {
-            onSelectBio(improvedBio)
+            onSelectAbout(improvedAbout)
             onClose()
           }}>
           Done

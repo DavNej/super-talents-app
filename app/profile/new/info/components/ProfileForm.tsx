@@ -1,16 +1,20 @@
 import React from 'react'
 import { useFormik } from 'formik'
 import clsx from 'clsx'
+import Image from 'next/image'
+import type { ChatCompletionResponseMessage } from 'openai'
 
-import { IFormValues, initialValues, validationSchema } from './form-utils'
-import Button from '@/app/components/Button'
 import { handleExists } from '@/lib/talent-layer/utils'
 import fetcher from '@/lib/fetcher'
-import type { ChatCompletionResponseMessage } from 'openai'
-import ChooseBioDialog from './components/ChooseBioDialog'
+import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
-import Image from 'next/image'
 import Toast from '@/app/components/Toast'
+
+import { IFormValues, initialValues, validationSchema } from '../form-utils'
+import type { IProfileData } from '../form-utils'
+
+import ChooseAboutDialog from './ChooseAboutDialog'
+import { useLocalStorage } from 'usehooks-ts'
 
 export const inputClassNames = [
   'py-4',
@@ -29,33 +33,53 @@ export const inputClassNames = [
   'focus:border-opacity-100',
 ]
 
-export default function ProfileForm() {
+export default function ProfileForm({
+  onSubmit,
+}: {
+  onSubmit: (data: IProfileData) => void
+}) {
+  const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
+
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit(values) {
-      console.log('🦋 | onSubmit | values', values)
+    onSubmit: async (values, { setSubmitting }) => {
+      const profileData: IProfileData = {
+        name: values.name,
+        about: values.about,
+        skills: values.skills,
+        // skills_raw: values.skills.join(','),
+        github: values.github,
+        otherLink: values.otherLink,
+        portefolio: values.portefolio,
+        twitter: values.twitter,
+        picture: selectedAvatar,
+        role: values.role,
+      }
+
+      await onSubmit(profileData)
+      setSubmitting(false)
     },
   })
 
   const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [error, setError] = React.useState('')
-  const [isBioLoading, setIsBioLoading] = React.useState(false)
+  const [isAboutLoading, setIsAboutLoading] = React.useState(false)
   const [isHandleAvailable, setIsHandleAvailable] = React.useState(false)
   const [skill, setSkill] = React.useState('')
 
-  async function improveBio() {
-    const bio = formik.values.bio
-    setIsBioLoading(true)
+  async function improveAbout() {
+    const about = formik.values.about
+    setIsAboutLoading(true)
     const res = await fetcher.POST<ChatCompletionResponseMessage>(
       '/profile/new/info/improve-bio',
-      { bio }
+      { about }
     )
 
     if (!res.ok) {
       setError(res.error.message)
-      setIsBioLoading(false)
+      setIsAboutLoading(false)
       return
     }
 
@@ -63,7 +87,7 @@ export default function ProfileForm() {
     if (content) {
       setGPTOptions(JSON.parse(content.trim()))
       setOpenDialog(true)
-      setIsBioLoading(false)
+      setIsAboutLoading(false)
     }
   }
 
@@ -151,22 +175,22 @@ export default function ProfileForm() {
             placeholder='Choose a Full Name (ex: Alan Turing)'
           />
         </fieldset>
-        <fieldset id='bio' className='flex flex-col'>
-          <SimpleLabel name='bio'>Bio</SimpleLabel>
+        <fieldset id='about' className='flex flex-col'>
+          <SimpleLabel name='about'>Bio</SimpleLabel>
           <div className={clsx(inputClassNames, 'flex flex-col flex-1')}>
             <textarea
               className=' h-52 bg-transparent outline-none flex-1'
-              name='bio'
+              name='about'
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.bio}
+              value={formik.values.about}
               placeholder='Write a bio or some keywords'
             />
             <Button
               className='bg-opacity-0 scale-75'
-              isDisabled={!Boolean(formik.values.bio)}
-              isLoading={isBioLoading}
-              onClick={improveBio}>
+              isDisabled={!Boolean(formik.values.about)}
+              isLoading={isAboutLoading}
+              onClick={improveAbout}>
               Improve bio with AI
             </Button>
           </div>
@@ -285,11 +309,11 @@ export default function ProfileForm() {
         </Button>
       </form>
 
-      <ChooseBioDialog
+      <ChooseAboutDialog
         open={Boolean(GPTOptions) && openDialog}
         options={GPTOptions}
-        onSelectBio={bio => {
-          formik.setFieldValue('bio', bio)
+        onSelectAbout={about => {
+          formik.setFieldValue('about', about)
         }}
         onClose={() => {
           setOpenDialog(false)
