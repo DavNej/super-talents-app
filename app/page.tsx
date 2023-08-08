@@ -1,10 +1,9 @@
 'use client'
 
-import Image from 'next/image'
-
 import { useWeb3Auth } from '@/lib/web3auth'
 import { redirect } from 'next/navigation'
 import React from 'react'
+import Loader from './components/Loader'
 
 export default function Init() {
   const { isConnected, init, isReady } = useWeb3Auth()
@@ -21,13 +20,7 @@ export default function Init() {
 
   return (
     <main className='flex-1 flex items-center justify-center'>
-      <Image
-        src='/loader.gif'
-        alt='SuperTalents'
-        width={500}
-        height={500}
-        priority
-      />
+      <Loader size={500} />
     </main>
   )
 }

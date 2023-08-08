@@ -9,9 +9,9 @@ import Button from '@/app/components/Button'
 import Toast from '@/app/components/Toast'
 import fetcher from '@/lib/fetcher'
 
-import type { RouteResponse } from './generate/config'
+import type { AvatarResponse } from './generate/config'
 
-import AvatarLoader from './components/AvatarLoader'
+import Loader from '@/app/components/Loader'
 import ImagePreview from './components/ImagePreview'
 import UploadFile from './components/UploadFile'
 
@@ -25,6 +25,7 @@ export default function AvatarPage() {
     'avatars',
     []
   )
+
   const [selectedAvatar, setSelectedAvatar] = useLocalStorage(
     'selectedAvatar',
     ''
@@ -48,11 +49,10 @@ export default function AvatarPage() {
     if (hasImageOutputs) {
       setImageOutputs([])
     }
-    const res = await fetcher.POST<RouteResponse>(
+
+    const res = await fetcher.POST<AvatarResponse>(
       '/profile/new/avatar/generate',
-      {
-        image: base64UploadedImage,
-      }
+      { image: base64UploadedImage }
     )
 
     if (!res.ok) {
@@ -69,7 +69,7 @@ export default function AvatarPage() {
 
   async function checkStatus() {
     console.log('checking status')
-    const res = await fetcher.GET<RouteResponse>(
+    const res = await fetcher.GET<AvatarResponse>(
       `/profile/new/avatar/generate?id=${jobId}`
     )
 
@@ -90,11 +90,15 @@ export default function AvatarPage() {
   useInterval(checkStatus, delay)
 
   return (
-    <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
-      <div className='flex flex-row flex-1 gap-x-24 items-start'>
-        <div className='flex-col w-1/2'>
+    <main className='flex-1 px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
+      <div className='grid grid-cols-2 gap-x-24'>
+        <div className='col-span-2'>
           <BackLink />
-          <h3 className='font-semibold text-5xl'>Create Your Avatar</h3>
+        </div>
+        <div>
+          <h3 className='font-semibold text-5xl whitespace-nowrap'>
+            Create Your Avatar
+          </h3>
           <UploadFile
             onSuccess={onUploadSuccess}
             onError={err => setError(err)}
@@ -116,13 +120,20 @@ export default function AvatarPage() {
         </div>
 
         {isLoading ? (
-          <AvatarLoader />
+          <div className='flex flex-col self-stretch justify-center items-center'>
+            <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>
+              Generating your avatar...
+            </h3>
+            <div className='mt-4 w-full flex justify-center items-center h-full rounded-[28px] backdrop-blur-xl'>
+              <Loader size={520} />
+            </div>
+          </div>
         ) : (
           <ImagePreview images={imageOutputs} onSelect={setSelectedAvatar} />
         )}
-      </div>
 
-      {error && <Toast message={error} onClose={() => setError('')} />}
+        {error && <Toast message={error} onClose={() => setError('')} />}
+      </div>
     </main>
   )
 }

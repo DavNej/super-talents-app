@@ -2,10 +2,9 @@
 import React from 'react'
 import Image from 'next/image'
 
-export default function Loader({ size }: { size: number }) {
+export default function Loader({ size = 320 }: { size?: number }) {
   return (
     <Image
-      className='rounded-full bg-white backdrop-blur-xl bg-opacity-20'
       src='/loader.gif'
       alt='Loading'
       width={size}

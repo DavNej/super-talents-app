@@ -1,5 +1,3 @@
-import { ApiError } from '@/lib/error-utils'
-
 export type ImageOutput = { image: string }
 
 export interface RunpodResponse {
@@ -8,17 +6,16 @@ export interface RunpodResponse {
   output?: ImageOutput[]
 }
 
-export interface RouteResponse {
+export interface AvatarResponse {
   id?: string
   status?: string
   results?: string[]
-  error?: ApiError
 }
 
 export const AVATAR_SERVICE_BASE_URL = process.env
   .AVATAR_SERVICE_BASE_URL as string
 export const AVATAR_SERVICE_API_KEY = process.env
-  .AVATAR_SERVICE_AVATAR_SERVICE_API_KEY as string
+  .AVATAR_SERVICE_API_KEY as string
 
 export const headers = { Authorization: `Bearer ${AVATAR_SERVICE_API_KEY}` }
 

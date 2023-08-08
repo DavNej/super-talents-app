@@ -21,7 +21,7 @@ export default function ImagePreview({
 
   if (images.length === 0) {
     return (
-      <div className='flex justify-center w-1/2'>
+      <div className='flex justify-center'>
         <Image
           src='/avatar-placeholder.png'
           alt='Avatar'
@@ -35,12 +35,12 @@ export default function ImagePreview({
 
   return (
     <>
-      <div className='flex flex-col justify-center items-center w-1/2'>
-        <h3 className='font-semibold text-center text-4xl'>Select avatar</h3>
+      <div className='flex flex-col justify-center items-center'>
+        <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>Select avatar</h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>
           {images.map((data, idx) => {
-            const isSelected = data === selectedImage
             const dataUrl = dataToUrl(data)
+            const isSelected = dataUrl === selectedImage
             return (
               <div key={idx} className='relative'>
                 <Image
@@ -69,9 +69,9 @@ export default function ImagePreview({
                   height={248}
                   priority
                   onClick={() => {
-                    const _data = !isSelected ? data : ''
+                    const _data = isSelected ? '' : dataUrl
                     setSelectedImage(_data)
-                    onSelect(dataUrl)
+                    onSelect(_data)
                   }}
                 />
               </div>
