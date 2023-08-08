@@ -1,12 +1,13 @@
 'use client'
 
 import { useWeb3Auth } from '@/lib/web3auth'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 import Loader from './components/Loader'
 
 export default function Init() {
   const { isConnected, init, isReady } = useWeb3Auth()
+  const router = useRouter()
 
   React.useEffect(() => {
     init()
@@ -14,9 +15,9 @@ export default function Init() {
 
   React.useEffect(() => {
     if (isReady) {
-      redirect(isConnected ? '/profile/address' : '/login')
+      router.push(isConnected ? '/profile/new/info' : '/login')
     }
-  }, [isConnected, isReady])
+  }, [isConnected, isReady, router])
 
   return (
     <main className='flex-1 flex items-center justify-center'>
