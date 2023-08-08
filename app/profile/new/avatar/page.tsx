@@ -21,14 +21,10 @@ export default function AvatarPage() {
   const [error, setError] = React.useState('')
   const [base64UploadedImage, setBase64UploadedImage] = React.useState('')
 
+  const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
   const [imageOutputs, setImageOutputs] = useLocalStorage<string[]>(
     'avatars',
     []
-  )
-
-  const [selectedAvatar, setSelectedAvatar] = useLocalStorage(
-    'selectedAvatar',
-    ''
   )
 
   const hasImageOutputs = imageOutputs.length > 0
@@ -129,7 +125,7 @@ export default function AvatarPage() {
             </div>
           </div>
         ) : (
-          <ImagePreview images={imageOutputs} onSelect={setSelectedAvatar} />
+          <ImagePreview images={imageOutputs} />
         )}
 
         {error && <Toast message={error} onClose={() => setError('')} />}

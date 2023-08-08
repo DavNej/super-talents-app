@@ -3,21 +3,20 @@ import React from 'react'
 
 import Dialog from '@/app/components/Dialog'
 import clsx from 'clsx'
+import { useLocalStorage } from 'usehooks-ts'
 
 function dataToUrl(data: string) {
   return `data:image/jpeg;base64,` + data
 }
 
-export default function ImagePreview({
-  images,
-  onSelect,
-}: {
-  images: string[]
-  onSelect: (dataUrl: string) => void
-}) {
+export default function ImagePreview({ images }: { images: string[] }) {
   const [showDialog, setShowDialog] = React.useState(false)
   const [dialogImage, setDialogImage] = React.useState('')
-  const [selectedImage, setSelectedImage] = React.useState('')
+
+  const [selectedAvatar, setSelectedAvatar] = useLocalStorage(
+    'selectedAvatar',
+    ''
+  )
 
   if (images.length === 0) {
     return (
@@ -36,11 +35,13 @@ export default function ImagePreview({
   return (
     <>
       <div className='flex flex-col justify-center items-center'>
-        <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>Select avatar</h3>
+        <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>
+          Select avatar
+        </h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>
           {images.map((data, idx) => {
             const dataUrl = dataToUrl(data)
-            const isSelected = dataUrl === selectedImage
+            const isSelected = dataUrl === selectedAvatar
             return (
               <div key={idx} className='relative'>
                 <Image
@@ -70,8 +71,7 @@ export default function ImagePreview({
                   priority
                   onClick={() => {
                     const _data = isSelected ? '' : dataUrl
-                    setSelectedImage(_data)
-                    onSelect(_data)
+                    setSelectedAvatar(_data)
                   }}
                 />
               </div>
