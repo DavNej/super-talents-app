@@ -69,6 +69,7 @@ export default function ChooseAboutDialog({
           ))}
         </div>
         <Button
+          className='w-full'
           onClick={() => {
             onSelectAbout(improvedAbout)
             onClose()

@@ -300,8 +300,9 @@ export default function ProfileForm({
         </fieldset>
 
         <Button
-          onClick={formik.handleSubmit}
-          isDisabled={!formik.dirty || !formik.isValid || formik.isSubmitting}>
+          className='w-full'
+          isDisabled={!formik.dirty || !formik.isValid || formik.isSubmitting}
+          onClick={formik.handleSubmit}>
           Next
         </Button>
       </form>

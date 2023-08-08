@@ -23,7 +23,6 @@ export default function Button({
       className={clsx(
         'py-5',
         'px-8',
-        'w-full',
         'rounded-full',
         'uppercase',
         'font-medium',
@@ -31,6 +30,7 @@ export default function Button({
         'bg-white',
         'border-2',
         'border-white',
+        'whitespace-nowrap',
         isDisabled || isLoading ? 'text-gray-400' : 'text-pink',
         className
       )}

@@ -107,7 +107,7 @@ export default function AvatarPage() {
             </Link>
           ) : (
             <Button
-              className='mt-5'
+              className='mt-5 w-full'
               onClick={() => generateImage()}
               isDisabled={!base64UploadedImage || isLoading}>
               {hasImageOutputs ? 'Regenerate avatar' : 'Generate avatar'}
