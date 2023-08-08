@@ -11,7 +11,7 @@ import ChooseBioDialog from './components/ChooseBioDialog'
 import Chip from '@/app/components/Chip'
 import Image from 'next/image'
 
-const inputClassNames = [
+export const inputClassNames = [
   'py-4',
   'px-8',
   'mt-2',

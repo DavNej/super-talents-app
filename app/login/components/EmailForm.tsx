@@ -1,13 +1,14 @@
 'use client'
 
-import { Formik, Form } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
 import React from 'react'
 
 import Button from '@/app/components/Button'
 import { useWeb3Auth } from '@/lib/web3auth'
-import InputField from '@/app/components/InputField'
+import { inputClassNames } from '@/app/profile/new/info/ProfileForm'
+import clsx from 'clsx'
 
 export default function EmailForm() {
   const { login } = useWeb3Auth()
@@ -24,12 +25,22 @@ export default function EmailForm() {
       }}>
       {({ isSubmitting }) => (
         <Form>
-          <InputField
-            label='Email'
-            name='email'
-            type='email'
-            placeholder='alan@turing.com'
-          />
+          <fieldset>
+            <label htmlFor='email' className='text-sm font-light opacity-70'>
+              Email
+            </label>
+            <Field
+              className={clsx(inputClassNames)}
+              name='email'
+              type='email'
+              placeholder='alan@turing.com'
+            />
+            <ErrorMessage
+              name='email'
+              component='div'
+              className='font-light text-right'
+            />
+          </fieldset>
 
           <Button type='submit' isLoading={isSubmitting} className='mt-5'>
             Continue with email
