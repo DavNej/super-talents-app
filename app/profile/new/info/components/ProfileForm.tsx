@@ -10,11 +10,10 @@ import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 import Toast from '@/app/components/Toast'
 
-import { IFormValues, initialValues, validationSchema } from '../form-utils'
-import type { IProfileData } from '../form-utils'
+import { initialValues, roleCaptions, validationSchema } from '../form-utils'
+import type { IFormValues } from '../form-utils'
 
 import ChooseAboutDialog from './ChooseAboutDialog'
-import { useLocalStorage } from 'usehooks-ts'
 
 export const inputClassNames = [
   'py-4',
@@ -36,28 +35,26 @@ export const inputClassNames = [
 export default function ProfileForm({
   onSubmit,
 }: {
-  onSubmit: (data: IProfileData) => void
+  onSubmit: (data: IFormValues) => void
 }) {
-  const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
-
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (values, { setSubmitting }) => {
-      const profileData: IProfileData = {
+    onSubmit: (values, { setSubmitting }) => {
+      const profileData: IFormValues = {
         name: values.name,
         about: values.about,
+        handle: values.handle,
         skills: values.skills,
         // skills_raw: values.skills.join(','),
         github: values.github,
         otherLink: values.otherLink,
         portefolio: values.portefolio,
         twitter: values.twitter,
-        picture: selectedAvatar,
         role: values.role,
       }
 
-      await onSubmit(profileData)
+      onSubmit(profileData)
       setSubmitting(false)
     },
   })
@@ -285,9 +282,9 @@ export default function ProfileForm({
               <option disabled value=''>
                 -- Choose role --
               </option>
-              <option value='seller'>Talent seeking project</option>
-              <option value='buyer'>Client seeking talent</option>
-              <option value='both'>Both</option>
+              <option value='seller'>{roleCaptions.seller}</option>
+              <option value='buyer'>{roleCaptions.buyer}</option>
+              <option value='both'>{roleCaptions.both}</option>
             </select>
 
             <div className='pointer-events-none absolute inset-y-0 right-8 flex items-center'>

@@ -9,8 +9,15 @@ export interface IFormValues {
   github: string
   twitter: string
   portefolio: string
-  role: 'buyer' | 'seller' | 'both' | ''
+  role: 'buyer' | 'seller' | 'both'
 }
+
+export const roleCaptions = {
+  seller: 'Talent seeking projects',
+  buyer: 'Client seeking talents',
+  both: 'Client seeking for talent and vice versa',
+}
+
 export interface IProfileData {
   name: string
   about: string
