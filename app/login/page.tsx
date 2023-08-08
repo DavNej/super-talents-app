@@ -5,9 +5,18 @@ import Image from 'next/image'
 import LoginSection from './components/LoginSection'
 import { useWeb3Auth } from '@/lib/web3auth'
 import { redirect } from 'next/navigation'
+import Toast from '../components/Toast'
 
 export default function LoginPage() {
-  const { isReady } = useWeb3Auth()
+  const { isReady, error } = useWeb3Auth()
+
+  const [errorMessage, setErrorMessage] = React.useState(error?.message || '')
+
+  React.useEffect(() => {
+    if (error) {
+      setErrorMessage(error.message)
+    }
+  }, [error])
 
   return !isReady ? (
     redirect('/')
@@ -47,6 +56,10 @@ export default function LoginPage() {
         </ul>
       </div>
       <LoginSection />
+
+      {errorMessage && (
+        <Toast message={errorMessage} onClose={() => setErrorMessage('')} />
+      )}
     </main>
   )
 }

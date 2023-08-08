@@ -10,6 +10,7 @@ import type { ChatCompletionResponseMessage } from 'openai'
 import ChooseBioDialog from './components/ChooseBioDialog'
 import Chip from '@/app/components/Chip'
 import Image from 'next/image'
+import Toast from '@/app/components/Toast'
 
 export const inputClassNames = [
   'py-4',
@@ -53,6 +54,7 @@ export default function ProfileForm() {
     )
 
     if (!res.ok) {
+      setError(res.error.message)
       setIsBioLoading(false)
       return
     }
@@ -293,6 +295,8 @@ export default function ProfileForm() {
           setOpenDialog(false)
         }}
       />
+
+      {error && <Toast message={error} onClose={() => setError('')} />}
     </>
   )
 }

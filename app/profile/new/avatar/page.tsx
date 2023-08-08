@@ -60,7 +60,7 @@ export default function AvatarPage() {
       setIsLoading(false)
       return
     }
-    
+
     const id = res.data.id
     if (id) {
       setJobId(id)
@@ -122,14 +122,7 @@ export default function AvatarPage() {
         )}
       </div>
 
-      {!!error && (
-        <Toast
-          message={error}
-          onClose={() => {
-            setError('')
-          }}
-        />
-      )}
+      {error && <Toast message={error} onClose={() => setError('')} />}
     </main>
   )
 }

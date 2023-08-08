@@ -14,7 +14,6 @@ export default function LoginSection() {
       <h3 className='font-semibold text-5xl mb-14 whitespace-nowrap'>
         Let’s get started
       </h3>
-      {/* <p className='font-light text-lg'>Lorem ipsum dolor sit amet consectetur. </p> */}
       <p className='mb-8 font-normal text-xl uppercase'>Continue with</p>
       <ul className='flex justify-between'>
         {loginProviders.map(provider => (
