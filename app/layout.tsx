@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Web3AuthProvider } from '@/app/hooks/web3auth'
+import { ProfileProvider } from '@/app/hooks/profile'
 
 import './globals.css'
 
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
-        <Web3AuthProvider>{children}</Web3AuthProvider>
+        <ProfileProvider>
+          <Web3AuthProvider>{children}</Web3AuthProvider>
+        </ProfileProvider>
       </body>
     </html>
   )

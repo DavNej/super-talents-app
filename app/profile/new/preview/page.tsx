@@ -3,24 +3,18 @@
 import React from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import Image from 'next/image'
+import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 import BackLink from '@/app/components/BackLink'
-
-import {
-  roleCaptions,
-  type IFormValues,
-  type IProfileData,
-} from '../info/form-utils'
 import Button from '@/app/components/Button'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
 
+import type { IProfileData } from '@/app/hooks/profile/types'
+import { roleCaptions } from '../info/form-utils'
+import { useProfile } from '@/app/hooks/profile'
 
 export default function ProfilePreviewPage() {
-  const [profile] = useLocalStorage<IFormValues | null>(
-    'SuperTalentProfile',
-    null
-  )
+  const { profile } = useProfile()
   const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
 
   function onSubmit(data: IProfileData) {
@@ -28,7 +22,7 @@ export default function ProfilePreviewPage() {
     // mintTalentLayerID(handle, dataUri, plateformId)
   }
 
-  if (!profile) redirect('/login')
+  if (!profile.handle) redirect('/login')
 
   return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>

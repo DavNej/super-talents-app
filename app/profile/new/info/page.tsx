@@ -1,18 +1,15 @@
 'use client'
 
 import React from 'react'
-import { useLocalStorage } from 'usehooks-ts'
 
 import BackLink from '@/app/components/BackLink'
 import ProfileForm from './components/ProfileForm'
-import type { IFormValues } from './form-utils'
+import type { IFormValues } from '@/app/hooks/profile/types'
 import { useRouter } from 'next/navigation'
+import { useProfile } from '@/app/hooks/profile'
 
 export default function ProfileInfoPage() {
-  const [_, setProfile] = useLocalStorage<IFormValues | null>(
-    'SuperTalentProfile',
-    null
-  )
+  const { setProfile } = useProfile()
 
   const { push } = useRouter()
 

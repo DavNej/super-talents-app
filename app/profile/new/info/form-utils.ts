@@ -1,46 +1,9 @@
 import * as Yup from 'yup'
 
-export interface IFormValues {
-  handle: string
-  name: string
-  about: string
-  skills: string[]
-  otherLink: string
-  github: string
-  twitter: string
-  portefolio: string
-  role: 'buyer' | 'seller' | 'both'
-}
-
 export const roleCaptions = {
   seller: 'Talent seeking projects',
   buyer: 'Client seeking talents',
   both: 'Client seeking for talent and vice versa',
-}
-
-export interface IProfileData {
-  name: string
-  about: string
-  skills: string[]
-  // skills_raw: string
-  github: string
-  otherLink: string
-  portefolio: string
-  twitter: string
-  picture: string
-  role: 'buyer' | 'seller' | 'both' | ''
-}
-
-export const initialValues: IFormValues = {
-  handle: '',
-  name: '',
-  about: '',
-  skills: [],
-  github: '',
-  otherLink: '',
-  portefolio: '',
-  twitter: '',
-  role: '',
 }
 
 export const validationSchema = Yup.object().shape({

@@ -4,14 +4,16 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import type { ChatCompletionResponseMessage } from 'openai'
 
+import { cn } from '@/lib'
 import { handleExists } from '@/lib/talent-layer/utils'
 import fetcher from '@/lib/fetcher'
 import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 import Toast from '@/app/components/Toast'
 
-import { initialValues, roleCaptions, validationSchema } from '../form-utils'
-import type { IFormValues } from '../form-utils'
+import { roleCaptions, validationSchema } from '../form-utils'
+import { useProfile } from '@/app/hooks/profile'
+import type { IFormValues } from '@/app/hooks/profile/types'
 
 import ChooseAboutDialog from './ChooseAboutDialog'
 
@@ -37,8 +39,10 @@ export default function ProfileForm({
 }: {
   onSubmit: (data: IFormValues) => void
 }) {
+  const { profile } = useProfile()
+
   const formik = useFormik({
-    initialValues,
+    initialValues: profile,
     validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       const profileData: IFormValues = {
@@ -144,6 +148,7 @@ export default function ProfileForm({
           <input
             className={clsx(inputClassNames)}
             onChange={formik.handleChange}
+            value={formik.values.handle}
             onBlur={async e => {
               formik.handleBlur(e)
               if (formik.errors.handle) return
@@ -169,6 +174,7 @@ export default function ProfileForm({
             onBlur={formik.handleBlur}
             type='text'
             name='name'
+            value={formik.values.name}
             placeholder='Choose a Full Name (ex: Alan Turing)'
           />
         </fieldset>
@@ -200,6 +206,7 @@ export default function ProfileForm({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             name='portefolio'
+            value={formik.values.portefolio}
             placeholder='Add portefolio'
           />
 
@@ -212,6 +219,7 @@ export default function ProfileForm({
             type='text'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            value={formik.values.twitter}
             name='twitter'
             placeholder='Add Twitter link'
           />
@@ -225,6 +233,7 @@ export default function ProfileForm({
             type='text'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            value={formik.values.github}
             name='github'
             placeholder='Add Github link'
           />
@@ -239,6 +248,7 @@ export default function ProfileForm({
             type='text'
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            value={formik.values.otherLink}
             name='otherLink'
             placeholder='Add other link'
           />
@@ -267,11 +277,12 @@ export default function ProfileForm({
         </fieldset>
         <fieldset id='role'>
           <SimpleLabel name='role'>Role</SimpleLabel>
-          <div className='relative mt-2'>
+          <div className='relative box-border mt-2'>
             <select
               name='role'
-              defaultValue=''
-              className={clsx(
+              // defaultValue=''
+              value={formik.values.role}
+              className={cn(
                 'appearance-none',
                 inputClassNames,
                 'mt-0',
