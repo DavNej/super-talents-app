@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Web3AuthProvider } from '@/lib/web3auth'
+import { Web3AuthProvider } from '@/app/hooks/web3auth'
 
 import './globals.css'
 

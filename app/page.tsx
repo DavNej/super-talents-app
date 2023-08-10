@@ -1,6 +1,6 @@
 'use client'
 
-import { useWeb3Auth } from '@/lib/web3auth'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import Loader from './components/Loader'

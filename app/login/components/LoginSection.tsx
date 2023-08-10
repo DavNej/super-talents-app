@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import React from 'react'
-import { useWeb3Auth } from '@/lib/web3auth'
-import { loginProviders } from '@/lib/web3auth/config'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
+import { loginProviders } from '@/app/hooks/web3auth/config'
 import EmailForm from './EmailForm'
 
 export default function LoginSection() {

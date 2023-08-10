@@ -7,7 +7,7 @@ import { web3auth as _web3auth } from './config'
 import type { LoginProvider } from './config'
 import { ethers } from 'ethers'
 import { redirect } from 'next/navigation'
-import { ApiError, parseApiError } from '../fetcher'
+import { ApiError, parseApiError } from '@/lib/fetcher'
 
 const Web3AuthContext = React.createContext<{
   web3auth: Web3AuthNoModal

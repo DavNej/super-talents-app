@@ -1,6 +1,6 @@
 'use client'
 
-import { useWeb3Auth } from '@/lib/web3auth'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
 import Toast from './Toast'
 import React from 'react'
 

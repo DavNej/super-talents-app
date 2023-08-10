@@ -1,7 +1,7 @@
 'use client'
 
 import LogoutButton from '@/app/components/LogoutButton'
-import { useWeb3Auth } from '@/lib/web3auth'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { usePathname, redirect } from 'next/navigation'
 import React from 'react'
 

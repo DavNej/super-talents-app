@@ -3,7 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import LoginSection from './components/LoginSection'
-import { useWeb3Auth } from '@/lib/web3auth'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { redirect } from 'next/navigation'
 import Toast from '../components/Toast'
 
