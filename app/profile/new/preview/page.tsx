@@ -50,9 +50,9 @@ export default function ProfilePreviewPage() {
 
           <div className='px-14 py-11 flex gap-14'>
             <div className='w-1/2 flex flex-col gap-8'>
-              <div className='flex gap-8'>
+              <div className='flex gap-8 items-start'>
                 <Image
-                  className='rounded-full row-span-4'
+                  className='rounded-full'
                   src={selectedAvatar}
                   alt='logo'
                   width={172}
@@ -63,7 +63,7 @@ export default function ProfilePreviewPage() {
                   <p className='font-semibold text-2xl'>{profile.name}</p>
                   <p className='font-light'>@{profile.handle}</p>
                   <p className='font-normal text-pink whitespace-nowrap'>
-                    {roleCaptions[profile.role]}
+                    {profile.role && roleCaptions[profile.role]}
                   </p>
                   <p className='font-light text-justify'>{profile.about}</p>
                 </div>
@@ -142,11 +142,11 @@ export default function ProfilePreviewPage() {
                       />
                     </Link>
                   )}
-                  {profile.portefolio && (
-                    <Link href={profile.portefolio} className='py-2 px-4'>
+                  {profile.otherLink && (
+                    <Link href={profile.otherLink} className='py-2 px-4'>
                       <Image
                         src='/pink-portefolio.svg'
-                        alt='portefolio'
+                        alt='otherLink'
                         width={32}
                         height={32}
                         priority
