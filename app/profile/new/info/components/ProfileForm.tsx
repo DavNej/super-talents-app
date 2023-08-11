@@ -280,7 +280,6 @@ export default function ProfileForm({
           <div className='relative box-border mt-2'>
             <select
               name='role'
-              // defaultValue=''
               value={formik.values.role}
               className={cn(
                 'appearance-none',
@@ -312,7 +311,7 @@ export default function ProfileForm({
 
         <Button
           className='w-full'
-          isDisabled={!formik.dirty || !formik.isValid || formik.isSubmitting}
+          isDisabled={!formik.isValid || formik.isSubmitting}
           onClick={formik.handleSubmit}>
           Next
         </Button>

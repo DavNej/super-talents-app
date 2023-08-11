@@ -6,7 +6,7 @@ import React from 'react'
 import Loader from './components/Loader'
 
 export default function Init() {
-  const { isConnected, init, isReady } = useWeb3Auth()
+  const { init, status } = useWeb3Auth()
   const router = useRouter()
 
   React.useEffect(() => {
@@ -14,10 +14,14 @@ export default function Init() {
   }, [init])
 
   React.useEffect(() => {
-    if (isReady) {
-      router.push(isConnected ? '/profile/new/info' : '/login')
+    if (status === 'ready') {
+      router.push('/login')
     }
-  }, [isConnected, isReady, router])
+
+    if (status === 'connected') {
+      router.push('/profile/new/avatar')
+    }
+  }, [status, router])
 
   return (
     <main className='flex-1 flex items-center justify-center'>

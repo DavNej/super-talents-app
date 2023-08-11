@@ -12,8 +12,9 @@ export const initialValues: IFormValues = {
   otherLink: '',
   portefolio: '',
   twitter: '',
-  role: 'seller',
+  role: '',
 }
+
 const ProfileContext = React.createContext<{
   profile: IFormValues
   setProfile: React.Dispatch<React.SetStateAction<IFormValues>>

@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-
 import BackLink from '@/app/components/BackLink'
 import ProfileForm from './components/ProfileForm'
 import type { IFormValues } from '@/app/hooks/profile/types'
@@ -10,7 +9,6 @@ import { useProfile } from '@/app/hooks/profile'
 
 export default function ProfileInfoPage() {
   const { setProfile } = useProfile()
-
   const { push } = useRouter()
 
   function onSubmit(data: IFormValues) {

@@ -5,7 +5,7 @@ export interface IFormValues {
   name: string
   about: string
   skills: string[]
-  role: Role
+  role: Role | ''
   github: string
   twitter: string
   portefolio: string

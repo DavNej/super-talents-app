@@ -2,7 +2,7 @@
 
 import LogoutButton from '@/app/components/LogoutButton'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
-import { usePathname, redirect } from 'next/navigation'
+import { redirect, usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function ProgressBarLayout({
@@ -11,13 +11,22 @@ export default function ProgressBarLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const { isReady, isConnected } = useWeb3Auth()
+  const { status } = useWeb3Auth()
+
+  const router = useRouter()
 
   React.useEffect(() => {
-    redirect(isConnected ? '/profile/address' : '/login')
-  }, [isConnected, isReady])
+    if (status === 'not_ready') {
+      router.push('/')
+    }
 
-  if (!isReady) return redirect('/')
+    if (!(status === 'connected')) {
+      router.push('/login')
+    }
+  }, [status, router])
+
+  if (status === 'not_ready') redirect('/')
+  if (!(status === 'connected')) redirect('/login')
 
   return (
     <>

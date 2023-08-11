@@ -1,12 +1,12 @@
 'use client'
 
 import * as React from 'react'
+import type { ADAPTER_STATUS_TYPE } from '@web3auth/base'
 import { WALLET_ADAPTERS } from '@web3auth/base'
 import type { Web3AuthNoModal } from '@web3auth/no-modal'
 import { web3auth as _web3auth } from './config'
 import type { LoginProvider } from './config'
 import { ethers } from 'ethers'
-import { redirect } from 'next/navigation'
 import { ApiError, parseApiError } from '@/lib/fetcher'
 
 const Web3AuthContext = React.createContext<{
@@ -17,8 +17,7 @@ const Web3AuthContext = React.createContext<{
   error: ApiError | null
   getSigner: Function
   signer: ethers.JsonRpcSigner | null
-  isReady: boolean
-  isConnected: boolean
+  status: ADAPTER_STATUS_TYPE
 }>({
   web3auth: _web3auth,
   init: () => {},
@@ -27,8 +26,7 @@ const Web3AuthContext = React.createContext<{
   login: () => {},
   signer: null,
   error: null,
-  isReady: false,
-  isConnected: false,
+  status: 'not_ready',
 })
 
 export function useWeb3Auth() {
@@ -44,28 +42,25 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
   const web3auth = web3authRef.current
 
   const [error, setError] = React.useState<ApiError | null>(null)
-
-  const [isReady, setIsReady] = React.useState(false)
-  const [isConnected, setIsConnected] = React.useState(false)
   const [signer, setSigner] = React.useState<ethers.JsonRpcSigner | null>(null)
+  const [status, setStatus] = React.useState<ADAPTER_STATUS_TYPE>('not_ready')
 
   const getSigner = React.useCallback(async () => {
     if (web3auth.provider) {
       const provider = new ethers.BrowserProvider(web3auth.provider)
       const _signer = await provider.getSigner()
+      console.log('🦋 | getSigner | _signer', _signer)
       setSigner(_signer)
     }
   }, [web3auth.provider])
 
   const init = React.useCallback(async () => {
     if (web3auth.status === 'disconnected' || web3auth.status === 'not_ready') {
-      console.log('🦋 | React.useEffect | web3auth', web3auth)
       web3auth
         .init()
         .then(() => {
-          setIsReady(true)
+          setStatus(web3auth.status)
           if (web3auth.status === 'connected') {
-            setIsConnected(true)
             getSigner()
           }
         })
@@ -85,31 +80,33 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
 
       await web3auth
         .connectTo(WALLET_ADAPTERS.OPENLOGIN, loginParams)
-        .then(res => {
-          redirect('/profile/new/info')
+        .then(async res => {
+          console.log('logged in')
+          setStatus(web3auth.status)
+          await getSigner()
         })
         .catch(err => {
           const _error = parseApiError(err)
           setError(_error)
         })
     },
-    [web3auth]
+    [getSigner, web3auth]
   )
 
   const logout = React.useCallback(async () => {
-    if (web3auth.status === 'connected') {
-      await web3auth
-        .logout()
-        .then(res => {
-          setSigner(null)
-          setIsConnected(false)
-          redirect('/login')
-        })
-        .catch(err => {
-          const _error = parseApiError(err)
-          setError(_error)
-        })
-    }
+    if (!(web3auth.status === 'connected')) return
+
+    await web3auth
+      .logout()
+      .then(res => {
+        console.log('logged out')
+        setSigner(null)
+        setStatus(web3auth.status)
+      })
+      .catch(err => {
+        const _error = parseApiError(err)
+        setError(_error)
+      })
   }, [web3auth])
 
   const value = React.useMemo(
@@ -119,22 +116,11 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
       logout,
       login,
       signer,
-      isReady,
-      isConnected,
+      status,
       getSigner,
       error,
     }),
-    [
-      web3auth,
-      init,
-      logout,
-      login,
-      error,
-      signer,
-      isReady,
-      isConnected,
-      getSigner,
-    ]
+    [web3auth, init, logout, login, error, signer, getSigner, status]
   )
 
   return <Web3AuthContext.Provider value={value} {...props} />

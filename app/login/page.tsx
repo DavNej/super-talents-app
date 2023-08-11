@@ -4,11 +4,12 @@ import React from 'react'
 import Image from 'next/image'
 import LoginSection from './components/LoginSection'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import Toast from '../components/Toast'
 
 export default function LoginPage() {
-  const { isReady, error } = useWeb3Auth()
+  const { status, error } = useWeb3Auth()
+  const router = useRouter()
 
   const [errorMessage, setErrorMessage] = React.useState(error?.message || '')
 
@@ -18,13 +19,25 @@ export default function LoginPage() {
     }
   }, [error])
 
-  return !isReady ? (
-    redirect('/')
-  ) : (
+  React.useEffect(() => {
+    console.log('🦋 | React.useEffect | status', status)
+    if (status === 'not_ready') {
+      router.push('/')
+    }
+
+    if (status === 'connected') {
+      router.push('/profile/new/avatar')
+    }
+  }, [status, router])
+
+  if (status === 'not_ready') redirect('/')
+  if (status === 'connected') redirect('/profile/new/avatar')
+
+  return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>
         <Image
-          className='relative '
+          className='relative'
           src='/mask.png'
           alt='Next.js Logo'
           width={128}

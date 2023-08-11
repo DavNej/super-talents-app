@@ -5,7 +5,8 @@ import Toast from './Toast'
 import React from 'react'
 
 export default function LogoutButton() {
-  const { logout, isConnected, error } = useWeb3Auth()
+  const { logout, error, status } = useWeb3Auth()
+
   const [errorMessage, setErrorMessage] = React.useState(error?.message || '')
 
   React.useEffect(() => {
@@ -14,7 +15,7 @@ export default function LogoutButton() {
     }
   }, [error])
 
-  if (!isConnected) return null
+  if (!(status === 'connected')) return null
 
   return (
     <>
