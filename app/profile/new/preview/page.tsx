@@ -14,6 +14,7 @@ import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 import { useProfile } from '@/app/hooks/profile'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
+import { mintTalentLayerId, updateProfileData } from '@/lib/talent-layer'
 
 export default function ProfilePreviewPage() {
   const { profile } = useProfile()
