@@ -58,7 +58,7 @@ export async function getTalentLayerUser(
 export async function handleExists(handle: string): Promise<boolean | null> {
   const query = `
   {
-    users(where: {handle_contains_nocase: "${handle}"}, first: 1) {
+    users(where: {handle: "${handle}"}, first: 1) {
       id
     }
   }
@@ -66,7 +66,7 @@ export async function handleExists(handle: string): Promise<boolean | null> {
 
   const res = await processRequest<ITalentLayerResponse>(query)
 
-  if (res === null) {
+  if (!res) {
     toast.error('Could not check handle availability')
     return null
   }

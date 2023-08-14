@@ -1,3 +1,4 @@
+import { handleExists } from '@/lib/talent-layer'
 import * as Yup from 'yup'
 
 export const roleCaptions = {
@@ -8,9 +9,15 @@ export const roleCaptions = {
 
 export const validationSchema = Yup.object().shape({
   handle: Yup.string()
-    .min(2, 'Handle too short')
-    .max(10, 'Handle too long')
-    .required(),
+    .required('Please choose a username')
+    .min(5, 'Handle too short')
+    .max(31, 'Handle too long')
+    .matches(/^([a-z|\-|\_])+$/, 'Must contain only letters, - or _')
+    .test('handle-available', 'Handle is yo taken', handle =>
+      handleExists(handle)
+        .then(res => !res)
+        .catch(err => !err)
+    ),
   name: Yup.string()
     .min(2, 'Name too short')
     .max(140, 'Name too long')

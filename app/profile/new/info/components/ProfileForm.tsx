@@ -5,7 +5,6 @@ import Image from 'next/image'
 import type { ChatCompletionResponseMessage } from 'openai'
 
 import { cn } from '@/lib'
-import { handleExists } from '@/lib/talent-layer'
 import fetcher from '@/lib/fetcher'
 import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
@@ -50,7 +49,6 @@ export default function ProfileForm({
         about: values.about,
         handle: values.handle,
         skills: values.skills,
-        // skills_raw: values.skills.join(','),
         github: values.github,
         otherLink: values.otherLink,
         portefolio: values.portefolio,
@@ -66,7 +64,6 @@ export default function ProfileForm({
   const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [isAboutLoading, setIsAboutLoading] = React.useState(false)
-  const [isHandleAvailable, setIsHandleAvailable] = React.useState(false)
   const [skill, setSkill] = React.useState('')
 
   async function improveAbout() {
@@ -139,7 +136,7 @@ export default function ProfileForm({
           <SimpleLabel name='handle'>
             <div className='flex justify-between'>
               <span>Handle</span>
-              {isHandleAvailable && (
+              {formik.touched.handle && !formik.errors.handle && (
                 <span className='text-sm text-green'>Handle available</span>
               )}
             </div>
@@ -148,18 +145,7 @@ export default function ProfileForm({
             className={clsx(inputClassNames)}
             onChange={formik.handleChange}
             value={formik.values.handle}
-            onBlur={async e => {
-              formik.handleBlur(e)
-              if (formik.errors.handle) return
-
-              const isHandleTaken = await handleExists(e.currentTarget.value)
-              if (typeof isHandleTaken === 'boolean') {
-                setIsHandleAvailable(!isHandleTaken)
-                if (isHandleTaken) {
-                  formik.setFieldError('handle', 'Handle already taken')
-                }
-              }
-            }}
+            onBlur={formik.handleBlur}
             type='text'
             name='handle'
             placeholder='Choose a profile handle (ex: alanturing)'
