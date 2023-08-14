@@ -32,7 +32,7 @@ export function buildPayload(image: string) {
       low_threshold: '100',
       high_threshold: '200',
       guidance_scale: '10',
-      seed: '4389562978424',
+      seed: '-1',
       no_of_images: 4,
       image,
     },

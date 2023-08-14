@@ -99,6 +99,10 @@ export default function AvatarPage() {
             onSuccess={onUploadSuccess}
             onError={err => setError(err)}
           />
+          <p className='mt-4 ml-4 font-light text-xs opacity-70'>
+            For optimal results, please upload a high-quality picture with a
+            clean background
+          </p>
           {!!selectedAvatar ? (
             <Link
               className='mt-5 py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-xl bg-white text-pink'

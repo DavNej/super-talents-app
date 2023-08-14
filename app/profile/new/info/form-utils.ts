@@ -1,9 +1,9 @@
 import * as Yup from 'yup'
 
 export const roleCaptions = {
-  seller: 'Talent seeking projects',
-  buyer: 'Client seeking talents',
-  both: 'Client seeking for talent and vice versa',
+  seller: 'Talent',
+  buyer: 'Client',
+  both: 'Both',
 }
 
 export const validationSchema = Yup.object().shape({
