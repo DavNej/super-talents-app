@@ -20,8 +20,10 @@ export default function ProfilePreviewPage() {
   const { profile } = useProfile()
   const { signer } = useWeb3Auth()
   const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
+  const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
+  const [isMinting, setIsMinting] = React.useState(false)
 
-  function onSubmit() {
+  async function onSubmit() {
     if (!profile.role || !signer?.address) {
       console.error('missing role or signer')
       console.error('profile.role', profile.role)
@@ -35,7 +37,6 @@ export default function ProfilePreviewPage() {
       about: profile.about,
       skills: profile.skills,
       picture: selectedAvatar,
-      // skills_raw: string
       role: profile.role,
 
       /* SuperTalents Additionnal */
@@ -45,12 +46,15 @@ export default function ProfilePreviewPage() {
       otherLink: profile.otherLink,
     }
 
-    uploadToPinata(profileData, signer.address, ipfsHash => {
-      console.log({ ipfsHash })
-    })
-    // mintTalentLayerID(handle, dataUri, plateformId)
+    setIsMinting(true)
+    const ipfsHash = await uploadToPinata(profileData, signer.address)
+    if (!ipfsHash) {
+      setIsMinting(false)
+      return
+    }
+    setIsMinting(false)
   }
-
+  
   if (!profile.handle) redirect('/login')
 
   return (
@@ -61,7 +65,9 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          <Button onClick={onSubmit}>Mint your profile NFT</Button>
+          <Button isLoading={isMinting} onClick={onSubmit}>
+            Mint my profile NFT
+          </Button>
         </div>
         <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
           <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>

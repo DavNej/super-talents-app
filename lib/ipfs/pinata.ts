@@ -1,13 +1,30 @@
 import type { AddressLike } from 'ethers'
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 import type { IProfileData } from '@/app/hooks/profile/types'
 
 const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
-type Args = [string, FormData | string, AxiosRequestConfig]
+type Args = [string, string, AxiosRequestConfig]
+
+export async function uploadToPinata(
+  profileData: IProfileData,
+  ownerAddress: AddressLike
+): Promise<string | null> {
+  const axiosArgs = buildPinJsonArgs(profileData, ownerAddress)
+
+  try {
+    const res = await axios.post<{ IpfsHash: string }>(...axiosArgs)
+    return res.data.IpfsHash
+  } catch (err) {
+    console.error(err)
+    toast.error('Could not upload profile info')
+    return null
+  }
+}
 
 function buildPinJsonArgs(
   profileData: IProfileData,
@@ -25,16 +42,4 @@ function buildPinJsonArgs(
   }
 
   return [baseUrl + '/pinJSONToIPFS', data, { headers }]
-}
-
-export function uploadToPinata(
-  profileData: IProfileData,
-  ownerAddress: AddressLike,
-  callback: (ipfsHash: string) => void
-) {
-  const axiosArgs = buildPinJsonArgs(profileData, ownerAddress)
-
-  axios.post(...axiosArgs).then(res => {
-    callback(res.data.IpfsHash)
-  })
 }
