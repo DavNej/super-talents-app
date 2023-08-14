@@ -6,7 +6,6 @@ import { useInterval, useLocalStorage } from 'usehooks-ts'
 
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
-import Toast from '@/app/components/Toast'
 import fetcher from '@/lib/fetcher'
 
 import type { AvatarResponse } from './generate/config'
@@ -14,11 +13,11 @@ import type { AvatarResponse } from './generate/config'
 import Loader from '@/app/components/Loader'
 import ImagePreview from './components/ImagePreview'
 import UploadFile from './components/UploadFile'
+import { toast } from 'react-toastify'
 
 export default function AvatarPage() {
   const [jobId, setJobId] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
-  const [error, setError] = React.useState('')
   const [base64UploadedImage, setBase64UploadedImage] = React.useState('')
 
   const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
@@ -52,7 +51,7 @@ export default function AvatarPage() {
     )
 
     if (!res.ok) {
-      setError(res.error.message)
+      toast.error(res.error.message)
       setIsLoading(false)
       return
     }
@@ -70,7 +69,7 @@ export default function AvatarPage() {
     )
 
     if (!res.ok) {
-      setError(res.error.message)
+      toast.error(res.error.message)
       setIsLoading(false)
       return
     }
@@ -95,14 +94,14 @@ export default function AvatarPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Create Your Avatar
           </h3>
-          <UploadFile
-            onSuccess={onUploadSuccess}
-            onError={err => setError(err)}
-          />
+
+          <UploadFile onSuccess={onUploadSuccess} />
+
           <p className='mt-4 ml-4 font-light text-xs opacity-70'>
             For optimal results, please upload a high-quality picture with a
             clean background
           </p>
+
           {!!selectedAvatar ? (
             <Link
               className='mt-5 py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-xl bg-white text-pink'
@@ -131,8 +130,6 @@ export default function AvatarPage() {
         ) : (
           <ImagePreview images={imageOutputs} />
         )}
-
-        {error && <Toast message={error} onClose={() => setError('')} />}
       </div>
     </main>
   )

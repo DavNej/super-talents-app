@@ -5,17 +5,15 @@ import Image from 'next/image'
 import LoginSection from './components/LoginSection'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { redirect, useRouter } from 'next/navigation'
-import Toast from '../components/Toast'
+import { toast } from 'react-toastify'
 
 export default function LoginPage() {
   const { status, error } = useWeb3Auth()
   const router = useRouter()
 
-  const [errorMessage, setErrorMessage] = React.useState(error?.message || '')
-
   React.useEffect(() => {
     if (error) {
-      setErrorMessage(error.message)
+      toast(error.message)
     }
   }, [error])
 
@@ -39,7 +37,7 @@ export default function LoginPage() {
         <Image
           className='relative'
           src='/mask.png'
-          alt='Next.js Logo'
+          alt='SuperTalents Logo'
           width={128}
           height={48}
           priority
@@ -69,10 +67,6 @@ export default function LoginPage() {
         </ul>
       </div>
       <LoginSection />
-
-      {errorMessage && (
-        <Toast message={errorMessage} onClose={() => setErrorMessage('')} />
-      )}
     </main>
   )
 }

@@ -5,17 +5,17 @@ import Image from 'next/image'
 import type { ChatCompletionResponseMessage } from 'openai'
 
 import { cn } from '@/lib'
-import { handleExists } from '@/lib/talent-layer/utils'
+import { handleExists } from '@/lib/talent-layer'
 import fetcher from '@/lib/fetcher'
 import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
-import Toast from '@/app/components/Toast'
 
 import { roleCaptions, validationSchema } from '../form-utils'
 import { useProfile } from '@/app/hooks/profile'
 import type { IFormValues } from '@/app/hooks/profile/types'
 
 import ChooseAboutDialog from './ChooseAboutDialog'
+import { toast } from 'react-toastify'
 
 export const inputClassNames = [
   'py-4',
@@ -65,7 +65,6 @@ export default function ProfileForm({
 
   const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
-  const [error, setError] = React.useState('')
   const [isAboutLoading, setIsAboutLoading] = React.useState(false)
   const [isHandleAvailable, setIsHandleAvailable] = React.useState(false)
   const [skill, setSkill] = React.useState('')
@@ -79,7 +78,7 @@ export default function ProfileForm({
     )
 
     if (!res.ok) {
-      setError(res.error.message)
+      toast.error(res.error.message)
       setIsAboutLoading(false)
       return
     }
@@ -327,8 +326,6 @@ export default function ProfileForm({
           setOpenDialog(false)
         }}
       />
-
-      {error && <Toast message={error} onClose={() => setError('')} />}
     </>
   )
 }

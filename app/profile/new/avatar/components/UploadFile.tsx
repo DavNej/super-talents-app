@@ -5,15 +5,16 @@ import React from 'react'
 
 import useImageProcessing from '../hooks/useImageProcessing'
 import useDropzone from '../hooks/useDropzone'
+import { toast } from 'react-toastify'
 
 export default function UploadFile({
-  onError,
   onSuccess,
 }: {
   onSuccess: (dataUrl: string) => unknown
-  onError: (error: string) => unknown
 }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null)
+
+  const onError = toast.error
 
   const { file, handleDrop, handleDragOver, handleFileChange } = useDropzone({
     onError,

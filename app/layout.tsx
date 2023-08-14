@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Web3AuthProvider } from '@/app/hooks/web3auth'
 import { ProfileProvider } from '@/app/hooks/profile'
+import Toast from '@/app/components/Toast'
 
 import './globals.css'
 
@@ -21,6 +22,7 @@ export default function RootLayout({
         <ProfileProvider>
           <Web3AuthProvider>{children}</Web3AuthProvider>
         </ProfileProvider>
+        <Toast />
       </body>
     </html>
   )
