@@ -5,20 +5,48 @@ import { useLocalStorage } from 'usehooks-ts'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { uploadToPinata } from '@/lib/ipfs/pinata'
+import { roleCaptions } from '../info/form-utils'
+
+import type { IProfileData } from '@/app/hooks/profile/types'
 
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
-
-import type { IProfileData } from '@/app/hooks/profile/types'
-import { roleCaptions } from '../info/form-utils'
 import { useProfile } from '@/app/hooks/profile'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
 
 export default function ProfilePreviewPage() {
   const { profile } = useProfile()
+  const { signer } = useWeb3Auth()
   const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
 
-  function onSubmit(data: IProfileData) {
-    // uplaodToPinata(data)
+  function onSubmit() {
+    if (!profile.role || !signer?.address) {
+      console.error('missing role or signer')
+      console.error('profile.role', profile.role)
+      console.error('signer', signer)
+      return
+    }
+
+    const profileData: IProfileData = {
+      /* TalentLayer */
+      name: profile.name,
+      about: profile.about,
+      skills: profile.skills,
+      picture: selectedAvatar,
+      // skills_raw: string
+      role: profile.role,
+
+      /* SuperTalents Additionnal */
+      github: profile.github,
+      twitter: profile.twitter,
+      portefolio: profile.portefolio,
+      otherLink: profile.otherLink,
+    }
+
+    uploadToPinata(profileData, signer.address, ipfsHash => {
+      console.log({ ipfsHash })
+    })
     // mintTalentLayerID(handle, dataUri, plateformId)
   }
 
@@ -32,7 +60,7 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          <Button onClick={() => {}}>Mint your profile NFT</Button>
+          <Button onClick={onSubmit}>Mint your profile NFT</Button>
         </div>
         <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
           <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>

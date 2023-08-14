@@ -13,14 +13,17 @@ export interface IFormValues {
 }
 
 export interface IProfileData {
+  /* TalentLayer */
   name: string
   about: string
   skills: string[]
+  picture: string
   // skills_raw: string
   role: Role
+
+  /* SuperTalents Additionnal */
   github: string
   twitter: string
   portefolio: string
   otherLink: string
-  picture: string
 }
