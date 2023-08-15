@@ -9,12 +9,15 @@ import LogoutButton from '@/app/components/LogoutButton'
 import { useUser } from '@/app/hooks/user'
 import type { IProfile, IProfileIPFS } from '@/app/hooks/profile/types'
 import PageLoader from '@/app/components/PageLoader'
-import { redirect } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { useProfile } from '@/app/hooks/profile'
+import { useWeb3Auth } from '../hooks/web3auth'
 
 export default function ProfilePage() {
   const { id, cid, handle } = useUser()
   const { profile, setProfile } = useProfile()
+
+  const { status } = useWeb3Auth()
 
   React.useEffect(() => {
     if (cid && handle) {
@@ -32,12 +35,13 @@ export default function ProfilePage() {
   }, [cid, handle, setProfile])
 
   if (!id) redirect('/')
+  if (!(status === 'connected')) redirect('/login')
   if (!profile || !handle) return <PageLoader />
 
   return (
-    <>
-      <ProfilePreview />
-      <LogoutButton />
-    </>
+    <main className='p-24 min-h-screen flex flex-col items-center'>
+      <ProfilePreview className='flex-a' />
+      <LogoutButton className='mt-4' />
+    </main>
   )
 }
