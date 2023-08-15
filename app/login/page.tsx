@@ -5,18 +5,11 @@ import Image from 'next/image'
 import LoginSection from './components/LoginSection'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { redirect } from 'next/navigation'
-import { toast } from 'react-toastify'
 import { useUser } from '../hooks/user'
 
 export default function LoginPage() {
-  const { status, error } = useWeb3Auth()
+  const { status } = useWeb3Auth()
   const user = useUser()
-
-  React.useEffect(() => {
-    if (error) {
-      toast(error.message)
-    }
-  }, [error])
 
   if (status === 'not_ready') redirect('/')
   if (status === 'connected' && user.id) redirect('/profile')

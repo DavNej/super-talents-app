@@ -6,7 +6,8 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 export const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: '0x13881', // hex of 80001, polygon testnet
-  rpcTarget: 'https://rpc.ankr.com/polygon_mumbai',
+  rpcTarget: 'https://endpoints.omniatech.io/v1/matic/mumbai/public',
+  // rpcTarget: 'https://rpc.ankr.com/polygon_mumbai',
   displayName: 'Polygon Mumbai Testnet',
   blockExplorer: 'https://mumbai.polygonscan.com/',
   ticker: 'MATIC',

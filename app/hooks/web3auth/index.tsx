@@ -7,25 +7,21 @@ import type { Web3AuthNoModal } from '@web3auth/no-modal'
 import { web3auth as _web3auth } from './config'
 import type { LoginProvider } from './config'
 import { ethers } from 'ethers'
-import { ApiError, parseApiError } from '@/lib/fetcher'
+import { toast } from 'react-toastify'
 
 const Web3AuthContext = React.createContext<{
   web3auth: Web3AuthNoModal
   init: Function
   logout: Function
   login: Function
-  error: ApiError | null
-  getSigner: Function
   signer: ethers.JsonRpcSigner | null
   status: ADAPTER_STATUS_TYPE
 }>({
   web3auth: _web3auth,
   init: () => {},
-  getSigner: () => {},
   logout: () => {},
   login: () => {},
   signer: null,
-  error: null,
   status: 'not_ready',
 })
 
@@ -41,7 +37,6 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
   const web3authRef = React.useRef(_web3auth)
   const web3auth = web3authRef.current
 
-  const [error, setError] = React.useState<ApiError | null>(null)
   const [signer, setSigner] = React.useState<ethers.JsonRpcSigner | null>(null)
   const [status, setStatus] = React.useState<ADAPTER_STATUS_TYPE>('not_ready')
 
@@ -49,7 +44,7 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
     if (web3auth.provider) {
       const provider = new ethers.BrowserProvider(web3auth.provider)
       const _signer = await provider.getSigner()
-      console.log('🦋 | getSigner | _signer', _signer)
+      console.log('🦋 | signer', _signer)
       setSigner(_signer)
     }
   }, [web3auth.provider])
@@ -65,8 +60,8 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
           }
         })
         .catch(err => {
-          const _error = parseApiError(err)
-          setError(_error)
+          console.error(err)
+          toast.error('Auth initilization failed')
         })
     }
   }, [web3auth, getSigner])
@@ -86,8 +81,8 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
           await getSigner()
         })
         .catch(err => {
-          const _error = parseApiError(err)
-          setError(_error)
+          console.error(err)
+          toast.error('Login failed')
         })
     },
     [getSigner, web3auth]
@@ -99,13 +94,13 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
     await web3auth
       .logout()
       .then(res => {
-        console.log('logged out')
+        console.log('Logged out')
         setSigner(null)
         setStatus(web3auth.status)
       })
       .catch(err => {
-        const _error = parseApiError(err)
-        setError(_error)
+        console.error(err)
+        toast.error('Logout failed')
       })
   }, [web3auth])
 
@@ -117,10 +112,8 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
       login,
       signer,
       status,
-      getSigner,
-      error,
     }),
-    [web3auth, init, logout, login, error, signer, getSigner, status]
+    [web3auth, init, logout, login, signer, status]
   )
 
   return <Web3AuthContext.Provider value={value} {...props} />

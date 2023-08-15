@@ -2,7 +2,6 @@
 
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 import React from 'react'
-import { toast } from 'react-toastify'
 import { clsx, type ClassValue } from 'clsx'
 
 export default function LogoutButton({
@@ -10,13 +9,7 @@ export default function LogoutButton({
 }: {
   className?: ClassValue
 }) {
-  const { logout, error, status } = useWeb3Auth()
-
-  React.useEffect(() => {
-    if (error) {
-      toast.error(error.message)
-    }
-  }, [error])
+  const { logout, status } = useWeb3Auth()
 
   if (!(status === 'connected')) return null
 
