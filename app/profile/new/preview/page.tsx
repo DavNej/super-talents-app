@@ -11,16 +11,18 @@ import { useProfile } from '@/app/hooks/profile'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { mintTalentLayerId, updateProfileData } from '@/lib/talent-layer'
 import ProfilePreview from '@/app/components/ProfilePreview'
+import { useUser } from '@/app/hooks/user'
 
 export default function ProfilePreviewPage() {
   const { profile } = useProfile()
   const { signer } = useWeb3Auth()
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
-  const [isMinting, setIsMinting] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const user = useUser()
 
   if (!profile.handle) redirect('/login')
 
-  async function onSubmit() {
+  async function uploadData() {
     if (!profile.role || !signer?.address) {
       console.error('missing role or signer')
       console.error('profile.role', profile.role)
@@ -28,24 +30,33 @@ export default function ProfilePreviewPage() {
       return
     }
 
-    setIsMinting(true)
+    setIsLoading(true)
     const ipfsHash = await uploadToPinata(profile, signer.address)
     if (!ipfsHash) {
-      setIsMinting(false)
+      setIsLoading(false)
       return
     }
 
     await setPinataCid(ipfsHash)
+    setIsLoading(false)
+  }
 
+  async function handleMint() {
+    if (!profile.role || !signer?.address) {
+      console.error('missing role or signer')
+      console.error('profile.role', profile.role)
+      console.error('signer', signer)
+      return
+    }
     const talentLayerId = await mintTalentLayerId(profile.handle, signer)
 
     if (!talentLayerId) {
-      setIsMinting(false)
+      setIsLoading(false)
       return
     }
 
     await updateProfileData(talentLayerId, pinataCid, signer)
-    setIsMinting(false)
+    setIsLoading(false)
   }
 
   return (
@@ -56,9 +67,15 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          <Button isLoading={isMinting} onClick={onSubmit} isDisabled={false}>
-            Mint my profile NFT
-          </Button>
+          {Boolean(user.id) ? (
+            <Button isLoading={isLoading} onClick={uploadData}>
+              Update profile
+            </Button>
+          ) : (
+            <Button isLoading={isLoading} onClick={handleMint}>
+              Mint my profile NFT
+            </Button>
+          )}
         </div>
 
         <ProfilePreview />
