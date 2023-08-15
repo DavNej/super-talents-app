@@ -1,9 +1,12 @@
 import axios from 'axios'
-import { Interface, ethers } from 'ethers'
+import { Interface, TransactionResponse, ethers } from 'ethers'
 import { toast } from 'react-toastify'
 
 import { SUPERTALENTS_PLATFORM_ID, config } from './config'
 import TalentLayerIdAbi from './TalentLayerID.json'
+import { showErrorTransactionToast } from '../errors'
+
+const contractAbi = new Interface(TalentLayerIdAbi)
 
 interface ITalentLayerUser {
   id: string
@@ -30,7 +33,7 @@ export async function getTalentLayerUser(
 ): Promise<ITalentLayerUser | null> {
   const query = `
     {
-      users(where: {address: "${address}"}) {
+      users(where: {address: "${address.toLowerCase()}"}) {
         cid
         id
         handle
@@ -41,7 +44,7 @@ export async function getTalentLayerUser(
   const res = await processRequest<ITalentLayerResponse>(query)
 
   if (res === null) {
-    toast.error('Something went wrong')
+    toast.error('Couldn‘t query graph')
     return null
   }
 
@@ -76,25 +79,45 @@ export async function handleExists(handle: string): Promise<boolean | null> {
   return false
 }
 
-export async function mintTalentLayerId(handle: string, signer: ethers.Signer) {
+export async function mintTalentLayerId(
+  handle: string,
+  signer: ethers.Signer
+): Promise<number | null> {
   try {
-    const abi = new Interface(TalentLayerIdAbi)
-
     const contract = new ethers.Contract(
       config.contracts.talentLayerId,
-      abi,
+      contractAbi,
       signer
     )
 
-    const talentLayerId: number = await contract.mint(
+    const handlePrice: number = await contract.getHandlePrice(handle)
+    const mintTx: TransactionResponse = await contract.mint(
       SUPERTALENTS_PLATFORM_ID,
-      handle
+      handle,
+      { value: handlePrice }
     )
-    console.log('🦋 | mintTalentLayerId | talentLayerId', talentLayerId)
+
+    console.log('🦋 | mintTx', mintTx)
+    const mintRc = await mintTx.wait(1)
+    console.log('🦋 | mintRc', mintRc)
+
+    const address = await signer.getAddress()
+    const talentLayerUser = await getTalentLayerUser(address)
+
+    if (!talentLayerUser) {
+      return null
+    }
+
+    const talentLayerId = Number(talentLayerUser.id)
+    if (Number.isNaN(talentLayerId) || !talentLayerId) {
+      toast.error('Invalid profile Id')
+      return null
+    }
+
     return talentLayerId
   } catch (error) {
-    console.error(error)
     toast.error('Could not mint Profile NFT')
+    showErrorTransactionToast(error)
     return null
   }
 }
@@ -105,19 +128,21 @@ export async function updateProfileData(
   signer: ethers.Signer
 ) {
   try {
-    const abi = new Interface(TalentLayerIdAbi)
-
     const contract = new ethers.Contract(
       config.contracts.talentLayerId,
-      abi,
+      contractAbi,
       signer
     )
 
-    const updateDataRes = await contract.updateData(talentLayerId, newCid)
+    const updateDataTx: TransactionResponse = await contract.updateProfileData(
+      talentLayerId,
+      newCid
+    )
+    const updateDataRc = await updateDataTx.wait(1)
+    console.log('🦋 | updateDataRc', updateDataRc)
     toast.success('Profile data updated successfully')
-    console.log('🦋 | updateDataRes', updateDataRes)
   } catch (error) {
-    console.error(error)
     toast.error('Could not update profile data')
+    showErrorTransactionToast(error)
   }
 }

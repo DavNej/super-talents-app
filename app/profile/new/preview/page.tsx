@@ -52,9 +52,20 @@ export default function ProfilePreviewPage() {
       setIsMinting(false)
       return
     }
+
+    await setPinataCid(ipfsHash)
+
+    const talentLayerId = await mintTalentLayerId(profile.handle, signer)
+
+    if (!talentLayerId) {
+      setIsMinting(false)
+      return
+    }
+
+    await updateProfileData(talentLayerId, pinataCid, signer)
     setIsMinting(false)
   }
-  
+
   if (!profile.handle) redirect('/login')
 
   return (

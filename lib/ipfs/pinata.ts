@@ -31,7 +31,7 @@ function buildPinJsonArgs(
   ownerAddress: AddressLike
 ): Args {
   const data = JSON.stringify({
-    pinataOptions: { cidVersion: 1 },
+    pinataOptions: { cidVersion: 0 },
     pinataMetadata: { name: ownerAddress },
     pinataContent: profileData,
   })
