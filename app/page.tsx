@@ -4,9 +4,11 @@ import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 import PageLoader from './components/PageLoader'
+import { useUser } from './hooks/user'
 
 export default function Init() {
   const { init, status } = useWeb3Auth()
+  const user = useUser()
   const router = useRouter()
 
   React.useEffect(() => {
@@ -19,9 +21,13 @@ export default function Init() {
     }
 
     if (status === 'connected') {
-      router.push('/profile/new/avatar')
+      if (user.id) {
+        router.push('/profile')
+      } else {
+        router.push('/profile/new/avatar')
+      }
     }
-  }, [status, router])
+  }, [status, router, user])
 
   return <PageLoader />
 }

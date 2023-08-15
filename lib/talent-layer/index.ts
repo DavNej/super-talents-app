@@ -8,10 +8,11 @@ import { showErrorTransactionToast } from '../errors'
 
 const contractAbi = new Interface(TalentLayerIdAbi)
 
-interface ITalentLayerUser {
+export interface ITalentLayerUser {
   id: string
   cid?: string
   handle?: string
+  address?: string
 }
 
 type ITalentLayerResponse = {
@@ -37,6 +38,7 @@ export async function getTalentLayerUser(
         cid
         id
         handle
+        address
       }
     }
     `

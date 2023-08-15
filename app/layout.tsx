@@ -4,6 +4,7 @@ import { ProfileProvider } from '@/app/hooks/profile'
 import Toast from '@/app/components/Toast'
 
 import './globals.css'
+import { UserProvider } from './hooks/user'
 
 export const metadata: Metadata = {
   title: 'SuperTalents',
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang='en'>
       <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
         <ProfileProvider>
-          <Web3AuthProvider>{children}</Web3AuthProvider>
+          <Web3AuthProvider>
+            <UserProvider>{children}</UserProvider>
+          </Web3AuthProvider>
         </ProfileProvider>
         <Toast />
       </body>
