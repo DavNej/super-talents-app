@@ -3,16 +3,19 @@
 import React from 'react'
 import BackLink from '@/app/components/BackLink'
 import ProfileForm from './components/ProfileForm'
-import type { IFormValues } from '@/app/hooks/profile/types'
+import type { IProfileForm } from '@/app/hooks/profile/types'
 import { useRouter } from 'next/navigation'
 import { useProfile } from '@/app/hooks/profile'
+import { useLocalStorage } from 'usehooks-ts'
 
 export default function ProfileInfoPage() {
-  const { setProfile } = useProfile()
+  const { setProfile, profile } = useProfile()
   const { push } = useRouter()
 
-  function onSubmit(data: IFormValues) {
-    setProfile(data)
+  const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
+
+  function onSubmit(data: IProfileForm) {
+    setProfile({ ...data, picture: selectedAvatar })
     push('/profile/new/preview')
   }
 
@@ -23,7 +26,7 @@ export default function ProfileInfoPage() {
         <h3 className='font-semibold text-5xl mb-12 whitespace-nowrap'>
           Add Profile Info
         </h3>
-        <ProfileForm onSubmit={onSubmit} />
+        <ProfileForm onSubmit={onSubmit} profile={profile} />
       </div>
     </main>
   )

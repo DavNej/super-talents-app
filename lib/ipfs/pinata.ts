@@ -3,7 +3,7 @@ import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-import type { IProfileData } from '@/app/hooks/profile/types'
+import type { IProfileIPFS } from '@/app/hooks/profile/types'
 
 const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
@@ -11,7 +11,7 @@ const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 type Args = [string, string, AxiosRequestConfig]
 
 export async function uploadToPinata(
-  profileData: IProfileData,
+  profileData: IProfileIPFS,
   ownerAddress: AddressLike
 ): Promise<string | null> {
   const axiosArgs = buildPinJsonArgs(profileData, ownerAddress)
@@ -27,7 +27,7 @@ export async function uploadToPinata(
 }
 
 function buildPinJsonArgs(
-  profileData: IProfileData,
+  profileData: IProfileIPFS,
   ownerAddress: AddressLike
 ): Args {
   const data = JSON.stringify({

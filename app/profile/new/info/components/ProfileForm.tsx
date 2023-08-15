@@ -10,8 +10,7 @@ import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 
 import { roleCaptions, validationSchema } from '../form-utils'
-import { useProfile } from '@/app/hooks/profile'
-import type { IFormValues } from '@/app/hooks/profile/types'
+import type { IProfile, IProfileForm } from '@/app/hooks/profile/types'
 
 import ChooseAboutDialog from './ChooseAboutDialog'
 import { toast } from 'react-toastify'
@@ -34,17 +33,17 @@ export const inputClassNames = [
 ]
 
 export default function ProfileForm({
+  profile,
   onSubmit,
 }: {
-  onSubmit: (data: IFormValues) => void
+  profile: IProfile
+  onSubmit: (data: IProfileForm) => void
 }) {
-  const { profile } = useProfile()
-
   const formik = useFormik({
     initialValues: profile,
     validationSchema,
     onSubmit: (values, { setSubmitting }) => {
-      const profileData: IFormValues = {
+      const profileData: IProfileForm = {
         name: values.name,
         about: values.about,
         handle: values.handle,
@@ -106,7 +105,7 @@ export default function ProfileForm({
     formik.setFieldValue('skills', newSkillSet)
   }
 
-  function fieldError(fieldName: keyof IFormValues) {
+  function fieldError(fieldName: keyof IProfile) {
     return formik.touched[fieldName] && formik.errors[fieldName]
   }
 
@@ -114,7 +113,7 @@ export default function ProfileForm({
     name,
     children,
   }: {
-    name: keyof IFormValues
+    name: keyof IProfile
     children: React.ReactNode
   }) {
     return (

@@ -1,25 +1,14 @@
 type Role = 'buyer' | 'seller' | 'both'
 
-export interface IFormValues {
+export interface IProfile {
   handle: string
-  name: string
-  about: string
-  skills: string[]
-  role: Role | ''
-  github: string
-  twitter: string
-  portefolio: string
-  otherLink: string
-}
 
-export interface IProfileData {
   /* TalentLayer */
   name: string
   about: string
   skills: string[]
   picture: string
-  // skills_raw: string
-  role: Role
+  role: Role | ''
 
   /* SuperTalents Additionnal */
   github: string
@@ -27,3 +16,6 @@ export interface IProfileData {
   portefolio: string
   otherLink: string
 }
+
+export type IProfileIPFS = Omit<IProfile, 'handle'>
+export type IProfileForm = Omit<IProfile, 'picture'>

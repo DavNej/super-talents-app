@@ -3,8 +3,13 @@
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 import React from 'react'
 import { toast } from 'react-toastify'
+import { clsx, type ClassValue } from 'clsx'
 
-export default function LogoutButton() {
+export default function LogoutButton({
+  className,
+}: {
+  className?: ClassValue
+}) {
   const { logout, error, status } = useWeb3Auth()
 
   React.useEffect(() => {
@@ -17,7 +22,7 @@ export default function LogoutButton() {
 
   return (
     <button
-      className='px-5 py-2 bg-pink rounded-xl'
+      className={clsx('px-5 py-2 bg-pink rounded-xl', className)}
       onClick={async () => {
         await logout()
       }}>

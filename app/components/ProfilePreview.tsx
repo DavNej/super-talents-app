@@ -5,17 +5,24 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { roleCaptions } from '@/app/profile/new/info/form-utils'
 
-import { IProfileData } from '@/app/hooks/profile/types'
+import { useProfile } from '../hooks/profile'
+import { clsx, type ClassValue } from 'clsx'
 
 export default function ProfilePreview({
-  profile,
-  handle,
+  className,
 }: {
-  profile: IProfileData
-  handle: string
+  className?: ClassValue
 }) {
+  const { profile } = useProfile()
+
+  console.log('🦋 | ProfilePreview | profile', profile)
+
   return (
-    <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
+    <div
+      className={clsx(
+        'rounded-[40px] border-pink border-4 overflow-hidden',
+        className
+      )}>
       <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
         <Image src='/mask.png' alt='logo' width={72} height={27} priority />
         <Link href='/profile/new/info'>
@@ -36,7 +43,7 @@ export default function ProfilePreview({
             />
             <div className='flex flex-col justify-between'>
               <p className='font-semibold text-2xl'>{profile.name}</p>
-              <p className='font-light'>@{handle}</p>
+              <p className='font-light'>@{profile.handle}</p>
               <p className='font-normal text-pink whitespace-nowrap'>
                 {profile.role && roleCaptions[profile.role]}
               </p>

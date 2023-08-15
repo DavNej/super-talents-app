@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import type { IFormValues } from './types'
+import type { IProfile } from './types'
 
-export const initialValues: IFormValues = {
+export const initialValues: IProfile = {
   handle: '',
   name: '',
   about: '',
@@ -13,11 +13,12 @@ export const initialValues: IFormValues = {
   portefolio: '',
   twitter: '',
   role: '',
+  picture: '',
 }
 
 const ProfileContext = React.createContext<{
-  profile: IFormValues
-  setProfile: React.Dispatch<React.SetStateAction<IFormValues>>
+  profile: IProfile
+  setProfile: React.Dispatch<React.SetStateAction<IProfile>>
 }>({ profile: initialValues, setProfile: () => {} })
 
 export function useProfile() {
