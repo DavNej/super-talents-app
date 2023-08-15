@@ -3,7 +3,7 @@
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import Loader from './components/Loader'
+import PageLoader from './components/PageLoader'
 
 export default function Init() {
   const { init, status } = useWeb3Auth()
@@ -23,9 +23,5 @@ export default function Init() {
     }
   }, [status, router])
 
-  return (
-    <main className='flex-1 flex items-center justify-center'>
-      <Loader size={500} />
-    </main>
-  )
+  return <PageLoader />
 }
