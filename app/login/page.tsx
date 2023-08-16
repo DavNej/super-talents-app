@@ -3,18 +3,8 @@
 import React from 'react'
 import Image from 'next/image'
 import LoginSection from './components/LoginSection'
-import { useWeb3Auth } from '@/app/hooks/web3auth'
-import { redirect } from 'next/navigation'
-import { useUser } from '../hooks/user'
 
 export default function LoginPage() {
-  const { status } = useWeb3Auth()
-  const user = useUser()
-
-  if (status === 'not_ready') redirect('/')
-  if (status === 'connected' && user.id) redirect('/profile')
-  if (status === 'connected') redirect('/profile/new/avatar')
-
   return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>

@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { Web3AuthProvider } from '@/app/hooks/web3auth'
 import { ProfileProvider } from '@/app/hooks/profile'
+import { UserProvider } from '@/app/hooks/user'
+
 import Toast from '@/app/components/Toast'
+import AppRouter from '@/app/components/AppRouter'
 
 import './globals.css'
-import { UserProvider } from './hooks/user'
 
 export const metadata: Metadata = {
   title: 'SuperTalents',
@@ -22,7 +24,9 @@ export default function RootLayout({
       <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
         <ProfileProvider>
           <Web3AuthProvider>
-            <UserProvider>{children}</UserProvider>
+            <UserProvider>
+              <AppRouter>{children}</AppRouter>
+            </UserProvider>
           </Web3AuthProvider>
         </ProfileProvider>
         <Toast />

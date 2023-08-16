@@ -1,13 +1,15 @@
 'use client'
 
 import * as React from 'react'
+import { type Signer, ethers } from 'ethers'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+
 import type { ADAPTER_STATUS_TYPE } from '@web3auth/base'
 import { WALLET_ADAPTERS } from '@web3auth/base'
 import type { Web3AuthNoModal } from '@web3auth/no-modal'
-import { web3auth as _web3auth } from './config'
-import type { LoginProvider } from './config'
-import { type Signer, ethers } from 'ethers'
-import { toast } from 'react-toastify'
+
+import { web3auth as _web3auth, type LoginProvider } from './config'
 
 const Web3AuthContext = React.createContext<{
   web3auth: Web3AuthNoModal
@@ -36,6 +38,7 @@ export function useWeb3Auth() {
 export function Web3AuthProvider(props: React.PropsWithChildren) {
   const web3authRef = React.useRef(_web3auth)
   const web3auth = web3authRef.current
+  const router = useRouter()
 
   const [signer, setSigner] = React.useState<Signer | null>(null)
   const [status, setStatus] = React.useState<ADAPTER_STATUS_TYPE>('not_ready')
@@ -79,13 +82,14 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
           console.log('logged in')
           setStatus(web3auth.status)
           await getSigner()
+          router.push('/profile')
         })
         .catch(err => {
           console.error(err)
           toast.error('Login failed')
         })
     },
-    [getSigner, web3auth]
+    [getSigner, router, web3auth]
   )
 
   const logout = React.useCallback(async () => {
@@ -97,12 +101,13 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
         console.log('Logged out')
         setSigner(null)
         setStatus(web3auth.status)
+        router.push('/login')
       })
       .catch(err => {
         console.error(err)
         toast.error('Logout failed')
       })
-  }, [web3auth])
+  }, [router, web3auth])
 
   const value = React.useMemo(
     () => ({

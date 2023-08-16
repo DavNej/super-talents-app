@@ -42,7 +42,10 @@ export default function EmailForm() {
             />
           </fieldset>
 
-          <Button type='submit' isLoading={isSubmitting} className='mt-5 w-full'>
+          <Button
+            type='submit'
+            isLoading={isSubmitting}
+            className='mt-5 w-full'>
             Continue with email
           </Button>
         </Form>

@@ -1,47 +1,33 @@
 'use client'
+
 import React from 'react'
-import axios from 'axios'
-import { urlFromCid } from '@/lib/ipfs'
-import { toast } from 'react-toastify'
+import { usePathname, useRouter } from 'next/navigation'
 
-import ProfilePreview from '@/app/components/ProfilePreview'
-import LogoutButton from '@/app/components/LogoutButton'
 import { useUser } from '@/app/hooks/user'
-import type { IProfile, IProfileIPFS } from '@/app/hooks/profile/types'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
+
 import PageLoader from '@/app/components/PageLoader'
-import { redirect, useRouter } from 'next/navigation'
-import { useProfile } from '@/app/hooks/profile'
-import { useWeb3Auth } from '../hooks/web3auth'
 
-export default function ProfilePage() {
-  const { id, cid, handle } = useUser()
-  const { profile, setProfile } = useProfile()
-
+export default function ProfileRouterPage() {
   const { status } = useWeb3Auth()
+  const { user, isFetched: userIsFetched } = useUser()
+  const router = useRouter()
+  const pathname = usePathname()
 
+  
   React.useEffect(() => {
-    if (cid && handle) {
-      axios
-        .get<IProfileIPFS>(urlFromCid(cid))
-        .then(res => {
-          const profileData: IProfile = { ...res.data, handle }
-          setProfile(profileData)
-        })
-        .catch(err => {
-          console.error(err)
-          toast.error('Could not fetch profile data')
-        })
+    if (userIsFetched) {
+      if (user) {
+        router.replace(`/profile/${user.handle}`)
+      } else {
+        router.replace(
+          pathname === '/profile/new/info'
+            ? '/profile/new/info'
+            : '/profile/new/avatar'
+        )
+      }
     }
-  }, [cid, handle, setProfile])
+  }, [pathname, router, status, user, userIsFetched])
 
-  if (!id) redirect('/')
-  if (!(status === 'connected')) redirect('/login')
-  if (!profile || !handle) return <PageLoader />
-
-  return (
-    <main className='p-24 min-h-screen flex flex-col items-center'>
-      <ProfilePreview className='flex-a' />
-      <LogoutButton className='mt-4' />
-    </main>
-  )
+  return <PageLoader />
 }

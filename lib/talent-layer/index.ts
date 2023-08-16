@@ -9,10 +9,10 @@ import { showErrorTransactionToast } from '../errors'
 export const talentLayerInterface = new ethers.utils.Interface(talentLayerIdAbi)
 
 export interface ITalentLayerUser {
+  address: string
+  handle: string
   id: string
   cid?: string
-  handle?: string
-  address?: string
 }
 
 type ITalentLayerResponse = {
