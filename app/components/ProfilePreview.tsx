@@ -11,9 +11,11 @@ import { IProfile } from '../hooks/profile/types'
 export default function ProfilePreview({
   className,
   profile,
+  isConnectedUser,
 }: {
   profile: IProfile
   className?: ClassValue
+  isConnectedUser: boolean
 }) {
   return (
     <div
@@ -23,9 +25,11 @@ export default function ProfilePreview({
       )}>
       <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
         <Image src='/mask.png' alt='logo' width={72} height={27} priority />
-        <Link href='/profile/new/info'>
-          <Image src='/edit.svg' alt='edit' width={24} height={24} priority />
-        </Link>
+        {isConnectedUser && (
+          <Link href='/profile/new/info'>
+            <Image src='/edit.svg' alt='edit' width={24} height={24} priority />
+          </Link>
+        )}
       </div>
 
       <div className='px-14 py-11 flex gap-14'>

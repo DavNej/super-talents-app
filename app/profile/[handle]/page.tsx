@@ -46,7 +46,7 @@ export default function ProfileHandlePage({
 
   return (
     <main className='p-24 min-h-screen flex flex-col items-center'>
-      <ProfilePreview className='flex-a' profile={profile} />
+      <ProfilePreview className='flex-a' profile={profile} isConnectedUser={isConnectedUser} />
       <LogoutButton className='mt-4' />
     </main>
   )
