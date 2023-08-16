@@ -29,12 +29,25 @@ async function processRequest<T>(query: string): Promise<T | null> {
   }
 }
 
-export async function getTalentLayerUser(
-  address: string
-): Promise<ITalentLayerUser | null> {
+export type IGetTalentLayerUserArgs = { handle?: string; address?: string }
+
+export async function getTalentLayerUser({
+  handle,
+  address,
+}: IGetTalentLayerUserArgs): Promise<ITalentLayerUser | null> {
+  let whereClause = ''
+
+  if (address) {
+    whereClause = `{address: "${address?.toLowerCase()}"}`
+  }
+
+  if (handle) {
+    whereClause = `{handle: "${handle}"}`
+  }
+
   const query = `
     {
-      users(where: {address: "${address.toLowerCase()}"}) {
+      users(where: ${whereClause} {
         cid
         id
         handle
@@ -104,7 +117,7 @@ export async function mintTalentLayerId(
     console.log('🦋 | mintRc', mintRc)
 
     const address = await signer.getAddress()
-    const talentLayerUser = await getTalentLayerUser(address)
+    const talentLayerUser = await getTalentLayerUser({ address })
 
     if (!talentLayerUser) {
       return null

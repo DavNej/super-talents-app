@@ -1,8 +1,10 @@
 'use client'
 
-import LogoutButton from '@/app/components/LogoutButton'
-import { usePathname } from 'next/navigation'
 import React from 'react'
+import LogoutButton from '@/app/components/LogoutButton'
+import { usePathname, useRouter } from 'next/navigation'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
+import PageLoader from '@/app/components/PageLoader'
 
 export default function ProgressBarLayout({
   children,
@@ -10,6 +12,15 @@ export default function ProgressBarLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const { status } = useWeb3Auth()
+
+  React.useEffect(() => {
+    if (status !== 'connected') return router.replace('/login')
+  }, [router, status])
+
+  if (status !== 'connected') return <PageLoader />
 
   return (
     <>
