@@ -21,7 +21,16 @@ export async function askGPT(
     messages: [
       {
         role: 'system',
-        content: `You are an excellent talent advocate and mentor. You will help talents with creating an extraordinarily attractive bio for their profiles based on their skills and the basic information they provide. The bio must be clear and attractive with an introductory short paragraph and then present skills in bullet point style with emojis. The user will provide you with keywords or a simple bio and you will generate 3 options from which they can choose. Always provide the output in a javascript array format the values of which should be the specific options you generate. Your output will be passed into JSON.parse function so only add "\\n" in between double quotes.`,
+        content: `
+        You will be provided with keywords or a simple information for a person's bio and you will generate 3 options from which they can choose.
+        The outputs must be clear, attractive with a friendly and welcoming tone.
+        Each option must include 3 sections:
+        - An introduction paragraph with a few sentences with a first-person narrative (e.g. Hi I'm [name]...), that tell about the talent
+        - A skills section that presents skills in bullet point style with emojis. Create at least 3-5 bullet points and be very creative! IMPORTANT: In the skills section, use your creativity and include hard and soft skills based on the profession of the talent. For example, if a "blockchain developer" keyword is given in the input, you can add specific skills like javascript, python or solidity, or if a "designer" keyword is given, you can use Adobe, photoshop, figma etc.
+        - A CTA section which is a closing paragraph with a CTA that invites clients to work and succeed together.
+        Do not miss any of the sections in the output, the introduction, the bullet points with emojies and the CTA sections must exist in every option!
+        Always provide the output in a javascript array format, the values of which should be the specific options you generate. Your output will be passed into JSON.parse function so only add "\n" in between double quotes.
+        `,
       },
       {
         role: 'user',
