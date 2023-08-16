@@ -12,6 +12,7 @@ import { useWeb3Auth } from '@/app/hooks/web3auth'
 import { mintTalentLayerId, updateProfileData } from '@/lib/talent-layer'
 import ProfilePreview from '@/app/components/ProfilePreview'
 import { useUser } from '@/app/hooks/user'
+import { useBiconomy } from '@/app/hooks/biconomy'
 
 export default function ProfilePreviewPage() {
   const { profile } = useProfile()
@@ -21,6 +22,8 @@ export default function ProfilePreviewPage() {
   const user = useUser()
 
   if (!profile.handle || !signer) redirect('/login')
+
+  const { updateProfileData } = useBiconomy(signer)
 
   async function uploadData() {
     if (!signer) {

@@ -3,7 +3,7 @@ import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 import { Web3AuthNoModal } from '@web3auth/no-modal'
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 
-const RPC_TARGET = process.env.NEXT_PUBLIC_JSON_RPC_TARGET as string
+const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
 const WEB3AUTH_CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string
 
 export const chainConfig = {
