@@ -1,17 +1,23 @@
 'use client'
 import * as React from 'react'
-
-import { getTalentLayerUser, type ITalentLayerUser } from '@/lib/talent-layer'
 import { useWeb3Auth } from './web3auth'
+
+import { getTalentLayerUser } from '@/lib/talent-layer'
+import type {
+  ITalentLayerUser,
+  IGetTalentLayerUserArgs,
+} from '@/lib/talent-layer'
 
 const initialValue = {
   user: null,
-  isFetched: false,
+  connectedUser: null,
+  getUser: () => {},
 }
 
 const UserContext = React.createContext<{
   user: ITalentLayerUser | null
-  isFetched: boolean
+  connectedUser: ITalentLayerUser | null
+  getUser: (args: IGetTalentLayerUserArgs) => void
 }>(initialValue)
 
 export function useUser() {
@@ -26,28 +32,43 @@ export function useUser() {
 export function UserProvider(props: React.PropsWithChildren) {
   const { signer } = useWeb3Auth()
 
-  const [isFetched, setIsFetched] = React.useState(false)
   const [user, setUser] = React.useState<ITalentLayerUser | null>(null)
+  const [connectedUser, setConnectedUser] =
+    React.useState<ITalentLayerUser | null>(null)
 
-  React.useEffect(() => {
-    ;async () => {
-      if (signer) {
-        const address = await signer.getAddress()
-        const _user = await getTalentLayerUser(address)
-        if (_user) {
-          setUser(_user)
-        }
-        setIsFetched(true)
+  const getUser = React.useCallback(
+    async ({ handle, address }: IGetTalentLayerUserArgs) => {
+      console.log('getting user')
+      const _user = await getTalentLayerUser({ handle, address })
+      if (_user) {
+        setUser(_user)
+      }
+    },
+    []
+  )
+
+  const getConnectedUser = React.useCallback(async () => {
+    if (signer) {
+      const address = await signer.getAddress()
+      console.log('getting connected user')
+      const _user = await getTalentLayerUser({ address })
+      if (_user) {
+        setConnectedUser(_user)
       }
     }
   }, [signer])
 
+  React.useEffect(() => {
+    getConnectedUser()
+  }, [getConnectedUser])
+
   const value = React.useMemo(
     () => ({
       user,
-      isFetched,
+      connectedUser,
+      getUser,
     }),
-    [user, isFetched]
+    [user, connectedUser, getUser]
   )
 
   return <UserContext.Provider value={value} {...props} />

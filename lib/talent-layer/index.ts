@@ -25,6 +25,7 @@ async function processRequest<T>(query: string): Promise<T | null> {
     return res.data.data
   } catch (error) {
     console.error(error)
+    toast.error('Could not get talent data')
     return null
   }
 }
@@ -47,7 +48,7 @@ export async function getTalentLayerUser({
 
   const query = `
     {
-      users(where: ${whereClause} {
+      users(where: ${whereClause}) {
         cid
         id
         handle

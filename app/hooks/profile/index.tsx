@@ -17,9 +17,16 @@ export const initialValues: IProfile = {
 }
 
 const ProfileContext = React.createContext<{
-  profile: IProfile
-  setProfile: React.Dispatch<React.SetStateAction<IProfile>>
-}>({ profile: initialValues, setProfile: () => {} })
+  profile: IProfile | null
+  setProfile: React.Dispatch<React.SetStateAction<IProfile | null>>
+  connectedProfile: IProfile | null
+  setConnectedProfile: React.Dispatch<React.SetStateAction<IProfile | null>>
+}>({
+  profile: null,
+  setProfile: () => {},
+  connectedProfile: null,
+  setConnectedProfile: () => {},
+})
 
 export function useProfile() {
   const context = React.useContext(ProfileContext)
@@ -30,14 +37,18 @@ export function useProfile() {
 }
 
 export function ProfileProvider(props: React.PropsWithChildren) {
-  const [profile, setProfile] = React.useState(initialValues)
+  const [profile, setProfile] = React.useState<IProfile | null>(null)
+  const [connectedProfile, setConnectedProfile] =
+    React.useState<IProfile | null>(null)
 
   const value = React.useMemo(
     () => ({
       profile,
       setProfile,
+      connectedProfile,
+      setConnectedProfile,
     }),
-    [profile, setProfile]
+    [profile, setProfile, connectedProfile, setConnectedProfile]
   )
 
   return <ProfileContext.Provider value={value} {...props} />

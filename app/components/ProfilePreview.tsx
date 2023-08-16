@@ -5,18 +5,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { roleCaptions } from '@/app/profile/new/info/form-utils'
 
-import { useProfile } from '../hooks/profile'
 import { clsx, type ClassValue } from 'clsx'
+import { IProfile } from '../hooks/profile/types'
 
 export default function ProfilePreview({
   className,
+  profile,
 }: {
+  profile: IProfile
   className?: ClassValue
 }) {
-  const { profile } = useProfile()
-
-  console.log('🦋 | ProfilePreview | profile', profile)
-
   return (
     <div
       className={clsx(
