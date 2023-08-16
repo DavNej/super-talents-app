@@ -1,12 +1,12 @@
 import axios from 'axios'
-import { Interface, TransactionResponse, ethers } from 'ethers'
+import { ethers, type Signer, type ContractTransaction } from 'ethers'
 import { toast } from 'react-toastify'
 
 import { SUPERTALENTS_PLATFORM_ID, config } from './config'
-import TalentLayerIdAbi from './TalentLayerID.json'
+import talentLayerIdAbi from './TalentLayerID.json'
 import { showErrorTransactionToast } from '../errors'
 
-const contractAbi = new Interface(TalentLayerIdAbi)
+export const talentLayerInterface = new ethers.utils.Interface(talentLayerIdAbi)
 
 export interface ITalentLayerUser {
   id: string
@@ -83,17 +83,17 @@ export async function handleExists(handle: string): Promise<boolean | null> {
 
 export async function mintTalentLayerId(
   handle: string,
-  signer: ethers.Signer
+  signer: Signer
 ): Promise<number | null> {
   try {
     const contract = new ethers.Contract(
       config.contracts.talentLayerId,
-      contractAbi,
+      talentLayerInterface,
       signer
     )
 
     const handlePrice: number = await contract.getHandlePrice(handle)
-    const mintTx: TransactionResponse = await contract.mint(
+    const mintTx: ContractTransaction = await contract.mint(
       SUPERTALENTS_PLATFORM_ID,
       handle,
       { value: handlePrice }
@@ -127,16 +127,16 @@ export async function mintTalentLayerId(
 export async function updateProfileData(
   talentLayerId: number,
   newCid: string,
-  signer: ethers.Signer
+  signer: Signer
 ) {
   try {
     const contract = new ethers.Contract(
       config.contracts.talentLayerId,
-      contractAbi,
+      talentLayerInterface,
       signer
     )
 
-    const updateDataTx: TransactionResponse = await contract.updateProfileData(
+    const updateDataTx: ContractTransaction = await contract.updateProfileData(
       talentLayerId,
       newCid
     )

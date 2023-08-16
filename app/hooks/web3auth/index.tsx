@@ -6,7 +6,7 @@ import { WALLET_ADAPTERS } from '@web3auth/base'
 import type { Web3AuthNoModal } from '@web3auth/no-modal'
 import { web3auth as _web3auth } from './config'
 import type { LoginProvider } from './config'
-import { ethers } from 'ethers'
+import { type Signer, ethers } from 'ethers'
 import { toast } from 'react-toastify'
 
 const Web3AuthContext = React.createContext<{
@@ -14,7 +14,7 @@ const Web3AuthContext = React.createContext<{
   init: Function
   logout: Function
   login: Function
-  signer: ethers.JsonRpcSigner | null
+  signer: Signer | null
   status: ADAPTER_STATUS_TYPE
 }>({
   web3auth: _web3auth,
@@ -37,12 +37,12 @@ export function Web3AuthProvider(props: React.PropsWithChildren) {
   const web3authRef = React.useRef(_web3auth)
   const web3auth = web3authRef.current
 
-  const [signer, setSigner] = React.useState<ethers.JsonRpcSigner | null>(null)
+  const [signer, setSigner] = React.useState<Signer | null>(null)
   const [status, setStatus] = React.useState<ADAPTER_STATUS_TYPE>('not_ready')
 
   const getSigner = React.useCallback(async () => {
     if (web3auth.provider) {
-      const provider = new ethers.BrowserProvider(web3auth.provider)
+      const provider = new ethers.providers.Web3Provider(web3auth.provider)
       const _signer = await provider.getSigner()
       console.log('🦋 | signer', _signer)
       setSigner(_signer)

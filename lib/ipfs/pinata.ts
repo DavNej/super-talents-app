@@ -1,4 +1,3 @@
-import type { AddressLike } from 'ethers'
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -12,7 +11,7 @@ type Args = [string, string, AxiosRequestConfig]
 
 export async function uploadToPinata(
   profileData: IProfileIPFS,
-  ownerAddress: AddressLike
+  ownerAddress: string
 ): Promise<string | null> {
   const axiosArgs = buildPinJsonArgs(profileData, ownerAddress)
 
@@ -28,7 +27,7 @@ export async function uploadToPinata(
 
 function buildPinJsonArgs(
   profileData: IProfileIPFS,
-  ownerAddress: AddressLike
+  ownerAddress: string
 ): Args {
   const data = JSON.stringify({
     pinataOptions: { cidVersion: 0 },

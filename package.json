@@ -22,7 +22,7 @@
     "clsx": "^1.2.1",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
-    "ethers": "^6.7.0",
+    "ethers": "^5.7.2",
     "formik": "^2.4.3",
     "heic2any": "^0.0.4",
     "next": "13.4.9",

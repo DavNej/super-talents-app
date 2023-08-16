@@ -20,18 +20,23 @@ export default function ProfilePreviewPage() {
   const [isLoading, setIsLoading] = React.useState(false)
   const user = useUser()
 
-  if (!profile.handle) redirect('/login')
+  if (!profile.handle || !signer) redirect('/login')
 
   async function uploadData() {
-    if (!profile.role || !signer?.address) {
-      console.error('missing role or signer')
-      console.error('profile.role', profile.role)
+    if (!signer) {
+      console.error('missing signer address')
       console.error('signer', signer)
+      return
+    }
+    if (!profile.role) {
+      console.error('missing profile role')
+      console.error('profile.role', profile.role)
       return
     }
 
     setIsLoading(true)
-    const ipfsHash = await uploadToPinata(profile, signer.address)
+    const address = await signer.getAddress()
+    const ipfsHash = await uploadToPinata(profile, address)
     if (!ipfsHash) {
       setIsLoading(false)
       return
@@ -42,12 +47,17 @@ export default function ProfilePreviewPage() {
   }
 
   async function handleMint() {
-    if (!profile.role || !signer?.address) {
-      console.error('missing role or signer')
-      console.error('profile.role', profile.role)
+    if (!signer) {
+      console.error('missing signer address')
       console.error('signer', signer)
       return
     }
+    if (!profile.role) {
+      console.error('missing profile role')
+      console.error('profile.role', profile.role)
+      return
+    }
+
     const talentLayerId = await mintTalentLayerId(profile.handle, signer)
 
     if (!talentLayerId) {
