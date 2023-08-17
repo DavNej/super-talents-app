@@ -39,7 +39,6 @@ export default function AvatarPage() {
   }
 
   async function generateImage() {
-    console.log('posting image')
     setIsLoading(true)
     if (hasImageOutputs) {
       setImageOutputs([])
@@ -49,6 +48,8 @@ export default function AvatarPage() {
       '/profile/new/avatar/generate',
       { image: base64UploadedImage }
     )
+
+    console.log('🦋 | generateImage', res)
 
     if (!res.ok) {
       toast.error(res.error.message)
@@ -63,7 +64,9 @@ export default function AvatarPage() {
   }
 
   async function checkStatus() {
-    console.log('checking status')
+    console.log('⏳ Checking status id:', jobId)
+    if (!jobId) return
+
     const res = await fetcher.GET<AvatarResponse>(
       `/profile/new/avatar/generate?id=${jobId}`
     )

@@ -21,7 +21,7 @@ export default function ProfileInfoPage() {
   }
 
   return (
-    <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
+    <main className='px-24 pb-12 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-col flex-1'>
         <BackLink />
         <h3 className='font-semibold text-5xl mb-12 whitespace-nowrap'>
