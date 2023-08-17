@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 
 import { SUPERTALENTS_PLATFORM_ID, config, talentLayerAddress } from './config'
 import talentLayerIdAbi from './TalentLayerID.json'
-import { showErrorTransactionToast } from '../errors'
+import { showErrorTransactionToast } from '../../../lib/errors'
 import { getTalentLayerUser } from './graph'
 
 export const talentLayerInterface = new ethers.utils.Interface(talentLayerIdAbi)

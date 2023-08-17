@@ -5,8 +5,8 @@ import { useWeb3Auth } from './web3auth'
 import {
   type IGetTalentLayerUserArgs,
   getTalentLayerUser,
-} from '@/lib/talent-layer/graph'
-import type { ITalentLayerUser } from '@/lib/talent-layer/config'
+} from '@/app/hooks/talent-layer/graph'
+import type { ITalentLayerUser } from '@/app/hooks/talent-layer/config'
 
 const initialValue = {
   user: null,
