@@ -4,7 +4,6 @@ import { type Signer } from 'ethers'
 import { ChainId } from '@biconomy/core-types'
 import {
   BiconomySmartAccount,
-  type BiconomySmartAccountConfig,
   DEFAULT_ENTRYPOINT_ADDRESS,
 } from '@biconomy/account'
 import {
@@ -14,10 +13,9 @@ import {
   SponsorUserOperationDto,
   PaymasterMode,
 } from '@biconomy/paymaster'
-import { talentLayerInterface } from '@/lib/talent-layer'
+import { toast } from 'react-toastify'
 
 const chainId = ChainId.POLYGON_MUMBAI
-const talentLayerAddress = '0x2475F87a2A73548b2E49351018E7f6a53D3d35A4'
 
 const bundler: IBundler = new Bundler({
   bundlerUrl:
@@ -31,78 +29,75 @@ const paymaster: IPaymaster = new BiconomyPaymaster({
     'https://paymaster.biconomy.io/api/v1/80001/DqNBUdjR_.ad347838-4e86-4fe4-a47d-415dabee1d3b',
 })
 
-export function useBiconomy(signer: Signer) {
-  // if (!signer) return { createAccount: () => {}, updateProfileData: () => {} }
+const paymasterServiceData: SponsorUserOperationDto = {
+  mode: PaymasterMode.SPONSORED,
+}
 
-  const { current: biconomySmartAccountConfig } =
-    React.useRef<BiconomySmartAccountConfig>({
+export function useBiconomy() {
+  const [smartAccount, setsmartAccount] =
+    React.useState<BiconomySmartAccount | null>(null)
+
+  const init = React.useCallback(async (signer: Signer) => {
+    console.log('💡 Creating Smart account')
+
+    let biconomySmartAccount = new BiconomySmartAccount({
       signer,
       chainId,
       bundler,
       paymaster,
     })
 
-  const createAccount = React.useCallback(async () => {
-    let biconomySmartAccount = new BiconomySmartAccount(
-      biconomySmartAccountConfig
-    )
     biconomySmartAccount = await biconomySmartAccount.init()
-    console.log('biconomySmartAccount', biconomySmartAccount)
-    console.log('owner: ', biconomySmartAccount.owner)
+    console.log('🎉 Smart account created', biconomySmartAccount)
     console.log(
       'address: ',
       await biconomySmartAccount.getSmartAccountAddress()
     )
-    return biconomySmartAccount
-  }, [biconomySmartAccountConfig])
+    setsmartAccount(biconomySmartAccount)
+  }, [])
 
-  async function updateProfileData() {
-    console.log('creating account')
+  const sendUserOp = React.useCallback(
+    async (
+      transactions: {
+        to: string
+        data: string
+        value?: number
+      }[]
+    ) => {
+      if (!smartAccount) return
 
-    const smartAccount = await createAccount()
+      let userOp = await smartAccount.buildUserOp(transactions)
 
-    const data = talentLayerInterface.encodeFunctionData('updateProfileData', [
-      174,
-      'QmXYy1B1zWAYTYsLX5MvDp5muCfQaNBjsBg6PQ1RXcLH93',
-    ])
+      const biconomyPaymaster =
+        smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>
 
-    const transaction = {
-      to: talentLayerAddress,
-      data,
-      // value: parseEther('0.1'),
-    }
+      try {
+        const paymasterAndDataResponse =
+          await biconomyPaymaster.getPaymasterAndData(
+            userOp,
+            paymasterServiceData
+          )
 
-    let partialUserOp = await smartAccount.buildUserOp([transaction])
+        userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData
+      } catch (e) {
+        toast.error('Paymaster setup error')
+        console.error('Biconomy paymaster error', e)
+      }
 
-    const biconomyPaymaster =
-      smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>
-
-    let paymasterServiceData: SponsorUserOperationDto = {
-      mode: PaymasterMode.SPONSORED,
-    }
-
-    try {
-      const paymasterAndDataResponse =
-        await biconomyPaymaster.getPaymasterAndData(
-          partialUserOp,
-          paymasterServiceData
+      try {
+        const userOpResponse = await smartAccount.sendUserOp(userOp)
+        const transactionDetails = await userOpResponse.wait()
+        console.log('🦋 | TransactionDetails', transactionDetails)
+        toast.success(
+          'Success: https://mumbai.polygonscan.com/tx/${transactionDetails.receipt.transactionHash}'
         )
+      } catch (e) {
+        toast.error('Could not process transactions')
+        console.error('Biconomy sendUserOp error ', e)
+      }
+    },
+    [smartAccount]
+  )
 
-      partialUserOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData
-    } catch (e) {
-      console.log('biconomy paymaster error received ', e)
-    }
-
-    try {
-      const userOpResponse = await smartAccount.sendUserOp(partialUserOp)
-      const transactionDetails = await userOpResponse.wait()
-      console.log(
-        `transactionDetails: https://mumbai.polygonscan.com/tx/${transactionDetails.receipt.transactionHash}`
-      )
-    } catch (e) {
-      console.log('biconomy sendUserOp error received ', e)
-    }
-  }
-
-  return { createAccount, updateProfileData }
+  return { init, sendUserOp }
 }

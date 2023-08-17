@@ -7,6 +7,44 @@ import { showErrorTransactionToast } from '../errors'
 import { getTalentLayerUser } from './graph'
 
 export const talentLayerInterface = new ethers.utils.Interface(talentLayerIdAbi)
+
+export function buildMintTalentLayerIdTx({
+  handle,
+  handlePrice,
+}: {
+  handle: number
+  handlePrice: number
+}) {
+  const txData = talentLayerInterface.encodeFunctionData('mint', [
+    SUPERTALENTS_PLATFORM_ID,
+    handle,
+  ])
+
+  return {
+    to: talentLayerAddress,
+    data: txData,
+    value: handlePrice,
+  }
+}
+
+export function buildUpdateProfileDataTx({
+  id,
+  cid,
+}: {
+  id: number
+  cid: string
+}) {
+  const txData = talentLayerInterface.encodeFunctionData('updateProfileData', [
+    id,
+    cid,
+  ])
+
+  return {
+    to: talentLayerAddress,
+    data: txData,
+  }
+}
+
 export async function mintTalentLayerId(
   handle: string,
   signer: Signer
