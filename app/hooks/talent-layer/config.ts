@@ -4,7 +4,7 @@ export enum NetworkEnum {
 }
 
 export const SUPERTALENTS_PLATFORM_ID = 18
-export const talentLayerAddress = '0x2475F87a2A73548b2E49351018E7f6a53D3d35A4'
+export const talentLayerAddress = '0x3F87289e6Ec2D05C32d8A74CCfb30773fF549306' // Mumbai
 
 export interface ITalentLayerUser {
   address: string
@@ -24,14 +24,14 @@ const mumbai: Config = {
   subgraphUrl:
     'https://api.thegraph.com/subgraphs/name/talentlayer/talent-layer-mumbai',
   contracts: {
-    talentLayerId: '0x3F87289e6Ec2D05C32d8A74CCfb30773fF549306',
+    talentLayerId: talentLayerAddress,
   },
 }
 
 const local: Config = {
   networkId: NetworkEnum.LOCAL,
   subgraphUrl: 'http://localhost:8020/',
-  contracts: { talentLayerId: talentLayerAddress },
+  contracts: { talentLayerId: '0x2475F87a2A73548b2E49351018E7f6a53D3d35A4' },
 }
 
 const chains: { [networkId in NetworkEnum]: Config } = {

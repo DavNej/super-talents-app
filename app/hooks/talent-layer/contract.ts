@@ -1,14 +1,15 @@
-import { ethers, type Signer, type ContractTransaction } from 'ethers'
+import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
 import React from 'react'
+import type { Transaction } from '@biconomy/core-types'
 
 import { showErrorTransactionToast } from '@/lib/errors'
-import { useUser } from '../user'
 import { useBiconomy } from '../biconomy'
 
 import { SUPERTALENTS_PLATFORM_ID, config, talentLayerAddress } from './config'
 import talentLayerIdAbi from './TalentLayerID.json'
 import { useWeb3Auth } from '../web3auth'
+import { getTalentLayerUser } from './graph'
 
 export const talentLayerInterface = new ethers.utils.Interface(talentLayerIdAbi)
 
@@ -16,17 +17,17 @@ export function buildMintTalentLayerIdTx({
   handle,
   handlePrice,
 }: {
-  handle: number
-  handlePrice: number
-}) {
-  const txData = talentLayerInterface.encodeFunctionData('mint', [
+  handle: string
+  handlePrice: ethers.BigNumber
+}): Transaction {
+  const functionData = talentLayerInterface.encodeFunctionData('mint', [
     SUPERTALENTS_PLATFORM_ID,
     handle,
   ])
 
   return {
     to: talentLayerAddress,
-    data: txData,
+    data: functionData,
     value: handlePrice,
   }
 }
@@ -37,29 +38,19 @@ export function buildUpdateProfileDataTx({
 }: {
   id: number
   cid: string
-}) {
-  const txData = talentLayerInterface.encodeFunctionData('updateProfileData', [
-    id,
-    cid,
-  ])
+}): Transaction {
+  const functionData = talentLayerInterface.encodeFunctionData(
+    'updateProfileData',
+    [id, cid]
+  )
 
   return {
     to: talentLayerAddress,
-    data: txData,
+    data: functionData,
   }
 }
 
-async function procressTransaction(
-  caption: string,
-  tx: ethers.ContractTransaction
-) {
-  console.log(`${caption} tx:`, tx)
-  const rc = await tx.wait(1)
-  console.log(`${caption} rc:`, rc)
-}
-
 export function useTalentLayerContract() {
-  const { getConnectedUser } = useUser()
   const { signer } = useWeb3Auth()
 
   const biconomy = useBiconomy()
@@ -106,13 +97,9 @@ export function useTalentLayerContract() {
       const handlePrice = await getHandlePrice({ handle })
       if (handlePrice === null) return
 
-      const mintTx: ContractTransaction = await contract.mint(
-        SUPERTALENTS_PLATFORM_ID,
-        handle,
-        { value: handlePrice }
-      )
-
-      await procressTransaction('🦋 | mint', mintTx)
+      const tx = buildMintTalentLayerIdTx({ handle, handlePrice })
+      console.log('🦋 | mintTalentLayerId', { tx })
+      await biconomy.sendUserOp([tx])
     } catch (error) {
       toast.error('Could not mint Profile NFT')
       showErrorTransactionToast(error)
@@ -120,18 +107,35 @@ export function useTalentLayerContract() {
   }
 
   async function updateProfileData({
+    handle,
     talentLayerId,
     newCid,
   }: {
-    talentLayerId: number
-    newCid: string
+    handle?: string
+    talentLayerId?: number
+    newCid?: string
   }) {
     try {
-      const updateDataTx: ContractTransaction =
-        await contract.updateProfileData(talentLayerId, newCid)
+      let _id = talentLayerId
+      let _cid = newCid
 
-      await procressTransaction('🦋 | updateProfileData', updateDataTx)
-      toast.success('Profile data updated successfully')
+      if (handle) {
+        const _user = await getTalentLayerUser({ handle })
+        if (_user) {
+          _id = Number(_user.id)
+          _cid = _user.cid
+        }
+      }
+
+      if (!(_id && _cid)) {
+        toast.warn('Missing id or cid')
+        return
+      }
+
+      const tx = buildUpdateProfileDataTx({ id: _id, cid: _cid })
+
+      console.log('🦋 | updateProfileData', { tx })
+      await biconomy.sendUserOp([tx])
     } catch (error) {
       toast.error('Could not update profile data')
       showErrorTransactionToast(error)

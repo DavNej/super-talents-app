@@ -36,34 +36,26 @@ export default function ProfilePreviewPage() {
     await setPinataCid(ipfsHash)
   }
 
-  async function handleMint() {
-    if (!connectedProfile?.role) {
-      console.error('missing connectedProfile role')
-      console.error('connectedProfile.role', connectedProfile?.role)
-      return
-    }
-
-    await talentLayerContract?.mintTalentLayerId({
-      handle: connectedProfile.handle,
-    })
-  }
-
   async function handleClick() {
     setIsLoading(true)
     await uploadToIpfs()
 
+    const handle = connectedProfile?.handle
+
+    if (!handle) {
+      console.error('missing connectedProfile handle')
+      return
+    }
+
     if (!connectedUser) {
-      handleMint()
-    } else {
-      const talentLayerId = Number(connectedUser.id)
-
-      if (Number.isNaN(talentLayerId)) return
-
-      await talentLayerContract?.updateProfileData({
-        talentLayerId,
-        newCid: pinataCid,
+      await talentLayerContract?.mintTalentLayerId({
+        handle,
       })
     }
+    await talentLayerContract?.updateProfileData({
+      handle,
+    })
+
     setIsLoading(false)
   }
 

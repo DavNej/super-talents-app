@@ -1,7 +1,7 @@
 import React from 'react'
 import { IBundler, Bundler } from '@biconomy/bundler'
 import { type Signer } from 'ethers'
-import { ChainId } from '@biconomy/core-types'
+import { ChainId, type Transaction } from '@biconomy/core-types'
 import {
   BiconomySmartAccount,
   DEFAULT_ENTRYPOINT_ADDRESS,
@@ -61,13 +61,7 @@ export function useBiconomy() {
   )
 
   const sendUserOp = React.useCallback(
-    async (
-      transactions: {
-        to: string
-        data: string
-        value?: number
-      }[]
-    ) => {
+    async (transactions: Transaction[]) => {
       if (!smartAccount) return
 
       let userOp = await smartAccount.buildUserOp(transactions)
@@ -93,7 +87,7 @@ export function useBiconomy() {
         const transactionDetails = await userOpResponse.wait()
         console.log('🦋 | TransactionDetails', transactionDetails)
         toast.success(
-          'Success: https://mumbai.polygonscan.com/tx/${transactionDetails.receipt.transactionHash}'
+          `Success: https://mumbai.polygonscan.com/tx/${transactionDetails.receipt.transactionHash}`
         )
       } catch (e) {
         toast.error('Could not process transactions')
