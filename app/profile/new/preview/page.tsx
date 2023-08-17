@@ -9,10 +9,9 @@ import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 import { useProfile } from '@/app/hooks/profile'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
-import { mintTalentLayerId, updateProfileData } from '@/lib/talent-layer'
 import ProfilePreview from '@/app/components/ProfilePreview'
 import { useUser } from '@/app/hooks/user'
-import { useBiconomy } from '@/app/hooks/biconomy'
+import { useTalentLayerContract } from '@/app/hooks/talent-layer/contract'
 
 export default function ProfilePreviewPage() {
   const { connectedProfile } = useProfile()
@@ -20,10 +19,7 @@ export default function ProfilePreviewPage() {
   const { signer } = useWeb3Auth()
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const [isLoading, setIsLoading] = React.useState(false)
-  const user = useUser()
-
-  if (!connectedProfile || !signer) redirect('/login')
-
+  const talentLayerContract = useTalentLayerContract({ signer })
 
   async function uploadToIpfs() {
     if (!connectedProfile?.role) {
@@ -32,52 +28,45 @@ export default function ProfilePreviewPage() {
       return
     }
 
-    setIsLoading(true)
     const ipfsHash = await uploadToPinata(
       connectedProfile,
       connectedProfile.handle
     )
 
-    if (!ipfsHash) {
-      setIsLoading(false)
-      return
-    }
+    if (!ipfsHash) return
 
     await setPinataCid(ipfsHash)
-    setIsLoading(false)
   }
 
   async function handleMint() {
-    if (!signer) {
-      console.error('missing signer address')
-      console.error('signer', signer)
-      return
-    }
     if (!connectedProfile?.role) {
       console.error('missing connectedProfile role')
       console.error('connectedProfile.role', connectedProfile?.role)
       return
     }
 
-    const talentLayerId = await mintTalentLayerId(
-      connectedProfile.handle,
-      signer
-    )
-
-    if (!talentLayerId) {
-      setIsLoading(false)
-      return
-    }
-
-    await updateProfileData(talentLayerId, pinataCid, signer)
-    setIsLoading(false)
+    await talentLayerContract?.mintTalentLayerId({
+      handle: connectedProfile.handle,
+    })
   }
+
   async function handleClick() {
+    setIsLoading(true)
     await uploadToIpfs()
-    if (connectedUser) {
-    } else {
+
+    if (!connectedUser) {
       handleMint()
+    } else {
+      const talentLayerId = Number(connectedUser.id)
+
+      if (Number.isNaN(talentLayerId)) return
+
+      await talentLayerContract?.updateProfileData({
+        talentLayerId,
+        newCid: pinataCid,
+      })
     }
+    setIsLoading(false)
   }
 
   return !connectedProfile || !signer ? (

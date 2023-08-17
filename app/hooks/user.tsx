@@ -12,12 +12,14 @@ const initialValue = {
   user: null,
   connectedUser: null,
   getUser: () => {},
+  getConnectedUser: () => {},
 }
 
 const UserContext = React.createContext<{
   user: ITalentLayerUser | null
   connectedUser: ITalentLayerUser | null
   getUser: (args: IGetTalentLayerUserArgs) => void
+  getConnectedUser: () => void
 }>(initialValue)
 
 export function useUser() {
@@ -50,7 +52,7 @@ export function UserProvider(props: React.PropsWithChildren) {
   const getConnectedUser = React.useCallback(async () => {
     if (signer) {
       const address = await signer.getAddress()
-      console.log('getting connected user')
+      console.log('🦋 | Getting connected user')
       const _user = await getTalentLayerUser({ address })
       if (_user) {
         setConnectedUser(_user)
@@ -67,8 +69,9 @@ export function UserProvider(props: React.PropsWithChildren) {
       user,
       connectedUser,
       getUser,
+      getConnectedUser,
     }),
-    [user, connectedUser, getUser]
+    [user, connectedUser, getUser, getConnectedUser]
   )
 
   return <UserContext.Provider value={value} {...props} />
