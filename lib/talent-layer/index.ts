@@ -67,7 +67,7 @@ export async function getTalentLayerUser({
   const user = res.users.at(0)
 
   if (user === undefined) {
-    toast.error('No user registered with given address')
+    console.log('No user registered with given address')
     return null
   }
 

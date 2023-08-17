@@ -15,30 +15,20 @@ export default function ProfileHandlePage({
   params: { handle: string }
 }) {
   const { user, connectedUser, getUser } = useUser()
-
-  const { profile, setProfile, setConnectedProfile, connectedProfile } =
-    useProfile()
+  const { profile, setProfile } = useProfile()
 
   const isConnectedUser = params.handle === connectedUser?.handle
 
   React.useEffect(() => {
-    // if (!isConnectedUser) {
     getUser({ handle: params.handle })
-    // }
   }, [getUser, isConnectedUser, params.handle])
 
   React.useEffect(() => {
-    // if (isConnectedUser && connectedUser.cid) {
     if (user?.cid) {
       getUserData({
         cid: user.cid,
         handle: user.handle,
-        // cid: connectedUser.cid,
-        // handle: connectedUser.handle,
-      }).then(res => {
-        console.log('🦋 | res', res)
-        setProfile(res)
-      })
+      }).then(setProfile)
     }
   }, [user, connectedUser, isConnectedUser, setProfile])
 
@@ -46,7 +36,11 @@ export default function ProfileHandlePage({
 
   return (
     <main className='p-24 min-h-screen flex flex-col items-center'>
-      <ProfilePreview className='flex-a' profile={profile} isConnectedUser={isConnectedUser} />
+      <ProfilePreview
+        className='flex-a'
+        profile={profile}
+        isMinted={Boolean(connectedUser?.id)}
+      />
       <LogoutButton className='mt-4' />
     </main>
   )

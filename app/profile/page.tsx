@@ -9,7 +9,7 @@ import { useWeb3Auth } from '@/app/hooks/web3auth'
 import PageLoader from '@/app/components/PageLoader'
 
 export default function ProfileRouterPage() {
-  const { status, signer } = useWeb3Auth()
+  const { status } = useWeb3Auth()
   const { connectedUser } = useUser()
 
   const router = useRouter()

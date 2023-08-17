@@ -15,13 +15,14 @@ import { useUser } from '@/app/hooks/user'
 import { useBiconomy } from '@/app/hooks/biconomy'
 
 export default function ProfilePreviewPage() {
-  const { profile } = useProfile()
+  const { connectedProfile } = useProfile()
+  const { connectedUser } = useUser()
   const { signer } = useWeb3Auth()
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const [isLoading, setIsLoading] = React.useState(false)
   const user = useUser()
 
-  if (!profile.handle || !signer) redirect('/login')
+  if (!connectedProfile || !signer) redirect('/login')
 
   const { updateProfileData } = useBiconomy(signer)
 
@@ -31,15 +32,15 @@ export default function ProfilePreviewPage() {
       console.error('signer', signer)
       return
     }
-    if (!profile.role) {
-      console.error('missing profile role')
-      console.error('profile.role', profile.role)
+    if (!connectedProfile?.role) {
+      console.error('missing connectedProfile role')
+      console.error('connectedProfile.role', connectedProfile?.role)
       return
     }
 
     setIsLoading(true)
     const address = await signer.getAddress()
-    const ipfsHash = await uploadToPinata(profile, address)
+    const ipfsHash = await uploadToPinata(connectedProfile, address)
     if (!ipfsHash) {
       setIsLoading(false)
       return
@@ -55,13 +56,16 @@ export default function ProfilePreviewPage() {
       console.error('signer', signer)
       return
     }
-    if (!profile.role) {
-      console.error('missing profile role')
-      console.error('profile.role', profile.role)
+    if (!connectedProfile?.role) {
+      console.error('missing connectedProfile role')
+      console.error('connectedProfile.role', connectedProfile?.role)
       return
     }
 
-    const talentLayerId = await mintTalentLayerId(profile.handle, signer)
+    const talentLayerId = await mintTalentLayerId(
+      connectedProfile.handle,
+      signer
+    )
 
     if (!talentLayerId) {
       setIsLoading(false)
@@ -80,7 +84,7 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          {Boolean(user.id) ? (
+          {connectedUser ? (
             <Button isLoading={isLoading} onClick={uploadData}>
               Update profile
             </Button>
@@ -91,7 +95,10 @@ export default function ProfilePreviewPage() {
           )}
         </div>
 
-        <ProfilePreview />
+        <ProfilePreview
+          isMinted={Boolean(connectedUser)}
+          profile={connectedProfile}
+        />
       </div>
     </main>
   )
