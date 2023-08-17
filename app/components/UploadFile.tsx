@@ -3,8 +3,8 @@
 import Image from 'next/image'
 import React from 'react'
 
-import useImageProcessing from '../hooks/useImageProcessing'
-import useDropzone from '../hooks/useDropzone'
+import useImageProcessing from '@/app/hooks/useImageProcessing'
+import useDropzone from '@/app/hooks/useDropzone'
 import { toast } from 'react-toastify'
 
 export default function UploadFile({

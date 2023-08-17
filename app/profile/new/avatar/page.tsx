@@ -2,18 +2,24 @@
 
 import React from 'react'
 import Link from 'next/link'
+
+import { toast } from 'react-toastify'
 import { useInterval, useLocalStorage } from 'usehooks-ts'
+
+import fetcher from '@/lib/fetcher'
+import type { AvatarResponse } from './generate/config'
 
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
-import fetcher from '@/lib/fetcher'
-
-import type { AvatarResponse } from './generate/config'
-
 import Loader from '@/app/components/Loader'
+
 import ImagePreview from '@/app/components/ImagePreview'
-import UploadFile from '@/app/components/UploadFile'
-import { toast } from 'react-toastify'
+
+import dynamic from 'next/dynamic'
+
+const UploadFile = dynamic(() => import('@/app/components/UploadFile'), {
+  ssr: false,
+})
 
 export default function AvatarPage() {
   const [jobId, setJobId] = React.useState('')
