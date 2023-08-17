@@ -45,6 +45,23 @@ export function buildUpdateProfileDataTx({
   }
 }
 
+export async function getHandlePrice(handle: string, signer: Signer) {
+  const contract = new ethers.Contract(
+    config.contracts.talentLayerId,
+    talentLayerInterface,
+    signer
+  )
+
+  try {
+    const handlePrice: number = await contract.getHandlePrice(handle)
+    return handlePrice
+  } catch (error) {
+    console.error(error)
+    toast.error('Could not get handle price')
+    return null
+  }
+}
+
 export async function mintTalentLayerId(
   handle: string,
   signer: Signer
@@ -56,7 +73,10 @@ export async function mintTalentLayerId(
       signer
     )
 
-    const handlePrice: number = await contract.getHandlePrice(handle)
+    const handlePrice = await getHandlePrice(handle, signer)
+
+    if (handlePrice === null) return null
+
     const mintTx: ContractTransaction = await contract.mint(
       SUPERTALENTS_PLATFORM_ID,
       handle,
