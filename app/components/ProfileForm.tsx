@@ -5,11 +5,11 @@ import Image from 'next/image'
 import type { ChatCompletionResponseMessage } from 'openai'
 
 import { cn } from '@/lib'
+import { roleCaptions, validationSchema, initialValues } from '@/lib/form-utils'
 import fetcher from '@/lib/fetcher'
 import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 
-import { roleCaptions, validationSchema, initialValues } from '../form-utils'
 import type { IProfile, IProfileForm } from '@/app/hooks/profile/types'
 
 import ChooseAboutDialog from './ChooseAboutDialog'

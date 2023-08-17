@@ -7,6 +7,8 @@ import { useUser } from '@/app/hooks/user'
 import { useWeb3Auth } from '@/app/hooks/web3auth'
 
 import PageLoader from '@/app/components/PageLoader'
+import { getUserData } from '@/lib/ipfs'
+import { useProfile } from '@/app/hooks/profile'
 
 export default function ProfileRouterPage() {
   const { status } = useWeb3Auth()

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import BackLink from '@/app/components/BackLink'
-import ProfileForm from './components/ProfileForm'
+import ProfileForm from '@/app/components/ProfileForm'
 import type { IProfileForm } from '@/app/hooks/profile/types'
 import { useRouter } from 'next/navigation'
 import { useProfile } from '@/app/hooks/profile'

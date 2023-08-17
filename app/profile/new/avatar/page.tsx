@@ -11,8 +11,8 @@ import fetcher from '@/lib/fetcher'
 import type { AvatarResponse } from './generate/config'
 
 import Loader from '@/app/components/Loader'
-import ImagePreview from './components/ImagePreview'
-import UploadFile from './components/UploadFile'
+import ImagePreview from '@/app/components/ImagePreview'
+import UploadFile from '@/app/components/UploadFile'
 import { toast } from 'react-toastify'
 
 export default function AvatarPage() {

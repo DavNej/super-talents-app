@@ -2,9 +2,9 @@
 
 import React from 'react'
 import Image from 'next/image'
-import LoginSection from './components/LoginSection'
+import LoginSection from '@/app/components/LoginSection'
 import { useRouter } from 'next/navigation'
-import { useWeb3Auth } from '../hooks/web3auth'
+import { useWeb3Auth } from '@/app/hooks/web3auth'
 
 export default function LoginPage() {
   const { status } = useWeb3Auth()

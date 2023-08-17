@@ -3,7 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { roleCaptions } from '@/app/profile/new/info/form-utils'
+import { roleCaptions } from '@/lib/form-utils'
 
 import { clsx, type ClassValue } from 'clsx'
 import { IProfile } from '../hooks/profile/types'
