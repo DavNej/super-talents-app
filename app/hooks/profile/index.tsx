@@ -3,19 +3,6 @@
 import * as React from 'react'
 import type { IProfile } from './types'
 
-export const initialValues: IProfile = {
-  handle: '',
-  name: '',
-  about: '',
-  skills: [],
-  github: '',
-  otherLink: '',
-  portefolio: '',
-  twitter: '',
-  role: '',
-  picture: '',
-}
-
 const ProfileContext = React.createContext<{
   profile: IProfile | null
   setProfile: React.Dispatch<React.SetStateAction<IProfile | null>>

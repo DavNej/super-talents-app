@@ -1,3 +1,4 @@
+import { IProfile } from '@/app/hooks/profile/types'
 import { handleExists } from '@/lib/talent-layer'
 import * as Yup from 'yup'
 
@@ -5,6 +6,19 @@ export const roleCaptions = {
   seller: 'Talent',
   buyer: 'Client',
   both: 'Both',
+}
+
+export const initialValues: IProfile = {
+  handle: '',
+  name: '',
+  about: '',
+  skills: [],
+  github: '',
+  otherLink: '',
+  portefolio: '',
+  twitter: '',
+  role: '',
+  picture: '',
 }
 
 export const validationSchema = Yup.object().shape({

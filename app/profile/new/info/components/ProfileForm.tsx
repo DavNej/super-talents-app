@@ -9,7 +9,7 @@ import fetcher from '@/lib/fetcher'
 import Button from '@/app/components/Button'
 import Chip from '@/app/components/Chip'
 
-import { roleCaptions, validationSchema } from '../form-utils'
+import { roleCaptions, validationSchema, initialValues } from '../form-utils'
 import type { IProfile, IProfileForm } from '@/app/hooks/profile/types'
 
 import ChooseAboutDialog from './ChooseAboutDialog'
@@ -36,11 +36,16 @@ export default function ProfileForm({
   profile,
   onSubmit,
 }: {
-  profile: IProfile
+  profile: IProfile | null
   onSubmit: (data: IProfileForm) => void
 }) {
+  const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
+  const [openDialog, setOpenDialog] = React.useState(false)
+  const [isAboutLoading, setIsAboutLoading] = React.useState(false)
+  const [skill, setSkill] = React.useState('')
+
   const formik = useFormik({
-    initialValues: profile,
+    initialValues: profile ? profile : initialValues,
     validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       const profileData: IProfileForm = {
@@ -59,11 +64,6 @@ export default function ProfileForm({
       setSubmitting(false)
     },
   })
-
-  const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
-  const [openDialog, setOpenDialog] = React.useState(false)
-  const [isAboutLoading, setIsAboutLoading] = React.useState(false)
-  const [skill, setSkill] = React.useState('')
 
   async function improveAbout() {
     const about = formik.values.about

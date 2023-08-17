@@ -9,14 +9,15 @@ import { useProfile } from '@/app/hooks/profile'
 import { useLocalStorage } from 'usehooks-ts'
 
 export default function ProfileInfoPage() {
-  const { setProfile, profile } = useProfile()
-  const { push } = useRouter()
+  const { setConnectedProfile, connectedProfile } = useProfile()
+
+  const router = useRouter()
 
   const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
 
   function onSubmit(data: IProfileForm) {
-    setProfile({ ...data, picture: selectedAvatar })
-    push('/profile/new/preview')
+    setConnectedProfile({ ...data, picture: selectedAvatar })
+    router.push('/profile/new/preview')
   }
 
   return (
@@ -26,7 +27,7 @@ export default function ProfileInfoPage() {
         <h3 className='font-semibold text-5xl mb-12 whitespace-nowrap'>
           Add Profile Info
         </h3>
-        <ProfileForm onSubmit={onSubmit} profile={profile} />
+        <ProfileForm onSubmit={onSubmit} profile={connectedProfile} />
       </div>
     </main>
   )
