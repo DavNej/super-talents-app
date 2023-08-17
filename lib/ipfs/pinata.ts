@@ -11,9 +11,9 @@ type Args = [string, string, AxiosRequestConfig]
 
 export async function uploadToPinata(
   profileData: IProfileIPFS,
-  ownerAddress: string
+  handle: string
 ): Promise<string | null> {
-  const axiosArgs = buildPinJsonArgs(profileData, ownerAddress)
+  const axiosArgs = buildPinJsonArgs(profileData, handle)
 
   try {
     const res = await axios.post<{ IpfsHash: string }>(...axiosArgs)
@@ -25,13 +25,10 @@ export async function uploadToPinata(
   }
 }
 
-function buildPinJsonArgs(
-  profileData: IProfileIPFS,
-  ownerAddress: string
-): Args {
+function buildPinJsonArgs(profileData: IProfileIPFS, handle: string): Args {
   const data = JSON.stringify({
     pinataOptions: { cidVersion: 0 },
-    pinataMetadata: { name: ownerAddress },
+    pinataMetadata: { name: handle },
     pinataContent: profileData,
   })
 

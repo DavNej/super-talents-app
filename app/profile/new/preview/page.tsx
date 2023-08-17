@@ -24,14 +24,8 @@ export default function ProfilePreviewPage() {
 
   if (!connectedProfile || !signer) redirect('/login')
 
-  const { updateProfileData } = useBiconomy(signer)
 
-  async function uploadData() {
-    if (!signer) {
-      console.error('missing signer address')
-      console.error('signer', signer)
-      return
-    }
+  async function uploadToIpfs() {
     if (!connectedProfile?.role) {
       console.error('missing connectedProfile role')
       console.error('connectedProfile.role', connectedProfile?.role)
@@ -39,8 +33,11 @@ export default function ProfilePreviewPage() {
     }
 
     setIsLoading(true)
-    const address = await signer.getAddress()
-    const ipfsHash = await uploadToPinata(connectedProfile, address)
+    const ipfsHash = await uploadToPinata(
+      connectedProfile,
+      connectedProfile.handle
+    )
+
     if (!ipfsHash) {
       setIsLoading(false)
       return
