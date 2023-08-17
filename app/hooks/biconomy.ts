@@ -37,24 +37,28 @@ export function useBiconomy() {
   const [smartAccount, setsmartAccount] =
     React.useState<BiconomySmartAccount | null>(null)
 
-  const init = React.useCallback(async (signer: Signer) => {
-    console.log('💡 Creating Smart account')
+  const init = React.useCallback(
+    async (signer: Signer) => {
+      if (smartAccount) return
+      console.log('💡 Creating Smart account')
 
-    let biconomySmartAccount = new BiconomySmartAccount({
-      signer,
-      chainId,
-      bundler,
-      paymaster,
-    })
+      let biconomySmartAccount = new BiconomySmartAccount({
+        signer,
+        chainId,
+        bundler,
+        paymaster,
+      })
 
-    biconomySmartAccount = await biconomySmartAccount.init()
-    console.log('🎉 Smart account created', biconomySmartAccount)
-    console.log(
-      'address: ',
-      await biconomySmartAccount.getSmartAccountAddress()
-    )
-    setsmartAccount(biconomySmartAccount)
-  }, [])
+      biconomySmartAccount = await biconomySmartAccount.init()
+      console.log('🎉 Smart account created', biconomySmartAccount)
+      console.log(
+        'address: ',
+        await biconomySmartAccount.getSmartAccountAddress()
+      )
+      setsmartAccount(biconomySmartAccount)
+    },
+    [smartAccount]
+  )
 
   const sendUserOp = React.useCallback(
     async (

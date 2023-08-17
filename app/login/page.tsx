@@ -3,8 +3,17 @@
 import React from 'react'
 import Image from 'next/image'
 import LoginSection from './components/LoginSection'
+import { useRouter } from 'next/navigation'
+import { useWeb3Auth } from '../hooks/web3auth'
 
 export default function LoginPage() {
+  const { status } = useWeb3Auth()
+  const router = useRouter()
+
+  React.useEffect(() => {
+    if (status === 'connected') return router.push('/profile')
+  }, [router, status])
+
   return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>

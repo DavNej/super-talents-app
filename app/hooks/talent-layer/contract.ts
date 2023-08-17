@@ -1,10 +1,14 @@
 import { ethers, type Signer, type ContractTransaction } from 'ethers'
 import { toast } from 'react-toastify'
+import React from 'react'
+
+import { showErrorTransactionToast } from '@/lib/errors'
+import { useUser } from '../user'
+import { useBiconomy } from '../biconomy'
 
 import { SUPERTALENTS_PLATFORM_ID, config, talentLayerAddress } from './config'
 import talentLayerIdAbi from './TalentLayerID.json'
-import { showErrorTransactionToast } from '@/lib/errors'
-import { useUser } from '../user'
+import { useWeb3Auth } from '../web3auth'
 
 export const talentLayerInterface = new ethers.utils.Interface(talentLayerIdAbi)
 
@@ -54,8 +58,18 @@ async function procressTransaction(
   console.log(`${caption} rc:`, rc)
 }
 
-export function useTalentLayerContract({ signer }: { signer: Signer | null }) {
+export function useTalentLayerContract() {
   const { getConnectedUser } = useUser()
+  const { signer } = useWeb3Auth()
+
+  const biconomy = useBiconomy()
+
+  React.useEffect(() => {
+    if (signer) {
+      biconomy.init(signer)
+    }
+  }, [biconomy, signer])
+
   if (!signer) return null
 
   const contract = new ethers.Contract(
@@ -64,18 +78,21 @@ export function useTalentLayerContract({ signer }: { signer: Signer | null }) {
     signer
   )
 
-  contract.on('Mint', async event => {
-    console.log('✅ Minted', event)
-    await getConnectedUser()
-  })
+  // contract.on('Mint', async event => {
+  //   console.log('✅ Minted', event)
+  //   await getConnectedUser()
+  // })
 
-  contract.on('CidUpdated', async event => {
-    console.log('✅ Profile data updated', event)
-  })
+  // contract.on('CidUpdated', async event => {
+  //   console.log('✅ Profile data updated', event)
+  //   // await getConnectedUser()
+  // })
 
   async function getHandlePrice({ handle }: { handle: string }) {
     try {
-      const handlePrice: number = await contract.getHandlePrice(handle)
+      const handlePrice: ethers.BigNumber = await contract.getHandlePrice(
+        handle
+      )
       return handlePrice
     } catch (error) {
       console.error(error)
@@ -120,5 +137,6 @@ export function useTalentLayerContract({ signer }: { signer: Signer | null }) {
       showErrorTransactionToast(error)
     }
   }
+
   return { getHandlePrice, mintTalentLayerId, updateProfileData }
 }

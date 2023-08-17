@@ -10,7 +10,6 @@ import { useLocalStorage } from 'usehooks-ts'
 
 export default function ProfileInfoPage() {
   const { setConnectedProfile, connectedProfile } = useProfile()
-
   const router = useRouter()
 
   const [selectedAvatar] = useLocalStorage('selectedAvatar', '')

@@ -8,7 +8,6 @@ import { uploadToPinata } from '@/lib/ipfs/pinata'
 import BackLink from '@/app/components/BackLink'
 import Button from '@/app/components/Button'
 import { useProfile } from '@/app/hooks/profile'
-import { useWeb3Auth } from '@/app/hooks/web3auth'
 import ProfilePreview from '@/app/components/ProfilePreview'
 import { useUser } from '@/app/hooks/user'
 import { useTalentLayerContract } from '@/app/hooks/talent-layer/contract'
@@ -16,10 +15,9 @@ import { useTalentLayerContract } from '@/app/hooks/talent-layer/contract'
 export default function ProfilePreviewPage() {
   const { connectedProfile } = useProfile()
   const { connectedUser } = useUser()
-  const { signer } = useWeb3Auth()
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const [isLoading, setIsLoading] = React.useState(false)
-  const talentLayerContract = useTalentLayerContract({ signer })
+  const talentLayerContract = useTalentLayerContract()
 
   async function uploadToIpfs() {
     if (!connectedProfile?.role) {
@@ -69,9 +67,8 @@ export default function ProfilePreviewPage() {
     setIsLoading(false)
   }
 
-  return !connectedProfile || !signer ? (
-    redirect('/login')
-  ) : (
+  if (!connectedProfile) redirect('/login')
+  return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-col flex-1'>
         <BackLink />
