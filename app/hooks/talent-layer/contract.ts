@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import React from 'react'
 import type { Transaction } from '@biconomy/core-types'
 
-import { showErrorTransactionToast } from '@/lib/errors'
 import { useBiconomy } from '../biconomy'
 
 import { SUPERTALENTS_PLATFORM_ID, config, talentLayerAddress } from './config'
@@ -102,7 +101,6 @@ export function useTalentLayerContract() {
       await biconomy.sendUserOp([tx])
     } catch (error) {
       toast.error('Could not mint Profile NFT')
-      showErrorTransactionToast(error)
     }
   }
 
@@ -138,7 +136,6 @@ export function useTalentLayerContract() {
       await biconomy.sendUserOp([tx])
     } catch (error) {
       toast.error('Could not update profile data')
-      showErrorTransactionToast(error)
     }
   }
 
