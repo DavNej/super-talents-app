@@ -2,11 +2,11 @@
 import * as React from 'react'
 import { useWeb3Auth } from './web3auth'
 
-import { getTalentLayerUser } from '@/lib/talent-layer'
-import type {
-  ITalentLayerUser,
-  IGetTalentLayerUserArgs,
-} from '@/lib/talent-layer'
+import {
+  type IGetTalentLayerUserArgs,
+  getTalentLayerUser,
+} from '@/lib/talent-layer/graph'
+import type { ITalentLayerUser } from '@/lib/talent-layer/config'
 
 const initialValue = {
   user: null,

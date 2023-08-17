@@ -1,5 +1,5 @@
 import { IProfile } from '@/app/hooks/profile/types'
-import { handleExists } from '@/lib/talent-layer'
+import { handleExists } from '@/lib/talent-layer/graph'
 import * as Yup from 'yup'
 
 export const roleCaptions = {

@@ -4,6 +4,14 @@ export enum NetworkEnum {
 }
 
 export const SUPERTALENTS_PLATFORM_ID = 18
+export const talentLayerAddress = '0x2475F87a2A73548b2E49351018E7f6a53D3d35A4'
+
+export interface ITalentLayerUser {
+  address: string
+  handle: string
+  id: string
+  cid?: string
+}
 
 type Config = {
   networkId: NetworkEnum
@@ -23,9 +31,7 @@ const mumbai: Config = {
 const local: Config = {
   networkId: NetworkEnum.LOCAL,
   subgraphUrl: 'http://localhost:8020/',
-  contracts: {
-    talentLayerId: '0x2475F87a2A73548b2E49351018E7f6a53D3d35A4',
-  },
+  contracts: { talentLayerId: talentLayerAddress },
 }
 
 const chains: { [networkId in NetworkEnum]: Config } = {
