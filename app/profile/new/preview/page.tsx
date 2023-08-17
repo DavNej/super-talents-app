@@ -72,8 +72,17 @@ export default function ProfilePreviewPage() {
     await updateProfileData(talentLayerId, pinataCid, signer)
     setIsLoading(false)
   }
+  async function handleClick() {
+    await uploadToIpfs()
+    if (connectedUser) {
+    } else {
+      handleMint()
+    }
+  }
 
-  return (
+  return !connectedProfile || !signer ? (
+    redirect('/login')
+  ) : (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-col flex-1'>
         <BackLink />
@@ -81,15 +90,9 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          {connectedUser ? (
-            <Button isLoading={isLoading} onClick={uploadData}>
-              Update profile
-            </Button>
-          ) : (
-            <Button isLoading={isLoading} onClick={handleMint}>
-              Mint my profile NFT
-            </Button>
-          )}
+          <Button isLoading={isLoading} onClick={handleClick}>
+            {connectedUser ? 'Update profile' : 'Mint my profile NFT'}
+          </Button>
         </div>
 
         <ProfilePreview
