@@ -5,7 +5,7 @@ import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { useQuery, useMutation } from '@tanstack/react-query'
 
 import { web3auth } from './config'
-import { web3authInit, web3authLogin } from './helpers'
+import { web3authInit, web3authLogin, web3authLogout } from './helpers'
 import { ILoginParams } from './types'
 
 type TSigner = {
@@ -44,3 +44,14 @@ export function useWeb3AuthLogin(
   })
 }
 
+export function useLogout(options?: UseMutationOptions<null>) {
+  return useMutation<null>({
+    mutationFn: () => web3authLogout(),
+    onError(err) {
+      console.error(err)
+
+      toast.error('Logout failed')
+    },
+    ...options,
+  })
+}

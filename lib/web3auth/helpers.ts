@@ -36,3 +36,9 @@ export async function web3authLogin({ loginProvider, email }: ILoginParams) {
   const signer = await getWeb3AuthSigner()
   return signer
 }
+
+export async function web3authLogout() {
+  if (!(web3auth.status === 'connected')) return null
+  await web3auth.logout()
+  return null
+}
