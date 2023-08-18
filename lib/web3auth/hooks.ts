@@ -2,10 +2,15 @@ import { toast } from 'react-toastify'
 import { ethers } from 'ethers'
 
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { web3auth } from './config'
-import { web3authInit, web3authLogin, web3authLogout } from './helpers'
+import {
+  getWeb3AuthSigner,
+  web3authInit,
+  web3authLogin,
+  web3authLogout,
+} from './helpers'
 import { ILoginParams } from './types'
 
 type TSigner = {
@@ -14,6 +19,8 @@ type TSigner = {
 } | null
 
 export function useWeb3AuthInit(options?: UseQueryOptions<TSigner>) {
+  const queryClient = useQueryClient()
+
   const enabled = Boolean(
     web3auth.status === 'disconnected' || web3auth.status === 'not_ready'
   )
@@ -26,6 +33,9 @@ export function useWeb3AuthInit(options?: UseQueryOptions<TSigner>) {
       console.error(err)
       toast.error('Auth initilization failed')
     },
+    onSuccess() {
+      queryClient.invalidateQueries(['signer'])
+    },
     ...options,
   })
 }
@@ -33,6 +43,8 @@ export function useWeb3AuthInit(options?: UseQueryOptions<TSigner>) {
 export function useWeb3AuthLogin(
   options?: UseMutationOptions<TSigner, unknown, ILoginParams>
 ) {
+  const queryClient = useQueryClient()
+
   return useMutation<TSigner, unknown, ILoginParams>({
     mutationFn: ({ loginProvider, email }) =>
       web3authLogin({ loginProvider, email }),
@@ -40,17 +52,40 @@ export function useWeb3AuthLogin(
       console.error(err)
       toast.error('Login failed')
     },
+    onSuccess() {
+      queryClient.invalidateQueries(['signer'])
+    },
     ...options,
   })
 }
 
-export function useLogout(options?: UseMutationOptions<null>) {
+export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
+  const queryClient = useQueryClient()
+
   return useMutation<null>({
     mutationFn: () => web3authLogout(),
     onError(err) {
       console.error(err)
 
       toast.error('Logout failed')
+    },
+    onSuccess() {
+      queryClient.invalidateQueries(['signer'])
+    },
+    ...options,
+  })
+}
+
+export function useSigner(options?: UseQueryOptions<TSigner>) {
+  const enabled = Boolean(web3auth.provider && web3auth.status === 'connected')
+
+  return useQuery<TSigner>({
+    queryKey: ['signer'],
+    queryFn: () => getWeb3AuthSigner(),
+    enabled,
+    onError(err) {
+      console.error(err)
+      toast.error('Could not get signer')
     },
     ...options,
   })
