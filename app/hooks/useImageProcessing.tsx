@@ -1,3 +1,5 @@
+'use client'
+
 import imageCompression from 'browser-image-compression'
 import { useState, useEffect, useCallback } from 'react'
 import heic2any from 'heic2any'
@@ -32,6 +34,7 @@ export default function useImageProcessing({
             return file
           })
       }
+
       return file
     },
     [onError]
