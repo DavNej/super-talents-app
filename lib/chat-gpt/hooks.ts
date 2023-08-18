@@ -6,7 +6,7 @@ export function useChatGPT(
   options?: UseMutationOptions<string, unknown, string>
 ) {
   return useMutation<string, unknown, string>({
-    mutationFn: prompt => api.POST('/foo/bio', { prompt }),
+    mutationFn: prompt => api.POST('/api/improve-bio', { prompt }),
     ...options,
   })
 }
