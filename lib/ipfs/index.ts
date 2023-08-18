@@ -1,39 +1,53 @@
+import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import type { IProfile, IProfileIPFS } from '@/app/hooks/profile/types'
+import { urlFromCid } from './utils'
 
-const IPFS_GATEWAY = 'https://gateway.pinata.cloud/ipfs/'
-// const IPFS_GATEWAY = 'https://gateway.ipfs.io/ipfs/'
+const baseUrl = 'https://api.pinata.cloud/pinning'
+const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
-export function urlFromCid(cid: string) {
-  return IPFS_GATEWAY + cid
+export async function fetchFromIPFS<T>({ cid }: { cid: string }) {
+  try {
+    const res = await axios.get<T>(urlFromCid(cid))
+    return res.data
+  } catch (error) {
+    toast.error('Could not fetch data from IPFS')
+    throw error
+  }
 }
 
-export function cidFromUrl(url: string) {
-  return url.replace(IPFS_GATEWAY, '')
-}
-
-export async function getUserData({
-  cid,
-  handle,
+export async function uploadToIPFS<T>({
+  name,
+  content,
 }: {
-  cid: string
-  handle: string
+  name: string
+  content: T
 }) {
-  return cid
-    ? axios
-        .get<IProfileIPFS>(urlFromCid(cid))
-        .then(res => {
-          const profileData: IProfile = {
-            ...res.data,
-            handle,
-          }
-          return profileData
-        })
-        .catch(err => {
-          console.error(err)
-          toast.error('Could not fetch profile data')
-          return null
-        })
-    : null
+  const axiosArgs = buildPinJsonArgs<T>(content, name)
+
+  try {
+    const res = await axios.post<{ IpfsHash: string }>(...axiosArgs)
+    return res.data.IpfsHash
+  } catch (err) {
+    toast.error('😣 Could not upload profile info')
+    throw err
+  }
+}
+
+function buildPinJsonArgs<T>(
+  content: T,
+  name: string
+): [string, string, AxiosRequestConfig] {
+  const data = JSON.stringify({
+    pinataOptions: { cidVersion: 0 },
+    pinataMetadata: { name },
+    pinataContent: content,
+  })
+
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: JWT,
+  }
+
+  return [baseUrl + '/pinJSONToIPFS', data, { headers }]
 }
