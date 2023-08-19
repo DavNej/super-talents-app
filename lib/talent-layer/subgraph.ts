@@ -1,8 +1,10 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-import { config } from './config'
 import type { IFetchUserParams, ITalentLayerUser } from './types'
+
+const subgraphUrl =
+  'https://api.thegraph.com/subgraphs/name/talentlayer/talent-layer-mumbai'
 
 export async function getTalentLayerUser({
   id,
@@ -62,7 +64,7 @@ function buildUserGraphQuery({ id, address, handle }: IFetchUserParams) {
 
 async function querSubgraph<T>(query: string) {
   try {
-    const res = await axios.post<{ data: T }>(config.subgraphUrl, { query })
+    const res = await axios.post<{ data: T }>(subgraphUrl, { query })
     return res.data.data
   } catch (error) {
     toast.error('Could not query subgraph')
