@@ -1,8 +1,8 @@
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
+import type { UseQueryOptions } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 
-import { getTalentLayerUser, handleExists } from './subgraph'
-import type { ITalentLayerUser, IFetchUserParams } from './types'
+import { getTalentLayerUser, handleExists } from '../subgraph'
+import type { ITalentLayerUser, IFetchUserParams } from '../types'
 
 export function useTalentLayerUser(
   { handle, address, id }: IFetchUserParams,
