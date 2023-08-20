@@ -1,5 +1,5 @@
 import { useTalentLayerUser } from '@/lib/talent-layer/subgraph/hooks'
-import type { IFetchUserParams } from '@/lib/talent-layer/types'
+import type { IFetchTalentLayerUserParams } from '@/lib/talent-layer/types'
 
 import { useGetFromIPFS } from '@/lib/ipfs/hooks'
 
@@ -8,9 +8,11 @@ import { IPFSProfileType } from '@/features/profile/types'
 
 import { toast } from 'react-toastify'
 
-export function useProfile({ handle, address, id }: IFetchUserParams) {
+export function useProfile({ handle, address, id }: IFetchTalentLayerUserParams): {
+  isLoading: boolean
+  data: IPFSProfileType | null
+} {
   const user = useTalentLayerUser({ handle, address, id })
-
   const profile = useGetFromIPFS({ cid: user.data?.cid })
 
   if (user.data === undefined || profile.data === undefined) {

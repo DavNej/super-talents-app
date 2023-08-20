@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-import type { IFetchUserParams, ITalentLayerUser } from '../types'
+import type { IFetchTalentLayerUserParams, ITalentLayerUser } from '../types'
 
 const subgraphUrl =
   'https://api.thegraph.com/subgraphs/name/talentlayer/talent-layer-mumbai'
@@ -10,7 +10,7 @@ export async function getTalentLayerUser({
   id,
   address,
   handle,
-}: IFetchUserParams) {
+}: IFetchTalentLayerUserParams) {
   const query = buildUserGraphQuery({ id, address, handle })
 
   try {
@@ -44,7 +44,7 @@ export async function handleExists(handle: string) {
   }
 }
 
-function buildUserGraphQuery({ id, address, handle }: IFetchUserParams) {
+function buildUserGraphQuery({ id, address, handle }: IFetchTalentLayerUserParams) {
   let whereClause = ''
 
   if (handle) {

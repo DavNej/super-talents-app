@@ -5,8 +5,4 @@ export interface ITalentLayerUser {
   cid?: string
 }
 
-export interface IFetchUserParams {
-  handle?: string
-  address?: string
-  id?: string
-}
+export type IFetchTalentLayerUserParams = Partial<Omit<ITalentLayerUser, 'cid'>>
