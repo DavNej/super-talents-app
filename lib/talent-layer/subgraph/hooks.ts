@@ -16,6 +16,7 @@ export function useTalentLayerUser(
         address,
         id,
       }),
+    enabled: Boolean(handle || address || id),
     ...options,
   })
 }

@@ -27,6 +27,7 @@ export default function ReactQueryProvider({
       queries: {
         onError: defaultOnError,
         retry: false,
+        refetchOnWindowFocus: false,
       },
       mutations: {
         onError: defaultOnError,

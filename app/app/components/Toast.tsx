@@ -7,7 +7,9 @@ import 'react-toastify/dist/ReactToastify.css'
 export default function Toast() {
   return (
     <ToastContainer
-      position='bottom-right'
+      position='top-right'
+      // position='bottom-right'
+      // closeOnClick
       autoClose={5000}
       newestOnTop
       pauseOnFocusLoss
