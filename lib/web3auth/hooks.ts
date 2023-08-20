@@ -23,14 +23,9 @@ type TSigner = {
 export function useWeb3AuthInit(options?: UseQueryOptions<TSigner>) {
   const queryClient = useQueryClient()
 
-  const enabled = Boolean(
-    web3auth.status === 'disconnected' || web3auth.status === 'not_ready'
-  )
-
   return useQuery<TSigner>({
     queryKey: ['web3auth init'],
     queryFn: () => web3authInit(),
-    enabled,
     onError(err) {
       console.error(err)
       toast.error('Auth initilization failed')
@@ -79,12 +74,9 @@ export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
 }
 
 export function useSigner(options?: UseQueryOptions<TSigner>) {
-  const enabled = Boolean(web3auth.provider && web3auth.status === 'connected')
-
   return useQuery<TSigner>({
     queryKey: ['signer'],
     queryFn: () => getWeb3AuthSigner(),
-    enabled,
     onError(err) {
       console.error(err)
       toast.error('Could not get signer')

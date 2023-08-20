@@ -8,23 +8,27 @@ import { IPFSProfileType } from '@/features/profile/types'
 
 import { toast } from 'react-toastify'
 
-export function useProfile({ handle, address, id }: IFetchTalentLayerUserParams): {
-  isLoading: boolean
+export function useProfile({
+  handle,
+  address,
+  id,
+}: IFetchTalentLayerUserParams): {
+  isFetched: boolean
   data: IPFSProfileType | null
 } {
   const user = useTalentLayerUser({ handle, address, id })
   const profile = useGetFromIPFS({ cid: user.data?.cid })
 
-  if (user.data === undefined || profile.data === undefined) {
-    return { isLoading: true, data: null }
+  if (user.isError || profile.isError) {
+    return { isFetched: true, data: null }
   }
 
   if (user.data === null || profile.data === null) {
-    return { isLoading: false, data: null }
+    return { isFetched: true, data: null }
   }
 
-  if (!user.isSuccess || !profile.isSuccess) {
-    return { isLoading: false, data: null }
+  if (user.data === undefined || profile.data === undefined) {
+    return { isFetched: false, data: null }
   }
 
   const result = IPFSProfile.safeParse(profile.data)
@@ -33,8 +37,8 @@ export function useProfile({ handle, address, id }: IFetchTalentLayerUserParams)
     console.warn('Zod validation', JSON.stringify(result.error.issues, null, 2))
     toast.warn('Wrong Profile data format')
     const data = profile.data as IPFSProfileType
-    return { isLoading: false, data }
+    return { isFetched: true, data }
   }
 
-  return { isLoading: false, data: result.data }
+  return { isFetched: true, data: result.data }
 }

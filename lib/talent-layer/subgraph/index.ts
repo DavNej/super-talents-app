@@ -11,6 +11,7 @@ export async function getTalentLayerUser({
   address,
   handle,
 }: IFetchTalentLayerUserParams) {
+  if (!Boolean(handle || address || id)) return null
   const query = buildUserGraphQuery({ id, address, handle })
 
   try {
@@ -44,7 +45,11 @@ export async function handleExists(handle: string) {
   }
 }
 
-function buildUserGraphQuery({ id, address, handle }: IFetchTalentLayerUserParams) {
+function buildUserGraphQuery({
+  id,
+  address,
+  handle,
+}: IFetchTalentLayerUserParams) {
   let whereClause = ''
 
   if (handle) {
