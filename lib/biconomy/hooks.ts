@@ -4,7 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { BiconomySmartAccount } from '@biconomy/account'
 import type { Transaction } from '@biconomy/core-types'
 
-import { init, sendUserOp } from './helpers'
+import { init, sendUserOp } from '.'
 
 export function useBiconomy({
   signer,

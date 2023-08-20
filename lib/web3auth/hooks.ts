@@ -4,14 +4,14 @@ import { ethers } from 'ethers'
 import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
+import { ILoginParams } from './types'
 import { web3auth } from './config'
 import {
   getWeb3AuthSigner,
   web3authInit,
   web3authLogin,
   web3authLogout,
-} from './helpers'
-import { ILoginParams } from './types'
+} from '.'
 
 type TSigner = {
   signer: ethers.providers.JsonRpcSigner
