@@ -4,14 +4,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function defaultOnError(err: unknown, variables?: unknown, context?: unknown) {
+  console.log('============')
   console.error(err)
 
   if (variables) {
     console.error({ variables })
   }
+
   if (context) {
     console.error({ context })
   }
+  console.log('============')
 }
 
 export default function ReactQueryProvider({
@@ -23,6 +26,7 @@ export default function ReactQueryProvider({
     defaultOptions: {
       queries: {
         onError: defaultOnError,
+        retry: false,
       },
       mutations: {
         onError: defaultOnError,
