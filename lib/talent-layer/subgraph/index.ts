@@ -15,9 +15,14 @@ export async function getTalentLayerUser({
 
   try {
     const res = await querSubgraph<{ users: ITalentLayerUser[] }>(query)
-    return res.users.at(0)
+    const user = res.users.at(0)
+    if (!user) {
+      console.log('🤷 No talent user found', { id, address, handle })
+      return null
+    }
+    return user
   } catch (error) {
-    console.log('🤷 No talent user found', { id, address, handle })
+    console.log('Could not fetch TalentLayer user', { id, address, handle })
     throw error
   }
 }

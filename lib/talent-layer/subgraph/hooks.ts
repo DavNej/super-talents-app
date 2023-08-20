@@ -6,9 +6,9 @@ import type { ITalentLayerUser, IFetchUserParams } from '../types'
 
 export function useTalentLayerUser(
   { handle, address, id }: IFetchUserParams,
-  options?: UseQueryOptions<ITalentLayerUser | undefined>
+  options?: UseQueryOptions<ITalentLayerUser | null>
 ) {
-  return useQuery<ITalentLayerUser | undefined>({
+  return useQuery<ITalentLayerUser | null>({
     queryKey: ['user', { handle, address, id }],
     queryFn: () =>
       getTalentLayerUser({
