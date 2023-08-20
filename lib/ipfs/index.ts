@@ -6,9 +6,14 @@ import { urlFromCid } from './utils'
 const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
-export async function fetchFromIPFS<T>({ cid }: { cid: string }) {
+export async function fetchFromIPFS({ cid }: { cid: string | undefined }) {
+  if (!cid) {
+    console.log('🦋 | fetchFromIPFS no CID provied', cid)
+    return null
+  }
+
   try {
-    const res = await axios.get<T>(urlFromCid(cid))
+    const res = await axios.get(urlFromCid(cid))
     return res.data
   } catch (error) {
     toast.error('Could not fetch data from IPFS')
@@ -16,14 +21,14 @@ export async function fetchFromIPFS<T>({ cid }: { cid: string }) {
   }
 }
 
-export async function uploadToIPFS<T>({
+export async function uploadToIPFS({
   name,
   content,
 }: {
   name: string
-  content: T
+  content: unknown
 }) {
-  const axiosArgs = buildPinJsonArgs<T>(content, name)
+  const axiosArgs = buildPinJsonArgs(content, name)
 
   try {
     const res = await axios.post<{ IpfsHash: string }>(...axiosArgs)
@@ -34,8 +39,8 @@ export async function uploadToIPFS<T>({
   }
 }
 
-function buildPinJsonArgs<T>(
-  content: T,
+function buildPinJsonArgs(
+  content: unknown,
   name: string
 ): [string, string, AxiosRequestConfig] {
   const data = JSON.stringify({
