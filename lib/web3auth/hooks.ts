@@ -74,6 +74,10 @@ export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
 }
 
 export function useSigner(options?: UseQueryOptions<TSigner>) {
+  const enabled = Boolean(
+    web3auth.status === 'disconnected' || web3auth.status === 'not_ready'
+  )
+
   return useQuery<TSigner>({
     queryKey: ['signer'],
     queryFn: () => getWeb3AuthSigner(),
@@ -81,6 +85,7 @@ export function useSigner(options?: UseQueryOptions<TSigner>) {
       console.error(err)
       toast.error('Could not get signer')
     },
+    enabled,
     ...options,
   })
 }
