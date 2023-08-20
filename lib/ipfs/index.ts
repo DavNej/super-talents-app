@@ -6,7 +6,7 @@ import { urlFromCid } from './utils'
 const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
-export async function fetchFromIPFS({ cid }: { cid: string | undefined }) {
+export async function fetchFromIPFS({ cid }: { cid: string }) {
   if (!cid) {
     console.log('🦋 | fetchFromIPFS no CID provied', cid)
     return null

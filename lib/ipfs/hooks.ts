@@ -4,12 +4,18 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { uploadToIPFS, fetchFromIPFS } from '.'
 
 export function useGetFromIPFS(
-  { cid }: { cid: string | undefined },
+  { cid }: { cid: string | undefined | null },
   options?: UseQueryOptions
 ) {
   return useQuery({
     queryKey: ['fetchFromIPFS', { cid }],
-    queryFn: () => fetchFromIPFS({ cid }),
+    queryFn: () => {
+      if (!cid) {
+        console.log('🦋 | fetchFromIPFS no CID provided', cid)
+        return null
+      }
+      return fetchFromIPFS({ cid })
+    },
     enabled: Boolean(cid),
     ...options,
   })
