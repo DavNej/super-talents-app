@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import Image from 'next/image'
 import type { ChatCompletionResponseMessage } from 'openai'
 
-import { cn } from '@/lib'
+import { cn } from '@/lib/utils'
 import { roleCaptions, validationSchema, initialValues } from '@/lib/form-utils'
 import fetcher from '@/lib/fetcher'
 import Button from '@/app/components/Button'

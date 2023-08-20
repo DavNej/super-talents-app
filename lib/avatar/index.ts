@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import { pause } from '@/lib'
+import { pause } from '@/lib/utils'
 
 import { AVATAR_SERVICE_BASE_URL, headers, buildPayload } from './config'
 
