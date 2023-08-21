@@ -1,13 +1,19 @@
 import { toast } from 'react-toastify'
 import axios from 'axios'
+
 import { pause } from '@/lib/utils'
 
 import { AVATAR_SERVICE_BASE_URL, headers, buildPayload } from './config'
-
-import type { TImageOutput, IRunpodRes } from './types'
+import type { DataUrlType } from './types'
 import { base64ToImgDataUrl } from './utils'
 
-async function createJob({ image }: { image: string }) {
+interface IRunpodRes {
+  id: string
+  status: string
+  output?: { image: string }[]
+}
+
+async function createJob({ image }: { image: DataUrlType }) {
   console.log('🛠️  Creating job')
 
   const payload = buildPayload(image)
@@ -31,7 +37,7 @@ async function checkJobStatus({ id }: { id: string }) {
       `${AVATAR_SERVICE_BASE_URL}/status/${id}`,
       { headers }
     )
-    console.log('🔍 Job', res.data.status)
+    console.log('🔍 Job', id, res.data.status)
     return res.data
   } catch (error) {
     toast.error('Could not check avatar status')
@@ -39,7 +45,7 @@ async function checkJobStatus({ id }: { id: string }) {
   }
 }
 
-export async function generateAvatars({ image }: { image: string }) {
+export async function generateAvatars({ image }: { image: DataUrlType }) {
   console.log('🎨 Generating avatars')
 
   const job = await createJob({ image })
@@ -56,7 +62,7 @@ export async function generateAvatars({ image }: { image: string }) {
   if (!res.output) return null
 
   if (res.output.length === 4)
-    return res.output?.map(o => base64ToImgDataUrl(o.image)) as TImageOutput
+    return res.output?.map(o => base64ToImgDataUrl(o.image)) as DataUrlType[]
 
   console.error(res.output)
   throw new Error('Something went wrong with the avatar generation')

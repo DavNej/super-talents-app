@@ -2,14 +2,13 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import type { TLoginProvider } from '@/lib/web3auth/types'
-import { type TSigner, useWeb3AuthLogin } from '@/lib/web3auth/hooks'
+import { useWeb3AuthLogin, useSigner } from '@/lib/web3auth/hooks'
 import { EmailForm } from '@/features/auth'
 
-import { useQueryClient } from '@tanstack/react-query'
-import { TalentLayerUserType } from '@/lib/talent-layer/types'
+import { useUser } from '@/features/profile/hooks'
 
 const loginProviders: {
   icon: string
@@ -23,35 +22,34 @@ const loginProviders: {
 
 export default function LoginPage() {
   const router = useRouter()
-  const login = useWeb3AuthLogin()
+  const signer = useSigner()
 
-  const queryClient = useQueryClient()
-  const signer = queryClient.getQueryData<TSigner>(['signer', 'connected'])
+  const hasSigner = Boolean(signer.data?.signer)
 
-  let redirectPath = ''
-
-  if (signer) {
-    const connectedUser = queryClient.getQueryData<TalentLayerUserType>([
-      'user',
-      { address: signer?.address },
-    ])
-
-    redirectPath = connectedUser?.handle
-      ? `/app/profile/${connectedUser.handle}`
-      : '/app/profile/new/avatar'
-  }
+  const connectedUser = useUser({ address: signer.data?.address })
+  const connectedUserHandle = connectedUser.data?.handle
 
   React.useEffect(() => {
-    if (redirectPath) {
+    if (hasSigner) {
+      const redirectPath = connectedUserHandle
+        ? `/app/profile/${connectedUserHandle}`
+        : '/app/profile/new/avatar'
+
       router.push(redirectPath)
     }
-  }, [redirectPath, router])
+  }, [connectedUserHandle, hasSigner, router])
+
+  return hasSigner ? null : <LoginUI />
+}
+
+function LoginUI() {
+  const login = useWeb3AuthLogin()
 
   function handleEmailSubmit({ email }: { email: string }) {
     login.mutate({ loginProvider: 'email_passwordless', email })
   }
 
-  return redirectPath ? null : (
+  return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>
         <Image

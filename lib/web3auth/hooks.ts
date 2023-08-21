@@ -45,6 +45,7 @@ export function useSigner(options?: UseQueryOptions<TSigner>) {
 export function useWeb3AuthLogin(
   options?: UseMutationOptions<TSigner, unknown, ILoginParams>
 ) {
+  const queryclient = useQueryClient()
   return useMutation<TSigner, unknown, ILoginParams>({
     mutationFn: ({ loginProvider, email }) =>
       web3authLogin({ loginProvider, email }),
@@ -52,16 +53,25 @@ export function useWeb3AuthLogin(
       console.error(err)
       toast.error('Login failed')
     },
+    onSuccess() {
+      queryclient.invalidateQueries(['signer'])
+      queryclient.invalidateQueries(['user'])
+    },
     ...options,
   })
 }
 
 export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
+  const queryclient = useQueryClient()
   return useMutation<null>({
     mutationFn: () => web3authLogout(),
     onError(err) {
       console.error(err)
       toast.error('Logout failed')
+    },
+    onSuccess() {
+      queryclient.invalidateQueries(['signer'])
+      queryclient.invalidateQueries(['user'])
     },
     ...options,
   })

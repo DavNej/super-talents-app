@@ -1,3 +1,4 @@
+import { DataUrlType } from './types'
 import { imgDataUrlToBase64 } from './utils'
 
 export const AVATAR_SERVICE_BASE_URL = process.env
@@ -7,7 +8,7 @@ export const AVATAR_SERVICE_API_KEY = process.env
 
 export const headers = { Authorization: `Bearer ${AVATAR_SERVICE_API_KEY}` }
 
-export function buildPayload(image: string) {
+export function buildPayload(image: DataUrlType) {
   return {
     input: {
       prompt:

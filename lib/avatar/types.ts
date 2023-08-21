@@ -1,7 +1,1 @@
-export type TImageOutput = string[]
-
-export interface IRunpodRes {
-  id: string
-  status: string
-  output?: { image: string }[]
-}
+export type DataUrlType = `data:image/jpeg;base64,${string}`

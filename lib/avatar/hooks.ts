@@ -3,13 +3,14 @@ import { useMutation } from '@tanstack/react-query'
 
 import api from '@/lib/api'
 
-import type { TImageOutput } from './types'
+import type { DataUrlType } from './types'
 
-export function useAvatars(
-  options?: UseMutationOptions<TImageOutput, unknown, { image: string }>
+export function useCreateAvatars(
+  options?: UseMutationOptions<DataUrlType[], unknown, { image: DataUrlType }>
 ) {
-  return useMutation<TImageOutput, unknown, { image: string }>({
-    mutationFn: ({ image }) => api.POST<TImageOutput>('/api/avatar-gen', { image }),
+  return useMutation<DataUrlType[], unknown, { image: DataUrlType }>({
+    mutationFn: ({ image }) =>
+      api.POST<DataUrlType[]>('/api/avatar-gen', { image }),
     ...options,
   })
 }
