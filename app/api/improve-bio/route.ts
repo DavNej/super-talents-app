@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { askChatGPT } from '@/lib/chat-gpt'
+import type { ChatCompletionResponseMessage } from 'openai'
 
 export async function POST(request: Request) {
   const body = await request.json()
@@ -7,5 +8,5 @@ export async function POST(request: Request) {
 
   const res = await askChatGPT(body.prompt)
 
-  return NextResponse.json(res)
+  return NextResponse.json<ChatCompletionResponseMessage | null>(res)
 }

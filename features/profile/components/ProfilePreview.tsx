@@ -10,20 +10,18 @@ import { IPFSProfileType } from '../types'
 export default function ProfilePreview({
   handle,
   profileData,
-  isSigner,
+  isSigner = false,
 }: {
   handle: string
   profileData: IPFSProfileType
-  isSigner: boolean
+  isSigner?: boolean
 }) {
-  const _isSigner = false && isSigner
-
   return (
     <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
-      {_isSigner && (
+      {isSigner && (
         <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
           <Image src='/mask.png' alt='logo' width={72} height={27} priority />
-          <Link href='/profile/new/info'>
+          <Link href='/app/profile/new/info'>
             <Image src='/edit.svg' alt='edit' width={24} height={24} priority />
           </Link>
         </div>

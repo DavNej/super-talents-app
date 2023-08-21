@@ -59,23 +59,29 @@ export default function ProfileInfoPage() {
         router.push('/app/profile/new/preview')
       } else {
         toast.error('Could not parse newProfile')
-        console.log(result.error.issues)
+        console.error(result.error.issues)
         setSubmitting(false)
       }
     },
   })
 
   React.useEffect(() => {
-    if (chatGPT.data) {
+    if (chatGPT.data?.content) {
+      let options
       try {
-        const options = JSON.parse(chatGPT.data.trim())
-        setGPTOptions(options)
-        setOpenDialog(true)
+        options = JSON.parse(chatGPT.data.content.trim())
       } catch (err) {
-        toast.error('could not parse options')
+        toast.warn('Could not parse options')
+        console.log(chatGPT.data)
+        options = JSON.parse(chatGPT.data.content.replace('\n', '').trim())
       }
+
+      setGPTOptions(options)
+      setOpenDialog(true)
     }
   }, [chatGPT.data])
+
+  // Hello I am a great physicist and I like to revolutionize the world
 
   function addSkill(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {

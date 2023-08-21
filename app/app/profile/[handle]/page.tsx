@@ -37,11 +37,7 @@ export default function ProfileHandlePage({
 
   return (
     <main className='p-24'>
-      <ProfilePreview
-        handle={handle}
-        profileData={profile.data}
-        isSigner={isSigner}
-      />
+      <ProfilePreview handle={handle} profileData={profile.data} />
     </main>
   )
 }
