@@ -1,4 +1,3 @@
 export { roleCaptions } from './helpers'
-export { useProfile } from './hooks'
-export { default as ProfileForm } from './components/ProfileForm'
+export { useProfileData } from './hooks'
 export { default as ProfilePreview } from './components/ProfilePreview'

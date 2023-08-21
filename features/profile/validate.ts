@@ -51,12 +51,9 @@ export const Link = z
   .url({ message: 'Must be a valid url' })
   .optional()
 
-export const Picture = z
-  .string()
-  .startsWith('data:image/jpeg;base64', {
-    message: 'Picture must be a dataUrl',
-  })
-  .optional()
+export const Picture = z.string().startsWith('data:image/jpeg;base64', {
+  message: 'Picture must be a dataUrl',
+})
 
 export const IPFSProfile = z.object({
   name: Name,

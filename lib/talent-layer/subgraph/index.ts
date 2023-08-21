@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-import type { IFetchTalentLayerUserParams, ITalentLayerUser } from '../types'
+import type { IFetchTalentLayerUserParams, TalentLayerUserType } from '../types'
 
 const subgraphUrl =
   'https://api.thegraph.com/subgraphs/name/talentlayer/talent-layer-mumbai'
@@ -15,7 +15,7 @@ export async function getTalentLayerUser({
   const query = buildUserGraphQuery({ id, address, handle })
 
   try {
-    const res = await querSubgraph<{ users: ITalentLayerUser[] }>(query)
+    const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
     const user = res.users.at(0)
     if (!user) {
       console.log('🤷 No talent user found', { id, address, handle })
@@ -37,7 +37,7 @@ export async function handleExists(handle: string) {
   }
   `
   try {
-    const res = await querSubgraph<{ users: ITalentLayerUser[] }>(query)
+    const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
     return Boolean(res.users.length > 0)
   } catch (err) {
     toast.error('Could not check handle availability')

@@ -5,6 +5,7 @@ import { web3auth } from './config'
 import { ILoginParams } from './types'
 
 export async function web3authInit() {
+  if (web3auth.status !== 'not_ready') return null
   await web3auth.init()
   return null
 }

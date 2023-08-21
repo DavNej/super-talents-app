@@ -2,10 +2,14 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { redirect, useRouter } from 'next/navigation'
+
 import type { TLoginProvider } from '@/lib/web3auth/types'
-import { useWeb3AuthLogin } from '@/lib/web3auth/hooks'
+import { type TSigner, useWeb3AuthLogin } from '@/lib/web3auth/hooks'
 import { EmailForm } from '@/features/auth'
 
+import { useQueryClient } from '@tanstack/react-query'
+import { TalentLayerUserType } from '@/lib/talent-layer/types'
 
 const loginProviders: {
   icon: string
@@ -18,13 +22,36 @@ const loginProviders: {
 ]
 
 export default function LoginPage() {
+  const router = useRouter()
   const login = useWeb3AuthLogin()
+
+  const queryClient = useQueryClient()
+  const signer = queryClient.getQueryData<TSigner>(['signer', 'connected'])
+
+  let redirectPath = ''
+
+  if (signer) {
+    const connectedUser = queryClient.getQueryData<TalentLayerUserType>([
+      'user',
+      { address: signer?.address },
+    ])
+
+    redirectPath = connectedUser?.handle
+      ? `/app/profile/${connectedUser.handle}`
+      : '/app/profile/new/avatar'
+  }
+
+  React.useEffect(() => {
+    if (redirectPath) {
+      router.push(redirectPath)
+    }
+  }, [redirectPath, router])
 
   function handleEmailSubmit({ email }: { email: string }) {
     login.mutate({ loginProvider: 'email_passwordless', email })
   }
 
-  return (
+  return redirectPath ? null : (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
       <div className='flex-col flex-1'>
         <Image

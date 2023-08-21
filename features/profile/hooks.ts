@@ -1,44 +1,66 @@
-import { useTalentLayerUser } from '@/lib/talent-layer/subgraph/hooks'
-import type { IFetchTalentLayerUserParams } from '@/lib/talent-layer/types'
-
-import { useGetFromIPFS } from '@/lib/ipfs/hooks'
-
-import { IPFSProfile } from '@/features/profile/validate'
-import { IPFSProfileType } from '@/features/profile/types'
-
 import { toast } from 'react-toastify'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
-export function useProfile({
+import { fetchFromIPFS } from '@/lib/ipfs'
+import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
+import { TalentLayerUser } from '@/lib/talent-layer/validate'
+import type {
+  IFetchTalentLayerUserParams,
+  TalentLayerUserType,
+} from '@/lib/talent-layer/types'
+
+import { IPFSProfile } from './validate'
+import { IPFSProfileType } from './types'
+
+export function useProfileData({
+  cid,
+}: {
+  cid: string | undefined | null
+}): UseQueryResult<IPFSProfileType | null> {
+  return useQuery<IPFSProfileType | null>({
+    queryKey: ['profile', { cid }],
+    queryFn: async () => {
+      if (!cid) return null
+
+      const data = await fetchFromIPFS({ cid })
+      if (!data) return null
+
+      const result = IPFSProfile.safeParse(data)
+      if (result.success) return result.data
+
+      console.warn(
+        'Zod validation',
+        JSON.stringify(result.error.issues, null, 2)
+      )
+      toast.warn('Wrong Profile data format')
+      return data as IPFSProfileType
+    },
+  })
+}
+
+export function useUser({
   handle,
   address,
   id,
-}: IFetchTalentLayerUserParams): {
-  isFetched: boolean
-  data: IPFSProfileType | null
-} {
-  const user = useTalentLayerUser({ handle, address, id })
-  const profile = useGetFromIPFS({ cid: user.data?.cid })
+}: IFetchTalentLayerUserParams): UseQueryResult<TalentLayerUserType | null> {
+  return useQuery<TalentLayerUserType | null>({
+    queryKey: ['user', { handle, address, id }],
+    queryFn: async () => {
+      if (!Boolean(handle || address || id)) return null
 
-  if (user.isError || profile.isError) {
-    return { isFetched: true, data: null }
-  }
+      const data = await getTalentLayerUser({ handle, address, id })
+      if (!data) return null
 
-  if (user.data === null || profile.data === null) {
-    return { isFetched: true, data: null }
-  }
+      const result = TalentLayerUser.safeParse(data)
+      if (result.success) return result.data
 
-  if (user.data === undefined || profile.data === undefined) {
-    return { isFetched: false, data: null }
-  }
+      console.warn(
+        'Zod validation',
+        JSON.stringify(result.error.issues, null, 2)
+      )
 
-  const result = IPFSProfile.safeParse(profile.data)
-
-  if (!result.success) {
-    console.warn('Zod validation', JSON.stringify(result.error.issues, null, 2))
-    toast.warn('Wrong Profile data format')
-    const data = profile.data as IPFSProfileType
-    return { isFetched: true, data }
-  }
-
-  return { isFetched: true, data: result.data }
+      toast.warn('Wrong TalentLayer user format')
+      return data as TalentLayerUserType
+    },
+  })
 }

@@ -1,13 +1,19 @@
 'use client'
 
 import React from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import { PageLoader } from '@/app/app/components'
 
-import { useSigner } from '@/lib/web3auth/hooks'
-import { useTalentLayerUser } from '@/lib/talent-layer/subgraph/hooks'
+import { TSigner } from '@/lib/web3auth/hooks'
 
-import { useProfile, ProfilePreview } from '@/features/profile'
+import type {
+  IFetchTalentLayerUserParams,
+  TalentLayerUserType,
+} from '@/lib/talent-layer/types'
+
+import { useProfileData, ProfilePreview } from '@/features/profile'
+import { useUser } from '@/features/profile/hooks'
 
 export default function ProfileHandlePage({
   params,
@@ -15,15 +21,20 @@ export default function ProfileHandlePage({
   params: { handle: string }
 }) {
   const { handle } = params
-  const signer = useSigner()
-  const address = signer.data?.address
 
-  const profile = useProfile({ handle })
-  const connectedUser = useTalentLayerUser({ address })
+  const queryClient = useQueryClient()
+  const signer = queryClient.getQueryData<TSigner>(['signer', 'connected'])
+  const signerAddress = signer?.address
+  const connectedUser = queryClient.getQueryData<TalentLayerUserType>([
+    'user',
+    { address: signerAddress },
+  ])
+  const isSigner = connectedUser?.handle === handle
+  const useUserParams = isSigner ? { address: signerAddress } : { handle }
+  const user = useUser(useUserParams)
+  const profile = useProfileData({ cid: user.data?.cid })
 
-  const isSigner = connectedUser.data?.handle === handle
-
-  if (!profile.isFetched || connectedUser.isLoading) return <PageLoader />
+  if (profile.isLoading || user.isLoading) return <PageLoader />
 
   if (!profile.data) {
     return (

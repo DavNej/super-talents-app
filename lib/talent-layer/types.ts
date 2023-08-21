@@ -1,8 +1,8 @@
-export interface ITalentLayerUser {
-  address: string
-  handle: string
-  id: string
-  cid?: string
-}
+import z from 'zod'
+import * as validator from './validate'
 
-export type IFetchTalentLayerUserParams = Partial<Omit<ITalentLayerUser, 'cid'>>
+export type TalentLayerUserType = z.infer<typeof validator.TalentLayerUser>
+
+export type IFetchTalentLayerUserParams = Partial<
+  Omit<TalentLayerUserType, 'cid'>
+>
