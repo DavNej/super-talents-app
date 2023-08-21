@@ -1,16 +1,9 @@
 'use client'
 
 import React from 'react'
-import { useQueryClient } from '@tanstack/react-query'
 
 import { PageLoader } from '@/app/app/components'
-
-import { TSigner } from '@/lib/web3auth/hooks'
-
-import type {
-  IFetchTalentLayerUserParams,
-  TalentLayerUserType,
-} from '@/lib/talent-layer/types'
+import { useSigner } from '@/lib/web3auth/hooks'
 
 import { useProfileData, ProfilePreview } from '@/features/profile'
 import { useUser } from '@/features/profile/hooks'
@@ -22,14 +15,12 @@ export default function ProfileHandlePage({
 }) {
   const { handle } = params
 
-  const queryClient = useQueryClient()
-  const signer = queryClient.getQueryData<TSigner>(['signer', 'connected'])
-  const signerAddress = signer?.address
-  const connectedUser = queryClient.getQueryData<TalentLayerUserType>([
-    'user',
-    { address: signerAddress },
-  ])
-  const isSigner = connectedUser?.handle === handle
+  const signer = useSigner()
+  const signerAddress = signer.data?.address
+  const connectedUser = useUser({ address: signerAddress })
+
+  const isSigner = connectedUser.data?.handle === handle
+
   const useUserParams = isSigner ? { address: signerAddress } : { handle }
   const user = useUser(useUserParams)
   const profile = useProfileData({ cid: user.data?.cid })
