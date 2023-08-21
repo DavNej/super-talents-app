@@ -11,5 +11,6 @@ export type TwitterType = z.infer<typeof validator.Twitter>
 export type LinkType = z.infer<typeof validator.Link>
 export type PictureType = z.infer<typeof validator.Picture>
 
-export type IPFSProfileType = z.infer<typeof validator.IPFSProfile>
 export type FormProfileType = z.infer<typeof validator.FormProfile>
+export type NewProfileType = z.infer<typeof validator.NewProfile>
+export type IPFSProfileType = z.infer<typeof validator.IPFSProfile>
