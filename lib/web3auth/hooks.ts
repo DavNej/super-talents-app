@@ -12,6 +12,7 @@ import {
   web3authLogin,
   web3authLogout,
 } from '.'
+import { useRouter } from 'next/navigation'
 
 export type TSigner = {
   signer: ethers.providers.JsonRpcSigner
@@ -63,6 +64,8 @@ export function useWeb3AuthLogin(
 
 export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
   const queryclient = useQueryClient()
+  const router = useRouter()
+
   return useMutation<null>({
     mutationFn: () => web3authLogout(),
     onError(err) {
@@ -72,6 +75,7 @@ export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
     onSuccess() {
       queryclient.invalidateQueries(['signer'])
       queryclient.invalidateQueries(['user'])
+      router.push('/login')
     },
     ...options,
   })

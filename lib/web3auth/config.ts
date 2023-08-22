@@ -8,6 +8,7 @@ const WEB3AUTH_CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string
 const WEB3AUTH_NETWORK = process.env.NEXT_PUBLIC_WEB3AUTH_NETWORK as
   | 'testnet'
   | 'mainnet'
+  | 'aqua'
 
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
