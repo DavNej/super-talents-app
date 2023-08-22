@@ -7,7 +7,13 @@ import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import { useLocalStorage } from 'usehooks-ts'
 
-import { BackLink, ChooseAboutDialog, Chip, Button } from '@/app/components'
+import {
+  BackLink,
+  ChooseAboutDialog,
+  Chip,
+  Button,
+  inputClassNames,
+} from '@/app/components'
 import { cn } from '@/lib/utils'
 import { useChatGPT } from '@/lib/chat-gpt/hooks'
 
@@ -22,23 +28,6 @@ import type {
   FormProfileType,
   SkillsType,
 } from '@/features/profile/types'
-
-export const inputClassNames = [
-  'py-4',
-  'px-8',
-  'mt-2',
-  'w-full',
-  'rounded-[32px]',
-  'font-light',
-  'bg-white',
-  'backdrop-blur-xl',
-  'bg-opacity-20',
-  'outline-none',
-  'border-white',
-  'border-2',
-  'border-opacity-0',
-  'focus:border-opacity-100',
-]
 
 export default function ProfileInfoPage() {
   const router = useRouter()

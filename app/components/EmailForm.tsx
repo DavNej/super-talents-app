@@ -8,7 +8,7 @@ import * as Yup from 'yup'
 import { Button } from '@/app/components'
 import { cn } from '@/lib/utils'
 
-import { inputClassNames } from '@/app/profile/new/info/page'
+import { inputClassNames } from '@/app/components'
 
 export default function EmailForm({
   onSubmit,
