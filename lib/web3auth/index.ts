@@ -10,6 +10,8 @@ export async function web3authInit() {
   return null
 }
 
+//TODO change getWeb3AuthSigner to getWeb3AuthProvider
+//TODO return { provider, signer, signerAddress }
 export async function getWeb3AuthSigner() {
   if (!web3auth.provider || web3auth.status !== 'connected') return null
 

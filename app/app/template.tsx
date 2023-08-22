@@ -7,6 +7,7 @@ import { PageLoader } from '@/app/app/components'
 
 import '@/app/globals.css'
 
+// TODO remove /app from urls
 export default function RootTemplate({
   children,
 }: {

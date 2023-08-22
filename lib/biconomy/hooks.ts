@@ -18,7 +18,7 @@ export function useBiconomy({
     address: string
     smartAccount: BiconomySmartAccount
   }>({
-    queryKey: ['biconomy init', { signer }],
+    queryKey: ['biconomy-init'],
     queryFn: () => init({ signer }),
     enabled: Boolean(signer && !smartAccount),
     onSuccess({ address, smartAccount }) {

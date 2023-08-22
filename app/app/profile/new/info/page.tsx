@@ -13,6 +13,7 @@ import { cn, inputClassNames } from '@/lib/utils'
 import { useChatGPT } from '@/lib/chat-gpt/hooks'
 
 //! ATTENTION
+// TODO remove Yup
 import { validationSchema } from '@/lib/form-utils'
 
 import { roleCaptions, initialValues } from '@/features/profile/helpers'

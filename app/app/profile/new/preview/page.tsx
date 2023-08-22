@@ -3,8 +3,10 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useLocalStorage } from 'usehooks-ts'
+import { toast } from 'react-toastify'
 
 import { BackLink, Button } from '@/app/app/components'
+import TalentLayerButton from '@/app/app/components/TalentLayerButton'
 
 import { useSigner } from '@/lib/web3auth/hooks'
 import type { IPFSProfileType, NewProfileType } from '@/features/profile/types'
@@ -13,8 +15,6 @@ import { IPFSProfile } from '@/features/profile/validate'
 import { ProfilePreview } from '@/features/profile'
 import { useUser } from '@/features/profile/hooks'
 import { DataUrlType } from '@/lib/avatar/types'
-import { toast } from 'react-toastify'
-import { useUploadToIPFS } from '@/lib/ipfs/hooks'
 
 export default function ProfilePreviewPage() {
   const router = useRouter()
@@ -26,21 +26,11 @@ export default function ProfilePreviewPage() {
     'selectedAvatar',
     null
   )
-  const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
 
   const signer = useSigner()
   const connectedUser = useUser({ address: signer.data?.address })
-  const uploadToIPFS = useUploadToIPFS()
 
   let redirectPath = ''
-
-  if (!newProfile) {
-    redirectPath = '/app/profile/new/info'
-  }
-
-  if (!selectedAvatar) {
-    redirectPath = '/app/profile/new/avatar'
-  }
 
   React.useEffect(() => {
     if (redirectPath) {
@@ -48,11 +38,18 @@ export default function ProfilePreviewPage() {
     }
   }, [redirectPath, router])
 
-  React.useEffect(() => {
-    if (uploadToIPFS.data) {
-      setPinataCid(uploadToIPFS.data)
-    }
-  }, [setPinataCid, uploadToIPFS.data])
+  if (connectedUser.data) {
+    redirectPath = `/app/profile/${connectedUser.data.handle}`
+    return null
+  }
+  if (!newProfile) {
+    redirectPath = '/app/profile/new/info'
+    return null
+  }
+  if (!selectedAvatar) {
+    redirectPath = '/app/profile/new/avatar'
+    return null
+  }
 
   let IPFSProfileData: IPFSProfileType
 
@@ -68,15 +65,6 @@ export default function ProfilePreviewPage() {
     IPFSProfileData = dataToUpload as IPFSProfileType
   }
 
-  function handleClick() {
-    if (!handle) {
-      console.error('missing connectedProfile handle')
-      return
-    }
-
-    uploadToIPFS.mutate({ name: handle, content: IPFSProfileData })
-  }
-
   return redirectPath ? null : (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-col flex-1'>
@@ -85,11 +73,15 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          <Button isLoading={uploadToIPFS.isLoading} onClick={handleClick}>
-            {connectedUser.data === null
-              ? 'Mint my profile NFT'
-              : 'Update profile'}
-          </Button>
+          {signer.data?.signer && handle ? (
+            <TalentLayerButton
+              signer={signer.data.signer}
+              handle={handle}
+              data={dataToUpload}
+            />
+          ) : (
+            <Button isDisabled>Mint my profile NFT</Button>
+          )}
         </div>
 
         {handle && IPFSProfileData && (

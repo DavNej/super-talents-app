@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 
 import { uploadToIPFS, fetchFromIPFS } from '.'
 
+//TODO remove unecessary hooks
 export function useGetFromIPFS(
   { cid }: { cid: string | undefined | null },
   options?: UseQueryOptions
@@ -16,7 +17,6 @@ export function useGetFromIPFS(
       }
       return fetchFromIPFS({ cid })
     },
-    enabled: Boolean(cid),
     ...options,
   })
 }

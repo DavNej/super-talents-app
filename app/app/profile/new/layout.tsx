@@ -17,6 +17,8 @@ export default function ProgressBarLayout({
   const signer = useSigner()
   const hasSigner = Boolean(signer.data?.signer)
 
+  //TODO redirect if signer has a TL id
+
   React.useEffect(() => {
     if (signer.isFetched && !hasSigner) {
       router.push('/app/login')
