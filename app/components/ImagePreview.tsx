@@ -1,24 +1,24 @@
 'use-client'
 
-import Image from 'next/image'
 import React from 'react'
-
-import Dialog from '@/app/components/Dialog'
+import Image from 'next/image'
 import clsx from 'clsx'
-import { useLocalStorage } from 'usehooks-ts'
 
-function dataToUrl(data: string) {
-  return `data:image/jpeg;base64,` + data
-}
+import { DataUrlType } from '@/lib/avatar/types'
 
-export default function ImagePreview({ images }: { images: string[] }) {
+import { Dialog } from '@/app/components'
+
+export default function ImagePreview({
+  images,
+  selectedAvatar,
+  onSelect,
+}: {
+  images: DataUrlType[]
+  selectedAvatar: DataUrlType | null
+  onSelect: (image: DataUrlType | null) => void
+}) {
   const [showDialog, setShowDialog] = React.useState(false)
-  const [dialogImage, setDialogImage] = React.useState('')
-
-  const [selectedAvatar, setSelectedAvatar] = useLocalStorage(
-    'selectedAvatar',
-    ''
-  )
+  const [dialogImage, setDialogImage] = React.useState(selectedAvatar)
 
   if (images.length === 0) {
     return (
@@ -41,8 +41,7 @@ export default function ImagePreview({ images }: { images: string[] }) {
           Select avatar
         </h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>
-          {images.map((data, idx) => {
-            const dataUrl = dataToUrl(data)
+          {images.map((dataUrl, idx) => {
             const isSelected = dataUrl === selectedAvatar
             return (
               <div key={idx} className='relative'>
@@ -72,8 +71,8 @@ export default function ImagePreview({ images }: { images: string[] }) {
                   height={248}
                   priority
                   onClick={() => {
-                    const _data = isSelected ? '' : dataUrl
-                    setSelectedAvatar(_data)
+                    const _data = isSelected ? null : dataUrl
+                    onSelect(_data)
                   }}
                 />
               </div>
@@ -82,19 +81,17 @@ export default function ImagePreview({ images }: { images: string[] }) {
         </div>
       </div>
 
-      <Dialog
-        open={showDialog}
-        onClose={() => {
-          setShowDialog(false)
-        }}>
-        <Image
-          className='rounded-[52px]'
-          src={dialogImage}
-          alt='Avatar'
-          width={694}
-          height={694}
-          priority
-        />
+      <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
+        {dialogImage && (
+          <Image
+            className='rounded-[52px]'
+            src={dialogImage}
+            alt='Avatar'
+            width={694}
+            height={694}
+            priority
+          />
+        )}
       </Dialog>
     </>
   )

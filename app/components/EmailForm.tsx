@@ -1,18 +1,20 @@
 'use client'
 
+import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
+// TODO remove Yup
 import * as Yup from 'yup'
 
-import React from 'react'
+import { Button } from '@/app/components'
+import { cn } from '@/lib/utils'
 
-import Button from '@/app/components/Button'
-import { useWeb3Auth } from '@/app/hooks/web3auth'
-import { inputClassNames } from '@/app/components/ProfileForm'
-import clsx from 'clsx'
+import { inputClassNames } from '@/app/profile/new/info/page'
 
-export default function EmailForm() {
-  const { login } = useWeb3Auth()
-
+export default function EmailForm({
+  onSubmit,
+}: {
+  onSubmit: ({ email }: { email: string }) => void
+}) {
   return (
     <Formik
       initialValues={{ email: '' }}
@@ -20,7 +22,7 @@ export default function EmailForm() {
         email: Yup.string().email('Invalid email address').required('Required'),
       })}
       onSubmit={async (values, { setSubmitting }) => {
-        await login('email_passwordless', values.email)
+        await onSubmit({ email: values.email })
         setSubmitting(false)
       }}>
       {({ isSubmitting }) => (
@@ -30,7 +32,7 @@ export default function EmailForm() {
               Email
             </label>
             <Field
-              className={clsx(inputClassNames)}
+              className={cn(inputClassNames)}
               name='email'
               type='email'
               placeholder='alan@turing.com'

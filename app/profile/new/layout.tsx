@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react'
-import LogoutButton from '@/app/components/LogoutButton'
 import { usePathname, useRouter } from 'next/navigation'
-import { useWeb3Auth } from '@/app/hooks/web3auth'
-import PageLoader from '@/app/components/PageLoader'
+
+import { useSigner } from '@/lib/web3auth/hooks'
+
+import { LogoutButton, PageLoader } from '@/app/components'
 
 export default function ProgressBarLayout({
   children,
@@ -14,15 +15,20 @@ export default function ProgressBarLayout({
   const pathname = usePathname()
   const router = useRouter()
 
-  const { status } = useWeb3Auth()
+  const signer = useSigner()
+  const hasSigner = Boolean(signer.data?.signer)
+
+  //TODO redirect if signer has a TL id
 
   React.useEffect(() => {
-    if (status !== 'connected') return router.replace('/login')
-  }, [router, status])
+    if (signer.isFetched && !hasSigner) {
+      router.push('/login')
+    }
+  }, [router, hasSigner, signer.isFetched])
 
-  if (status !== 'connected') return <PageLoader />
-
-  return (
+  return !hasSigner ? (
+    <PageLoader />
+  ) : (
     <>
       <div className='py-12 px-24 flex flex-row gap-7'>
         <Step

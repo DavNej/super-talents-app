@@ -2,14 +2,15 @@
 
 import React from 'react'
 import { ethers } from 'ethers'
+import { useLocalStorage } from 'usehooks-ts'
 
 import { useTalentLayerContract } from '@/lib/talent-layer/contract/hooks'
-
-import { Button } from '@/app/app/components'
-import { useLocalStorage } from 'usehooks-ts'
 import { useUploadToIPFS } from '@/lib/ipfs/hooks'
-import { IPFSProfileType } from '@/features/profile/types'
 import { useProfileIdOfHandle } from '@/lib/talent-layer/subgraph/hooks'
+
+import { IPFSProfileType } from '@/features/profile/types'
+
+import { Button } from '@/app/components'
 
 export default function TalentLayerButton({
   handle,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Image from 'next/image'
 
 export default function Dialog({
@@ -10,7 +10,7 @@ export default function Dialog({
   onClose: () => void
   children: React.ReactNode
 }) {
-  useEffect(() => {
+  React.useEffect(() => {
     function closeOnEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         onClose()

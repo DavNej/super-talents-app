@@ -2,9 +2,8 @@
 
 import clsx from 'clsx'
 import React from 'react'
-import Button from '@/app/components/Button'
 
-import Dialog from '@/app/components/Dialog'
+import { Button, Dialog } from '@/app/components'
 
 export default function ChooseAboutDialog({
   onSelectAbout,

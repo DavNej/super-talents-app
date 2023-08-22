@@ -1,24 +1,16 @@
 'use client'
 
-import { useWeb3Auth } from '@/app/hooks/web3auth'
 import React from 'react'
-import { clsx, type ClassValue } from 'clsx'
 
-export default function LogoutButton({
-  className,
-}: {
-  className?: ClassValue
-}) {
-  const { logout, status } = useWeb3Auth()
+import { useWeb3AuthLogout } from '@/lib/web3auth/hooks'
 
-  if (!(status === 'connected')) return null
+export default function LogoutButton() {
+  const logout = useWeb3AuthLogout()
 
   return (
     <button
-      className={clsx('px-5 py-2 bg-pink rounded-xl', className)}
-      onClick={async () => {
-        await logout()
-      }}>
+      className='px-5 py-2 bg-pink rounded-xl'
+      onClick={() => logout.mutate()}>
       Logout
     </button>
   )

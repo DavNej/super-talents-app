@@ -2,17 +2,53 @@
 
 import React from 'react'
 import Image from 'next/image'
-import LoginSection from '@/app/components/LoginSection'
 import { useRouter } from 'next/navigation'
-import { useWeb3Auth } from '@/app/hooks/web3auth'
+
+import type { TLoginProvider } from '@/lib/web3auth/types'
+import { useWeb3AuthLogin, useSigner } from '@/lib/web3auth/hooks'
+
+import { useUser } from '@/features/profile/hooks'
+
+import { EmailForm } from '@/app/components'
+
+const loginProviders: {
+  icon: string
+  name: TLoginProvider
+}[] = [
+  { icon: '/linkedin.svg', name: 'linkedin' },
+  { icon: '/github.svg', name: 'github' },
+  { icon: '/twitter.svg', name: 'twitter' },
+  { icon: '/google.svg', name: 'google' },
+]
 
 export default function LoginPage() {
-  const { status } = useWeb3Auth()
   const router = useRouter()
+  const signer = useSigner()
+
+  const hasSigner = Boolean(signer.data?.signer)
+
+  const connectedUser = useUser({ address: signer.data?.address })
+  const connectedUserHandle = connectedUser.data?.handle
 
   React.useEffect(() => {
-    if (status === 'connected') return router.push('/profile')
-  }, [router, status])
+    if (hasSigner) {
+      const redirectPath = connectedUserHandle
+        ? `/profile/${connectedUserHandle}`
+        : '/profile/new/avatar'
+
+      router.push(redirectPath)
+    }
+  }, [connectedUserHandle, hasSigner, router])
+
+  return hasSigner ? null : <LoginUI />
+}
+
+function LoginUI() {
+  const login = useWeb3AuthLogin()
+
+  function handleEmailSubmit({ email }: { email: string }) {
+    login.mutate({ loginProvider: 'email_passwordless', email })
+  }
 
   return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
@@ -49,7 +85,36 @@ export default function LoginPage() {
           </li>
         </ul>
       </div>
-      <LoginSection />
+
+      <div className='px-14 py-16 bg-gradient-to-b from-purple-500 to-pink h-[644px] w-[521px] rounded-[50px]'>
+        <h3 className='font-semibold text-5xl mb-14 whitespace-nowrap'>
+          Let’s get started
+        </h3>
+        <p className='mb-8 font-normal text-xl uppercase'>Continue with</p>
+        <ul className='flex justify-between'>
+          {loginProviders.map(provider => (
+            <li
+              className='cursor-pointer'
+              key={provider.name}
+              onClick={() => login.mutate({ loginProvider: provider.name })}>
+              <Image
+                src={provider.icon}
+                alt={provider.name}
+                width={48}
+                height={48}
+                priority
+              />
+            </li>
+          ))}
+        </ul>
+        <div className='my-12 flex items-center gap-5 opacity-50'>
+          <hr className='flex-1' />
+          <span>or</span>
+          <hr className='flex-1' />
+        </div>
+
+        <EmailForm onSubmit={handleEmailSubmit} />
+      </div>
     </main>
   )
 }

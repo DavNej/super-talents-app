@@ -28,7 +28,7 @@ export async function getTalentLayerUser({
   }
 }
 
-export async function handleExists(handle: string) {
+export async function profileIdOfHandle(handle: string) {
   const query = `
   {
     users(where: {handle: "${handle}"}, first: 1) {
@@ -38,7 +38,12 @@ export async function handleExists(handle: string) {
   `
   try {
     const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
-    return Boolean(res.users.length > 0)
+    const user = res.users.at(0)
+
+    if (!user) return null
+    if (user.id === undefined) return null
+
+    return Number(user.id)
   } catch (err) {
     toast.error('Could not check handle availability')
     throw err

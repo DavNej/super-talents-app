@@ -1,97 +1,35 @@
 'use client'
 
 import React from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 
-import { toast } from 'react-toastify'
-import { useInterval, useLocalStorage } from 'usehooks-ts'
+//TODO delete images in local storage after mint
+import { useLocalStorage } from 'usehooks-ts'
 
-import fetcher from '@/lib/fetcher'
-import type { AvatarResponse } from './generate/config'
-
-import BackLink from '@/app/components/BackLink'
-import Button from '@/app/components/Button'
-import Loader from '@/app/components/Loader'
-
-import ImagePreview from '@/app/components/ImagePreview'
-
-import dynamic from 'next/dynamic'
+import { Button, Loader, BackLink, ImagePreview } from '@/app/components'
+import { useCreateAvatars } from '@/lib/avatar/hooks'
+import { DataUrlType } from '@/lib/avatar/types'
 
 const UploadFile = dynamic(() => import('@/app/components/UploadFile'), {
   ssr: false,
 })
 
 export default function AvatarPage() {
-  const [jobId, setJobId] = React.useState('')
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [base64UploadedImage, setBase64UploadedImage] = React.useState('')
+  const createAvatar = useCreateAvatars()
 
-  const [selectedAvatar] = useLocalStorage('selectedAvatar', '')
-  const [imageOutputs, setImageOutputs] = useLocalStorage<string[]>(
-    'avatars',
-    []
-  )
+  const [uploadedPicture, setUploadedPicture] =
+    React.useState<DataUrlType | null>(null)
 
-  const hasImageOutputs = imageOutputs.length > 0
+  const [avatars, setAvatars] = useLocalStorage<DataUrlType[]>('avatars', [])
+  const [selectedAvatar, setSelectedAvatar] =
+    useLocalStorage<DataUrlType | null>('selectedAvatar', null)
 
-  function onUploadSuccess(dataUrl: string) {
-    const fileExtension = dataUrl.substring(
-      dataUrl.indexOf('/') + 1,
-      dataUrl.indexOf(';')
-    )
-    const regex = new RegExp(`^data:image\/${fileExtension};base64,`)
-    const data = dataUrl.replace(regex, '')
-    setBase64UploadedImage(data)
-  }
-
-  async function generateImage() {
-    setIsLoading(true)
-    if (hasImageOutputs) {
-      setImageOutputs([])
+  React.useEffect(() => {
+    if (createAvatar.data) {
+      setAvatars(createAvatar.data)
     }
-
-    const res = await fetcher.POST<AvatarResponse>(
-      '/profile/new/avatar/generate',
-      { image: base64UploadedImage }
-    )
-
-    console.log('🦋 | generateImage', res)
-
-    if (!res.ok) {
-      toast.error(res.error.message)
-      setIsLoading(false)
-      return
-    }
-
-    const id = res.data.id
-    if (id) {
-      setJobId(id)
-    }
-  }
-
-  async function checkStatus() {
-    console.log('⏳ Checking status id:', jobId)
-    if (!jobId) return
-
-    const res = await fetcher.GET<AvatarResponse>(
-      `/profile/new/avatar/generate?id=${jobId}`
-    )
-
-    if (!res.ok) {
-      toast.error(res.error.message)
-      setIsLoading(false)
-      return
-    }
-
-    const images = res.data.results
-    if (!!images?.length) {
-      setImageOutputs(images)
-      setIsLoading(false)
-    }
-  }
-
-  const delay = isLoading ? 5000 : null
-  useInterval(checkStatus, delay)
+  }, [createAvatar.data, setAvatars])
 
   return (
     <main className='flex-1 px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
@@ -104,7 +42,7 @@ export default function AvatarPage() {
             Create Your Avatar
           </h3>
 
-          <UploadFile onSuccess={onUploadSuccess} />
+          <UploadFile onSuccess={setUploadedPicture} />
 
           <p className='mt-4 ml-4 font-light text-xs opacity-70'>
             For optimal results, please upload a high-quality picture with a
@@ -120,14 +58,17 @@ export default function AvatarPage() {
           ) : (
             <Button
               className='mt-5 w-full'
-              onClick={() => generateImage()}
-              isDisabled={!base64UploadedImage || isLoading}>
-              {hasImageOutputs ? 'Regenerate avatar' : 'Generate avatar'}
+              onClick={() => {
+                if (uploadedPicture)
+                  createAvatar.mutate({ image: uploadedPicture })
+              }}
+              isDisabled={!uploadedPicture || createAvatar.isLoading}>
+              {createAvatar.data ? 'Regenerate avatar' : 'Generate avatar'}
             </Button>
           )}
         </div>
 
-        {isLoading ? (
+        {createAvatar.isLoading ? (
           <div className='flex flex-col self-stretch justify-center items-center'>
             <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>
               Generating your avatar...
@@ -137,7 +78,11 @@ export default function AvatarPage() {
             </div>
           </div>
         ) : (
-          <ImagePreview images={imageOutputs} />
+          <ImagePreview
+            images={avatars}
+            onSelect={setSelectedAvatar}
+            selectedAvatar={selectedAvatar}
+          />
         )}
       </div>
     </main>

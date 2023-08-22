@@ -1,42 +1,32 @@
 'use client'
 
-import Image from 'next/image'
 import React from 'react'
+import Image from 'next/image'
 
-import useImageProcessing from '@/app/hooks/useImageProcessing'
-import useDropzone from '@/app/hooks/useDropzone'
-import { toast } from 'react-toastify'
+import { useImageProcessing, useDropzone } from '@/lib/hooks'
+import { DataUrlType } from '@/lib/avatar/types'
 
 export default function UploadFile({
   onSuccess,
 }: {
-  onSuccess: (dataUrl: string) => unknown
+  onSuccess: (dataUrl: DataUrlType) => unknown
 }) {
   const fileInputRef = React.useRef<HTMLInputElement>(null)
 
-  const onError = toast.error
-
-  const { file, handleDrop, handleDragOver, handleFileChange } = useDropzone({
-    onError,
-  })
-
-  const dataUrl = useImageProcessing({ file, onError })
+  const { file, handleDrop, handleDragOver, handleFileChange } = useDropzone()
+  const dataUrl = useImageProcessing({ file })
 
   React.useEffect(() => {
     if (!dataUrl) return
     onSuccess(dataUrl)
   }, [dataUrl, onSuccess])
 
-  function handleClick() {
-    fileInputRef.current?.click()
-  }
-
   return (
     <div
       className='flex p-4 mt-12 bg-gray-700 rounded-[30px] justify-center cursor-pointer'
       onDrop={handleDrop}
       onDragOver={handleDragOver}
-      onClick={handleClick}>
+      onClick={() => fileInputRef.current?.click()}>
       <input
         ref={fileInputRef}
         type='file'

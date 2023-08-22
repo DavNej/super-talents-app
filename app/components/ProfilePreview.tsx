@@ -3,53 +3,48 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { roleCaptions } from '@/lib/form-utils'
 
-import { clsx, type ClassValue } from 'clsx'
-import { IProfile } from '../hooks/profile/types'
+import { roleCaptions } from '@/features/profile/helpers'
+import { IPFSProfileType } from '@/features/profile/types'
 
 export default function ProfilePreview({
-  className,
-  profile,
-  isMinted,
+  handle,
+  profileData,
+  isSigner = false,
 }: {
-  profile: IProfile
-  className?: ClassValue
-  isMinted: boolean
+  handle: string
+  profileData: IPFSProfileType
+  isSigner?: boolean
 }) {
   return (
-    <div
-      className={clsx(
-        'rounded-[40px] border-pink border-4 overflow-hidden',
-        className
-      )}>
-      <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
-        <Image src='/mask.png' alt='logo' width={72} height={27} priority />
-        {!isMinted && (
+    <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
+      {isSigner && (
+        <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
+          <Image src='/mask.png' alt='logo' width={72} height={27} priority />
           <Link href='/profile/new/info'>
             <Image src='/edit.svg' alt='edit' width={24} height={24} priority />
           </Link>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className='px-14 py-11 flex gap-14'>
         <div className='w-1/2 flex flex-col gap-8'>
           <div className='flex gap-8 items-start'>
             <Image
               className='rounded-full'
-              src={profile.picture}
+              src={profileData.picture}
               alt='logo'
               width={172}
               height={172}
               priority
             />
             <div className='flex flex-col justify-between'>
-              <p className='font-semibold text-2xl'>{profile.name}</p>
-              <p className='font-light'>@{profile.handle}</p>
+              <p className='font-semibold text-2xl'>{profileData.name}</p>
+              <p className='font-light'>@{handle}</p>
               <p className='font-normal text-pink whitespace-nowrap'>
-                {profile.role && roleCaptions[profile.role]}
+                {profileData.role && roleCaptions[profileData.role]}
               </p>
-              <p className='font-light text-justify'>{profile.about}</p>
+              <p className='font-light text-justify'>{profileData.about}</p>
             </div>
           </div>
 
@@ -58,7 +53,7 @@ export default function ProfilePreview({
               Skills
             </h4>
             <div className='py-5 flex gap-2'>
-              {profile.skills.map(skill => (
+              {profileData.skills.map(skill => (
                 <div
                   key={skill}
                   className='py-2 px-4 rounded-full bg-white backdrop-blur-xl bg-opacity-20'>
@@ -93,8 +88,8 @@ export default function ProfilePreview({
               Links
             </h4>
             <div className='py-5 flex gap-2'>
-              {profile.portefolio && (
-                <Link href={profile.portefolio} className='py-2 px-4'>
+              {profileData.portefolio && (
+                <Link href={profileData.portefolio} className='py-2 px-4'>
                   <Image
                     src='/pink-portefolio.svg'
                     alt='portefolio'
@@ -104,8 +99,8 @@ export default function ProfilePreview({
                   />
                 </Link>
               )}
-              {profile.github && (
-                <Link href={profile.github} className='py-2 px-4'>
+              {profileData.github && (
+                <Link href={profileData.github} className='py-2 px-4'>
                   <Image
                     src='/pink-github.svg'
                     alt='github'
@@ -115,8 +110,8 @@ export default function ProfilePreview({
                   />
                 </Link>
               )}
-              {profile.twitter && (
-                <Link href={profile.twitter} className='py-2 px-4'>
+              {profileData.twitter && (
+                <Link href={profileData.twitter} className='py-2 px-4'>
                   <Image
                     src='/pink-twitter.svg'
                     alt='twitter'
@@ -126,8 +121,8 @@ export default function ProfilePreview({
                   />
                 </Link>
               )}
-              {profile.otherLink && (
-                <Link href={profile.otherLink} className='py-2 px-4'>
+              {profileData.otherLink && (
+                <Link href={profileData.otherLink} className='py-2 px-4'>
                   <Image
                     src='/pink-portefolio.svg'
                     alt='otherLink'

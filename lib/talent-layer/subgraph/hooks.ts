@@ -1,7 +1,7 @@
 import type { UseQueryOptions } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 
-import { getTalentLayerUser, handleExists } from '../subgraph'
+import { getTalentLayerUser, profileIdOfHandle } from '../subgraph'
 import type { TalentLayerUserType, IFetchTalentLayerUserParams } from '../types'
 
 export function useTalentLayerUser(
@@ -21,13 +21,14 @@ export function useTalentLayerUser(
   })
 }
 
-export function useHandleExists(
+export function useProfileIdOfHandle(
   { handle }: { handle: string },
-  options?: UseQueryOptions<boolean>
+  options?: UseQueryOptions<number | null>
 ) {
-  return useQuery<boolean>({
-    queryKey: ['handleExists'],
-    queryFn: () => handleExists(handle),
+  return useQuery<number | null>({
+    queryKey: ['profile-id-of-handle', handle],
+    enabled: Boolean(handle),
+    queryFn: () => profileIdOfHandle(handle),
     ...options,
   })
 }
