@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { ethers } from 'ethers'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -32,9 +31,9 @@ export default function useAuth() {
       console.error(err)
       toast.error('Login failed')
     },
-    onSuccess() {
-      queryclient.invalidateQueries(['user'])
-      redirect('/profile')
+    onSuccess(provider) {
+      queryclient.setQueryData(['auth-init'], provider)
+      queryclient.invalidateQueries(['connected-user'])
     },
   })
 
@@ -46,8 +45,7 @@ export default function useAuth() {
     },
     onSuccess() {
       queryclient.setQueryData(['auth-init'], null)
-      queryclient.invalidateQueries(['user'])
-      redirect('/login')
+      queryclient.invalidateQueries(['connected-user'])
     },
   })
 

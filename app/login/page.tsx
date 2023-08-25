@@ -7,6 +7,7 @@ import type { LoginProvider } from '@/lib/web3auth/types'
 import { useAuth } from '@/lib/hooks'
 
 import { EmailForm } from '@/app/components'
+import { redirect } from 'next/navigation'
 
 const loginProviders: {
   icon: string
@@ -19,7 +20,11 @@ const loginProviders: {
 ]
 
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { login, provider } = useAuth()
+
+  if (provider) {
+    return redirect('/profile/new/avatar')
+  }
 
   function handleEmailSubmit({ email }: { email: string }) {
     login.mutate({ loginProvider: 'email_passwordless', email })

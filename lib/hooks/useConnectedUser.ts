@@ -4,25 +4,23 @@ import { useQuery } from '@tanstack/react-query'
 import { log } from '@/lib/utils'
 import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
 import { TalentLayerUser } from '@/lib/talent-layer/schemas'
-import type {
-  IFetchTalentLayerUserParams,
-  TalentLayerUserType,
-} from '@/lib/talent-layer/types'
+import type { TalentLayerUserType } from '@/lib/talent-layer/types'
 
-export default function useTalentLayerUser({
-  handle,
-  address,
-  id,
-}: IFetchTalentLayerUserParams) {
-  return useQuery<TalentLayerUserType | null>({
-    queryKey: ['user', { handle, address, id }],
-    enabled: Boolean(handle || address || id),
+import useAuth from './useAuth'
+
+export default function useConnectedUser() {
+  const { provider } = useAuth()
+  const address = provider?.signerAddress
+
+  const connectedUser = useQuery<TalentLayerUserType | null>({
+    queryKey: ['connected-user'],
+    enabled: Boolean(address),
     queryFn: async () => {
-      log('👤 | TL user')
-      if (!Boolean(handle || address || id)) return null
-      log('👤 | TL user hit')
+      log('👤 | TL connected-user')
+      if (!address) return null
+      log('👤 | TL connected-user hit')
 
-      const data = await getTalentLayerUser({ handle, address, id })
+      const data = await getTalentLayerUser({ address })
       if (!data) return null
 
       const result = TalentLayerUser.safeParse(data)
@@ -37,4 +35,6 @@ export default function useTalentLayerUser({
       return data as TalentLayerUserType
     },
   })
+
+  return connectedUser
 }
