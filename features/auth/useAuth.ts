@@ -3,9 +3,9 @@ import { toast } from 'react-toastify'
 import { ethers } from 'ethers'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { Web3AuthLoginParams } from './types'
-import { web3auth } from './config'
-import { init, login, logout } from './helpers'
+import { web3auth } from '@/lib/web3auth/config'
+import { Web3AuthLoginParams } from '@/lib/web3auth/types'
+import { init, login, logout } from '@/lib/web3auth/helpers'
 
 type IProvider = {
   provider: ethers.providers.Web3Provider
@@ -13,11 +13,11 @@ type IProvider = {
   signerAddress: string
 }
 
-export function useAuth() {
+export default function useAuth() {
   const queryclient = useQueryClient()
 
   const initQuery = useQuery({
-    queryKey: ['web3auth-init'],
+    queryKey: ['auth-init'],
     enabled: Boolean(web3auth.status === 'not_ready'),
     queryFn: init,
   })
@@ -45,7 +45,7 @@ export function useAuth() {
       toast.error('Logout failed')
     },
     onSuccess() {
-      queryclient.setQueryData(['web3auth-init'], null)
+      queryclient.setQueryData(['auth-init'], null)
       queryclient.invalidateQueries(['user'])
       redirect('/login')
     },

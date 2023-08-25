@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 
-import { useAuth } from '@/lib/web3auth/hooks'
+import { useAuth } from '@/features/auth'
 import { useUser } from '@/features/profile/hooks'
 
 export default function ProfilePage() {

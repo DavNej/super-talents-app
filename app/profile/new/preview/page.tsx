@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 import { BackLink, Button, ProfilePreview } from '@/app/components'
 import TalentLayerButton from '@/app/components/TalentLayerButton'
 
-import { useProvider } from '@/lib/web3auth/hooks'
+import { useAuth } from '@/features/auth'
 import type { IPFSProfileType, NewProfileType } from '@/features/profile/types'
 import { IPFSProfile } from '@/features/profile/validate'
 
@@ -26,8 +26,8 @@ export default function ProfilePreviewPage() {
     null
   )
 
-  const provider = useProvider()
-  const connectedUser = useUser({ address: provider.data?.signerAddress })
+  const { provider } = useAuth()
+  const connectedUser = useUser({ address: provider?.signerAddress })
 
   let redirectPath = ''
 
@@ -72,9 +72,9 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          {provider.data?.signer && handle ? (
+          {provider?.signer && handle ? (
             <TalentLayerButton
-              signer={provider.data.signer}
+              signer={provider.signer}
               handle={handle}
               data={dataToUpload}
             />

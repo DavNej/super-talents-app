@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { useAuth } from '@/lib/web3auth/hooks'
+import { useAuth } from '@/features/auth'
 
 export default function LogoutButton() {
   const { logout } = useAuth()

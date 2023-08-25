@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { PageLoader, ProfilePreview } from '@/app/components'
-import { useAuth } from '@/lib/web3auth/hooks'
+import { useAuth } from '@/features/auth'
 
 import { useProfileData } from '@/features/profile'
 import { useUser } from '@/features/profile/hooks'
