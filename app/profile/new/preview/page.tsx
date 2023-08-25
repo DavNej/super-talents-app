@@ -10,7 +10,7 @@ import TalentLayerButton from '@/app/components/TalentLayerButton'
 
 import { useAuth } from '@/features/auth'
 import type { IPFSProfileType, NewProfileType } from '@/features/profile/types'
-import { IPFSProfile } from '@/features/profile/validate'
+import { IPFSProfile } from '@/features/profile/schemas'
 
 import { useUser } from '@/features/profile/hooks'
 import { DataUrlType } from '@/lib/avatar/types'

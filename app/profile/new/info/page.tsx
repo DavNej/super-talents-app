@@ -22,7 +22,7 @@ import { useChatGPT } from '@/lib/chat-gpt/hooks'
 import { validationSchema } from '@/lib/form-utils'
 
 import { roleCaptions, initialValues } from '@/features/profile/helpers'
-import { NewProfile } from '@/features/profile/validate'
+import { NewProfile } from '@/features/profile/schemas'
 import type {
   NewProfileType,
   FormProfileType,

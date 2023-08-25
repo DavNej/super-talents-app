@@ -3,13 +3,13 @@ import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
 import { fetchFromIPFS } from '@/lib/ipfs'
 import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
-import { TalentLayerUser } from '@/lib/talent-layer/validate'
+import { TalentLayerUser } from '@/lib/talent-layer/schemas'
 import type {
   IFetchTalentLayerUserParams,
   TalentLayerUserType,
 } from '@/lib/talent-layer/types'
 
-import { IPFSProfile } from './validate'
+import { IPFSProfile } from './schemas'
 import { IPFSProfileType } from './types'
 
 export function useProfileData({
