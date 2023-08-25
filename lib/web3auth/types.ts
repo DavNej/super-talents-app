@@ -1,11 +1,11 @@
-export type TLoginProvider =
+export type LoginProvider =
   | 'github'
   | 'google'
   | 'twitter'
   | 'linkedin'
   | 'email_passwordless'
 
-export interface ILoginParams {
-  loginProvider: TLoginProvider
+export interface Web3AuthLoginParams {
+  loginProvider: LoginProvider
   email?: string
 }

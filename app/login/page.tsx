@@ -2,18 +2,15 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 
-import type { TLoginProvider } from '@/lib/web3auth/types'
-import { useWeb3AuthLogin, useSigner } from '@/lib/web3auth/hooks'
-
-import { useUser } from '@/features/profile/hooks'
+import type { LoginProvider } from '@/lib/web3auth/types'
+import { useAuth } from '@/lib/web3auth/hooks'
 
 import { EmailForm } from '@/app/components'
 
 const loginProviders: {
   icon: string
-  name: TLoginProvider
+  name: LoginProvider
 }[] = [
   { icon: '/linkedin.svg', name: 'linkedin' },
   { icon: '/github.svg', name: 'github' },
@@ -22,29 +19,7 @@ const loginProviders: {
 ]
 
 export default function LoginPage() {
-  const router = useRouter()
-  const signer = useSigner()
-
-  const hasSigner = Boolean(signer.data?.signer)
-
-  const connectedUser = useUser({ address: signer.data?.address })
-  const connectedUserHandle = connectedUser.data?.handle
-
-  React.useEffect(() => {
-    if (hasSigner) {
-      const redirectPath = connectedUserHandle
-        ? `/profile/${connectedUserHandle}`
-        : '/profile/new/avatar'
-
-      router.push(redirectPath)
-    }
-  }, [connectedUserHandle, hasSigner, router])
-
-  return hasSigner ? null : <LoginUI />
-}
-
-function LoginUI() {
-  const login = useWeb3AuthLogin()
+  const { login } = useAuth()
 
   function handleEmailSubmit({ email }: { email: string }) {
     login.mutate({ loginProvider: 'email_passwordless', email })

@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { PageLoader, ProfilePreview } from '@/app/components'
-import { useSigner } from '@/lib/web3auth/hooks'
+import { useAuth } from '@/lib/web3auth/hooks'
 
 import { useProfileData } from '@/features/profile'
 import { useUser } from '@/features/profile/hooks'
@@ -15,8 +15,8 @@ export default function ProfileHandlePage({
 }) {
   const { handle } = params
 
-  const signer = useSigner()
-  const signerAddress = signer.data?.address
+  const { provider } = useAuth()
+  const signerAddress = provider?.signerAddress
   const connectedUser = useUser({ address: signerAddress })
 
   const isSigner = connectedUser.data?.handle === handle

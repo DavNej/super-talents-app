@@ -1,82 +1,60 @@
+import { redirect } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { ethers } from 'ethers'
-
-import type { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { ILoginParams } from './types'
+import { Web3AuthLoginParams } from './types'
 import { web3auth } from './config'
-import {
-  getWeb3AuthSigner,
-  web3authInit,
-  web3authLogin,
-  web3authLogout,
-} from '.'
-import { useRouter } from 'next/navigation'
+import { init, login, logout } from './helpers'
 
-export type TSigner = {
+type IProvider = {
+  provider: ethers.providers.Web3Provider
   signer: ethers.providers.JsonRpcSigner
-  address: string
-} | null
-
-export function useWeb3AuthInit(options?: UseQueryOptions<TSigner>) {
-  return useQuery<TSigner>({
-    queryKey: ['web3auth-init'],
-    queryFn: () => web3authInit(),
-    onError(err) {
-      console.error(err)
-      toast.error('Auth initilization failed')
-    },
-    ...options,
-  })
+  signerAddress: string
 }
 
-export function useSigner(options?: UseQueryOptions<TSigner>) {
-  return useQuery<TSigner>({
-    queryKey: ['signer', web3auth.status],
-    queryFn: () => getWeb3AuthSigner(),
-    onError(err) {
-      console.error(err)
-      toast.error('Could not get signer')
-    },
-    ...options,
-  })
-}
-
-export function useWeb3AuthLogin(
-  options?: UseMutationOptions<TSigner, unknown, ILoginParams>
-) {
+export function useAuth() {
   const queryclient = useQueryClient()
-  return useMutation<TSigner, unknown, ILoginParams>({
-    mutationFn: ({ loginProvider, email }) =>
-      web3authLogin({ loginProvider, email }),
+
+  const initQuery = useQuery({
+    queryKey: ['web3auth-init'],
+    enabled: Boolean(web3auth.status === 'not_ready'),
+    queryFn: init,
+  })
+
+  const loginMutation = useMutation<
+    IProvider | null,
+    unknown,
+    Web3AuthLoginParams
+  >({
+    mutationFn: login,
     onError(err) {
       console.error(err)
       toast.error('Login failed')
     },
     onSuccess() {
-      queryclient.invalidateQueries(['signer'])
       queryclient.invalidateQueries(['user'])
+      redirect('/profile')
     },
-    ...options,
   })
-}
 
-export function useWeb3AuthLogout(options?: UseMutationOptions<null>) {
-  const queryclient = useQueryClient()
-  const router = useRouter()
-
-  return useMutation<null>({
-    mutationFn: () => web3authLogout(),
+  const logoutMutation = useMutation<null, unknown, void>({
+    mutationFn: logout,
     onError(err) {
       console.error(err)
       toast.error('Logout failed')
     },
     onSuccess() {
-      queryclient.invalidateQueries(['signer'])
+      queryclient.setQueryData(['web3auth-init'], null)
       queryclient.invalidateQueries(['user'])
-      router.push('/login')
+      redirect('/login')
     },
-    ...options,
   })
+
+  return {
+    init: initQuery,
+    provider: initQuery.data,
+    login: loginMutation,
+    logout: logoutMutation,
+  }
 }

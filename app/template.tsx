@@ -1,19 +1,31 @@
 'use client'
 
 import React from 'react'
+import { redirect, usePathname } from 'next/navigation'
 
-import { useWeb3AuthInit } from '@/lib/web3auth/hooks'
+import { useAuth } from '@/lib/web3auth/hooks'
 import { PageLoader } from '@/app/components'
 
-// TODO remove /app from urls
+// TODO check pathname regex pattern with zod
+const authenticatedRoutes = [
+  '/profile/new/avatar',
+  '/profile/new/info',
+  '/profile/new/preview',
+]
+
 export default function RootTemplate({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const web3AuthInit = useWeb3AuthInit()
+  const { init, provider } = useAuth()
+  const pathname = usePathname()
 
-  if (web3AuthInit.isLoading) return <PageLoader />
+  if (init.isFetching) return <PageLoader />
+
+  if (!provider && authenticatedRoutes.includes(pathname)) {
+    return redirect('/login')
+  }
 
   return children
 }
