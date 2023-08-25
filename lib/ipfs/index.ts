@@ -1,7 +1,8 @@
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { urlFromCid } from './utils'
+
+import { urlFromCid } from './helpers'
 
 const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`

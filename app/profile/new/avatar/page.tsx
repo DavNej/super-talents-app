@@ -3,13 +3,11 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-
-//TODO delete images in local storage after mint
 import { useLocalStorage } from 'usehooks-ts'
 
+import { useCreateAvatars } from '@/lib/hooks'
+import type { DataUrlType } from '@/lib/avatar/types'
 import { Button, Loader, BackLink, ImagePreview } from '@/app/components'
-import { useCreateAvatars } from '@/lib/avatar/hooks'
-import { DataUrlType } from '@/lib/avatar/types'
 
 const UploadFile = dynamic(() => import('@/app/components/UploadFile'), {
   ssr: false,
@@ -21,6 +19,7 @@ export default function AvatarPage() {
   const [uploadedPicture, setUploadedPicture] =
     React.useState<DataUrlType | null>(null)
 
+  //TODO delete images in local storage after mint
   const [avatars, setAvatars] = useLocalStorage<DataUrlType[]>('avatars', [])
   const [selectedAvatar, setSelectedAvatar] =
     useLocalStorage<DataUrlType | null>('selectedAvatar', null)

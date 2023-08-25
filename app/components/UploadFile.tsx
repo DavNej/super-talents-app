@@ -3,7 +3,8 @@
 import React from 'react'
 import Image from 'next/image'
 
-import { useImageProcessing, useDropzone } from '@/lib/hooks'
+import { useDropzone } from '@/lib/hooks'
+import useImageProcessing from '@/lib/hooks/useImageProcessing'
 import { DataUrlType } from '@/lib/avatar/types'
 
 export default function UploadFile({

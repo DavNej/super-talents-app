@@ -4,8 +4,8 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { roleCaptions } from '@/features/profile/helpers'
-import { IPFSProfileType } from '@/features/profile/types'
+import { roleCaptions } from '@/lib/profile/helpers'
+import { IPFSProfileType } from '@/lib/profile/types'
 
 export default function ProfilePreview({
   handle,

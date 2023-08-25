@@ -2,13 +2,12 @@
 
 import { redirect } from 'next/navigation'
 
-import { useAuth } from '@/features/auth'
-import { useUser } from '@/features/profile/hooks'
+import { useAuth,  useTalentLayerUser } from '@/lib/hooks'
 
 export default function ProfilePage() {
   const { provider } = useAuth()
 
-  const connectedUser = useUser({ address: provider?.signerAddress })
+  const connectedUser = useTalentLayerUser({ address: provider?.signerAddress })
 
   const connectedUserHandle = connectedUser.data?.handle
   if (!connectedUserHandle) {

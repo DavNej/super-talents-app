@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { useAuth } from '@/features/auth'
+import { useAuth } from '@/lib/hooks'
 
 export default function LogoutButton() {
   const { logout } = useAuth()

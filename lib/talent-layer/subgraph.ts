@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-import type { IFetchTalentLayerUserParams, TalentLayerUserType } from '../types'
+import type { IFetchTalentLayerUserParams, TalentLayerUserType } from './types'
 
 const subgraphUrl =
   'https://api.thegraph.com/subgraphs/name/talentlayer/talent-layer-mumbai'

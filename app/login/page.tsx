@@ -4,7 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 
 import type { LoginProvider } from '@/lib/web3auth/types'
-import { useAuth } from '@/features/auth'
+import { useAuth } from '@/lib/hooks'
 
 import { EmailForm } from '@/app/components'
 

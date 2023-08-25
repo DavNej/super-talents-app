@@ -8,11 +8,11 @@ import { toast } from 'react-toastify'
 import { BackLink, Button, ProfilePreview } from '@/app/components'
 import TalentLayerButton from '@/app/components/TalentLayerButton'
 
-import { useAuth } from '@/features/auth'
-import type { IPFSProfileType, NewProfileType } from '@/features/profile/types'
-import { IPFSProfile } from '@/features/profile/schemas'
+import { useAuth, useTalentLayerUser } from '@/lib/hooks'
 
-import { useUser } from '@/features/profile/hooks'
+import type { IPFSProfileType, NewProfileType } from '@/lib/profile/types'
+import { IPFSProfile } from '@/lib/profile/schemas'
+
 import { DataUrlType } from '@/lib/avatar/types'
 
 export default function ProfilePreviewPage() {
@@ -27,7 +27,7 @@ export default function ProfilePreviewPage() {
   )
 
   const { provider } = useAuth()
-  const connectedUser = useUser({ address: provider?.signerAddress })
+  const connectedUser = useTalentLayerUser({ address: provider?.signerAddress })
 
   let redirectPath = ''
 

@@ -3,8 +3,8 @@
 import React from 'react'
 import { redirect, usePathname } from 'next/navigation'
 
+import { useAuth } from '@/lib/hooks'
 import { PageLoader } from '@/app/components'
-import { useAuth } from '@/features/auth'
 
 // TODO check pathname regex pattern with zod
 const authenticatedRoutes = [

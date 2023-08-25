@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
-import { fetchFromIPFS } from '@/lib/ipfs'
 import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
 import { TalentLayerUser } from '@/lib/talent-layer/schemas'
 import type {
@@ -9,36 +8,7 @@ import type {
   TalentLayerUserType,
 } from '@/lib/talent-layer/types'
 
-import { IPFSProfile } from './schemas'
-import { IPFSProfileType } from './types'
-
-export function useProfileData({
-  cid,
-}: {
-  cid: string | undefined | null
-}): UseQueryResult<IPFSProfileType | null> {
-  return useQuery<IPFSProfileType | null>({
-    queryKey: ['profile', { cid }],
-    queryFn: async () => {
-      if (!cid) return null
-
-      const data = await fetchFromIPFS({ cid })
-      if (!data) return null
-
-      const result = IPFSProfile.safeParse(data)
-      if (result.success) return result.data
-
-      console.warn(
-        'Zod validation',
-        JSON.stringify(result.error.issues, null, 2)
-      )
-      toast.warn('Wrong Profile data format')
-      return data as IPFSProfileType
-    },
-  })
-}
-
-export function useUser({
+export default function useTalentLayerUser({
   handle,
   address,
   id,

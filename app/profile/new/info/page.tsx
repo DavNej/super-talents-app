@@ -15,19 +15,19 @@ import {
   inputClassNames,
 } from '@/app/components'
 import { cn } from '@/lib/utils'
-import { useChatGPT } from '@/lib/chat-gpt/hooks'
+import { useChatGPT } from '@/lib/hooks'
 
 //! ATTENTION
 // TODO remove Yup
 import { validationSchema } from '@/lib/form-utils'
 
-import { roleCaptions, initialValues } from '@/features/profile/helpers'
-import { NewProfile } from '@/features/profile/schemas'
+import { roleCaptions, initialValues } from '@/lib/profile/helpers'
+import { NewProfile } from '@/lib/profile/schemas'
 import type {
   NewProfileType,
   FormProfileType,
   SkillsType,
-} from '@/features/profile/types'
+} from '@/lib/profile/types'
 
 export default function ProfileInfoPage() {
   const router = useRouter()
