@@ -10,10 +10,10 @@ const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
 export async function fetchFromIPFS<T>({ cid }: { cid: string }) {
-  log('📂 | fetchFromIPFS')
+  log('🪐 | Fetch from IPFS')
   if (!cid) return null
-  log('📂 | fetchFromIPFS hit')
-
+  log('🪐 | Fetch from IPFS hit')
+  
   try {
     const res = await axios.get<T>(urlFromCid(cid))
     return res.data
@@ -30,6 +30,8 @@ export async function uploadToIPFS({
   name: string
   content: unknown
 }) {
+  log('🪐 | Upload to IPFS hit')
+
   const axiosArgs = buildPinJsonArgs(content, name)
 
   try {

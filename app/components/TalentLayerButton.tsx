@@ -1,20 +1,20 @@
 'use client'
 
 import React from 'react'
-
+import { toast } from 'react-toastify'
 import { useLocalStorage } from 'usehooks-ts'
 
-import { IPFSProfileType } from '@/lib/profile/types'
 import {
   useAuth,
   useProfileData,
   useProfileIdOfHandle,
   useUploadToIPFS,
+  useUpdateProfileData,
+  useMintProfile,
 } from '@/lib/hooks'
-import { Button } from '@/app/components'
-
-import { useTalentLayerContract } from '@/lib/hooks'
+import { IPFSProfileType } from '@/lib/profile/types'
 import { deepEqual } from '@/lib/utils'
+import { Button } from '@/app/components'
 
 export default function TalentLayerButton({
   handle,
@@ -24,38 +24,40 @@ export default function TalentLayerButton({
   dataToUpload: IPFSProfileType
 }) {
   const { provider } = useAuth()
+
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const profileData = useProfileData({ cid: pinataCid })
-  const uploadToIPFS = useUploadToIPFS({
-    onSuccess: onIPFSUploadSuccess,
+  const updateProfileData = useUpdateProfileData()
+  const { data: talentLayerId } = useProfileIdOfHandle({ handle })
+  const handleExists = talentLayerId || talentLayerId === 0
+  const signerAddress = provider?.signerAddress
+  const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
+
+  const mintProfile = useMintProfile({
+    onMutate() {
+      if (deepEqual(profileData.data, dataToUpload)) return
+      uploadToIPFS.mutate({ name: handle, content: dataToUpload })
+    },
+    onSuccess({ profileId }) {
+      updateProfileData.mutate({ profileId, cid: pinataCid })
+    },
   })
 
-  const { mintProfile, updateProfileData } = useTalentLayerContract()
-  const { data: talentLayerId } = useProfileIdOfHandle({ handle })
-  const hasTalentLayerId = talentLayerId || talentLayerId === 0
-  const signerAddress = provider?.signerAddress
-
-  async function onIPFSUploadSuccess(cid: string) {
-    setPinataCid(cid)
-    if (!signerAddress) return
-    if (!hasTalentLayerId) {
-      mintProfile.mutate({ handle, address: signerAddress })
-    } else {
-      updateProfileData.mutate({ cid, id: talentLayerId })
+  function handleClick() {
+    if (handleExists) {
+      toast.error('Handle already exists')
+      return
     }
-  }
-
-  async function handleClick() {
     if (buttonIsDisabled) return
-    uploadToIPFS.mutate({ name: handle, content: dataToUpload })
+
+    mintProfile.mutate({ handle, address: signerAddress })
   }
 
-  const buttonIsDisabled =
-    !signerAddress || !handle || !deepEqual(profileData.data, dataToUpload)
+  const buttonIsDisabled = !signerAddress || !handle
 
   return (
     <Button
-      isLoading={uploadToIPFS.isLoading}
+      isLoading={uploadToIPFS.isLoading || mintProfile.isLoading}
       isDisabled={buttonIsDisabled}
       onClick={handleClick}>
       Mint my profile NFT

@@ -87,8 +87,6 @@ export default function ProfileInfoPage() {
     }
   }, [chatGPT.data])
 
-  // Hello I am a great physicist and I like to revolutionize the world
-
   function addSkill(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       const newSkill = event.currentTarget.value.trim()

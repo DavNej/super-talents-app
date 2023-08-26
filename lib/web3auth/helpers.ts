@@ -8,7 +8,7 @@ import type { Web3AuthLoginParams, IProvider } from './types'
 import { web3auth } from './config'
 
 export async function init() {
-  log('🍇 | init')
+  log('🔑 | init')
   try {
     await web3auth.init()
     if (web3auth.connected) {
@@ -23,9 +23,9 @@ export async function init() {
 }
 
 export async function login({ loginProvider, email }: Web3AuthLoginParams) {
-  log('🍇 | login')
+  log('🔑 | login')
   if (web3auth.connected) return null
-  log('🍇 | login hit')
+  log('🔑 | login hit')
   const loginParams =
     loginProvider === 'email_passwordless'
       ? { loginProvider, extraLoginOptions: { login_hint: email } }
@@ -37,17 +37,17 @@ export async function login({ loginProvider, email }: Web3AuthLoginParams) {
 }
 
 export async function logout() {
-  log('🍇 | logout')
+  log('🔑 | logout')
   if (!web3auth.connected) return null
-  log('🍇 | logout hit')
+  log('🔑 | logout hit')
   await web3auth.logout()
   return null
 }
 
 async function getProvider() {
-  log('🍇 | get-provider')
+  log('🔑 | get-provider')
   if (!web3auth.provider || !web3auth.connected) return null
-  log('🍇 | get-provider hit')
+  log('🔑 | get-provider hit')
   try {
     const provider = new ethers.providers.Web3Provider(web3auth.provider)
     const signer = await provider.getSigner()

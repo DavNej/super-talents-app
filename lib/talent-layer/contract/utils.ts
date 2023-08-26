@@ -23,15 +23,15 @@ export async function buildMintProfileTx({
 
 export async function buildUpdateProfileDataTx({
   contract,
-  id,
+  profileId,
   cid,
 }: {
   contract: ethers.Contract
-  id: number
+  profileId: BigInt
   cid: string
 }) {
   const updateProfileDataTx =
-    await contract.populateTransaction.updateProfileData(id, cid)
+    await contract.populateTransaction.updateProfileData(profileId, cid)
 
   return {
     to: talentLayerAddress,

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
+import { log } from '@/lib/utils'
 import type { IFetchTalentLayerUserParams, TalentLayerUserType } from './types'
 
 const subgraphUrl =
@@ -18,7 +19,7 @@ export async function getTalentLayerUser({
     const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
     const user = res.users.at(0)
     if (!user) {
-      console.log('🤷 No TalentLayer user found', { id, address, handle })
+      log('👤 | No TalentLayer found', address || handle || id)
       return null
     }
     return user

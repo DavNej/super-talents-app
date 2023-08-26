@@ -1,16 +1,17 @@
 import * as Yup from 'yup'
 
+import { profileIdOfHandle } from '@/lib/talent-layer/subgraph'
 export const validationSchema = Yup.object().shape({
   handle: Yup.string()
     .required('Please choose a username')
     .min(5, 'Handle too short')
     .max(31, 'Handle too long')
-    .matches(/^([a-z|\-|\_])+$/, 'Must contain only letters, - or _'),
-  // .test('handle-available', 'Handle is yo taken', handle =>
-  //   handleExists(handle)
-  //     .then(res => !res)
-  //     .catch(err => !err)
-  // ),
+    .matches(/^([a-z|\-|\_])+$/, 'Must contain only letters, - or _')
+    .test('handle-available', 'Handle is yo taken', handle =>
+      profileIdOfHandle(handle)
+        .then(res => !res)
+        .catch(err => !err)
+    ),
   name: Yup.string()
     .min(2, 'Name too short')
     .max(140, 'Name too long')

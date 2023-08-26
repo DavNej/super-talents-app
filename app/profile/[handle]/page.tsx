@@ -3,7 +3,7 @@
 import React from 'react'
 
 import { PageLoader, ProfilePreview } from '@/app/components'
-import { useAuth, useProfileData, useTalentLayerUser } from '@/lib/hooks'
+import { useProfileData, useTalentLayerUser } from '@/lib/hooks'
 
 export default function ProfileHandlePage({
   params,
@@ -12,19 +12,10 @@ export default function ProfileHandlePage({
 }) {
   const { handle } = params
 
-  const { provider } = useAuth()
-  const signerAddress = provider?.signerAddress
-  const connectedUser = useTalentLayerUser({ address: signerAddress })
-
-  const isSigner = connectedUser.data?.handle === handle
-
-  const useTalentLayerUserParams = isSigner
-    ? { address: signerAddress }
-    : { handle }
-  const user = useTalentLayerUser(useTalentLayerUserParams)
+  const user = useTalentLayerUser({ handle })
   const profile = useProfileData({ cid: user.data?.cid })
 
-  if (profile.isLoading || user.isLoading) return <PageLoader />
+  if (profile.isFetching || user.isFetching) return <PageLoader />
 
   if (!profile.data) {
     return (

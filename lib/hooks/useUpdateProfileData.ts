@@ -1,45 +1,42 @@
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
-
-import api from '@/lib/api'
-import { useAuth, useBiconomy } from '@/lib/hooks'
-import { sendUserOp } from '@/lib/biconomy/helpers'
+import type { UseMutationOptions } from '@tanstack/react-query'
 
 import {
   talentLayerAddress,
   talentLayerInterface,
-} from '../talent-layer/contract/config'
-import { buildUpdateProfileDataTx } from '../talent-layer/contract/utils'
+} from '@/lib/talent-layer/contract/config'
+import { buildUpdateProfileDataTx } from '@/lib/talent-layer/contract/utils'
+import { useAuth, useBiconomy } from '@/lib/hooks'
+import { sendUserOp } from '@/lib/biconomy/helpers'
+import { log } from '@/lib/utils'
 
-export default function useTalentLayerContract() {
+export default function useUpdateProfileData(
+  options?: UseMutationOptions<
+    string | null,
+    unknown,
+    {
+      profileId: BigInt
+      cid: string
+    }
+  >
+) {
   const { provider } = useAuth()
   const biconomy = useBiconomy()
 
   const signer = provider?.signer
 
-  const mintProfile = useMutation<
-    { profileId: number },
-    unknown,
-    { handle: string; address: string }
-  >({
-    mutationFn: ({ handle, address }) =>
-      api.POST('/api/mint-profile', { handle, address }),
-    onError(err) {
-      console.error(err)
-      toast.error('Could not mint Profile NFT')
-    },
-  })
-
-  const updateProfileData = useMutation<
+  return useMutation<
     string | null,
     unknown,
     {
-      id: number
+      profileId: BigInt
       cid: string
     }
   >({
-    mutationFn: async ({ id, cid }) => {
+    mutationFn: async ({ profileId, cid }) => {
+      log('📓 | Update TL profile data')
       const smartAccount = biconomy.data.smartAccount
       if (!smartAccount) {
         toast.warn('Smart account not ready yet')
@@ -49,12 +46,14 @@ export default function useTalentLayerContract() {
         toast.error('No signer')
         return null
       }
+
+      log('📓 | Update TL profile data hit')
       const contract = new ethers.Contract(
         talentLayerAddress,
         talentLayerInterface,
         signer
       )
-      const tx = await buildUpdateProfileDataTx({ contract, id, cid })
+      const tx = await buildUpdateProfileDataTx({ contract, profileId, cid })
       const txHash = await sendUserOp({ smartAccount, transactions: [tx] })
       return txHash
     },
@@ -62,7 +61,6 @@ export default function useTalentLayerContract() {
       console.error(err)
       toast.error('Could not update profile data')
     },
+    ...options,
   })
-
-  return { mintProfile, updateProfileData }
 }

@@ -11,7 +11,7 @@ async function POST<T>(
     const res = await axios.post<T>(url, data, config)
     return res.data
   } catch (error) {
-    toast.error('🏚️ Could not POST api')
+    toast.error('🏚️ Something went wrong')
     throw error
   }
 }
@@ -21,7 +21,7 @@ async function GET<T>(url: string, config?: AxiosRequestConfig<any>) {
     const res = await axios.get<T>(url, config)
     return res.data
   } catch (error) {
-    toast.error('🏚️ Could not GET api')
+    toast.error('🏚️ Something went wrong')
     throw error
   }
 }
