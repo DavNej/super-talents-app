@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { web3auth } from '@/lib/web3auth/config'
 import type { Web3AuthLoginParams, IProvider } from '@/lib/web3auth/types'
 import { init, login, logout } from '@/lib/web3auth/helpers'
+import { redirect } from 'next/navigation'
 
 export default function useAuth() {
   const queryclient = useQueryClient()
@@ -27,6 +28,7 @@ export default function useAuth() {
     onSuccess(provider) {
       queryclient.setQueryData(['auth-init'], provider)
       queryclient.invalidateQueries(['connected-user'])
+      redirect('/profile/new/avatar')
     },
   })
 

@@ -1,6 +1,5 @@
 import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
-import { toast } from 'react-toastify'
 
 import { log } from '@/lib/utils'
 
@@ -13,13 +12,13 @@ export async function fetchFromIPFS<T>({ cid }: { cid: string }) {
   log('🪐 | Fetch from IPFS')
   if (!cid) return null
   log('🪐 | Fetch from IPFS hit')
-  
+
   try {
     const res = await axios.get<T>(urlFromCid(cid))
     return res.data
-  } catch (error) {
-    toast.error('Could not fetch data from IPFS')
-    throw error
+  } catch (err) {
+    console.error(err)
+    throw 'Could not fetch data from IPFS'
   }
 }
 
@@ -38,8 +37,8 @@ export async function uploadToIPFS({
     const res = await axios.post<{ IpfsHash: string }>(...axiosArgs)
     return res.data.IpfsHash
   } catch (err) {
-    toast.error('😣 Could not upload profile info')
-    throw err
+    console.error(err)
+    throw '😣 Could not upload profile info'
   }
 }
 

@@ -1,5 +1,4 @@
 import { openai, settings, systemPrompt } from './config'
-import { toast } from 'react-toastify'
 
 export async function askChatGPT(prompt: string) {
   try {
@@ -13,7 +12,7 @@ export async function askChatGPT(prompt: string) {
 
     return res.data.choices.at(0)?.message || null
   } catch (err) {
-    toast.error('Empty 😿 response')
-    throw err
+    console.error(err)
+    throw 'Empty 😿 response'
   }
 }

@@ -46,8 +46,8 @@ export async function profileIdOfHandle(handle: string) {
 
     return Number(user.id)
   } catch (err) {
-    toast.error('Could not check handle availability')
-    throw err
+    console.error(err)
+    throw 'Could not check handle availability'
   }
 }
 

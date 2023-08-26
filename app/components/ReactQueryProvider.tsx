@@ -2,10 +2,16 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { toast } from 'react-toastify'
 
 function defaultOnError(err: unknown, variables?: unknown, context?: unknown) {
   console.log('============')
+
   console.error(err)
+
+  if (typeof err === 'string') {
+    toast.error(err, { toastId: 'root' })
+  }
 
   if (variables) {
     console.error({ variables })

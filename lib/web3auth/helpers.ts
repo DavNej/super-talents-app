@@ -16,8 +16,8 @@ export async function init() {
       return provider
     }
   } catch (err) {
-    toast.error('Auth initilization failed')
-    throw err
+    console.error(err)
+    throw 'Auth initilization failed'
   }
   return null
 }
@@ -54,8 +54,7 @@ async function getProvider() {
     const signerAddress = await signer.getAddress()
     return { provider, signer, signerAddress } as IProvider
   } catch (err) {
-    toast.error('Could not get provider')
-    console.error('Could not get provider')
-    return null
+    console.error(err)
+    throw 'Could not get provider'
   }
 }

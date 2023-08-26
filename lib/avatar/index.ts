@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify'
 import axios from 'axios'
 
 import { pause } from '@/lib/utils'
@@ -25,9 +24,9 @@ async function createJob({ image }: { image: DataUrlType }) {
       { headers }
     )
     return res.data
-  } catch (error) {
-    toast.error('🙈 Could not generate avatar')
-    throw error
+  } catch (err) {
+    console.error(err)
+    throw '🙈 Could not generate avatar'
   }
 }
 
@@ -39,9 +38,9 @@ async function checkJobStatus({ id }: { id: string }) {
     )
     console.log('🔍 Job', id, res.data.status)
     return res.data
-  } catch (error) {
-    toast.error('Could not check avatar status')
-    throw error
+  } catch (err) {
+    console.error(err)
+    throw '🙈 Could not check avatar status'
   }
 }
 
