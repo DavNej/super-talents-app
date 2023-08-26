@@ -1,62 +1,63 @@
 'use client'
 
 import React from 'react'
-import { ethers } from 'ethers'
+
 import { useLocalStorage } from 'usehooks-ts'
 
 import { IPFSProfileType } from '@/lib/profile/types'
-import { useProfileIdOfHandle, useUploadToIPFS } from '@/lib/hooks'
+import {
+  useAuth,
+  useProfileData,
+  useProfileIdOfHandle,
+  useUploadToIPFS,
+} from '@/lib/hooks'
 import { Button } from '@/app/components'
 
-import { useTalentLayerContract } from '@/lib/talent-layer/contract/hooks'
+import { useTalentLayerContract } from '@/lib/hooks'
+import { deepEqual } from '@/lib/utils'
 
 export default function TalentLayerButton({
   handle,
-  signer,
-  data,
+  dataToUpload,
 }: {
-  signer: ethers.providers.JsonRpcSigner
   handle: string
-  data: IPFSProfileType
+  dataToUpload: IPFSProfileType
 }) {
+  const { provider } = useAuth()
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
-  const uploadToIPFS = useUploadToIPFS({ onSuccess: onIPFSUploadSuccess })
+  const profileData = useProfileData({ cid: pinataCid })
+  const uploadToIPFS = useUploadToIPFS({
+    onSuccess: onIPFSUploadSuccess,
+  })
 
-  const talentLayerContract = useTalentLayerContract({ signer })
-  const profileIdOfHandle = useProfileIdOfHandle({ handle })
-  const talentLayerId = profileIdOfHandle.data
+  const { mintProfile, updateProfileData } = useTalentLayerContract()
+  const { data: talentLayerId } = useProfileIdOfHandle({ handle })
   const hasTalentLayerId = talentLayerId || talentLayerId === 0
-
-  const [shouldUpdateData, setShouldUpdateData] = React.useState(false)
-  const cond = hasTalentLayerId && pinataCid && shouldUpdateData
-
-  React.useEffect(() => {
-    if (cond) {
-      talentLayerContract.updateProfileData({
-        id: talentLayerId,
-        newCid: pinataCid,
-      })
-      setShouldUpdateData(false)
-    }
-  }, [cond, pinataCid, talentLayerContract, talentLayerId])
+  const signerAddress = provider?.signerAddress
 
   async function onIPFSUploadSuccess(cid: string) {
     setPinataCid(cid)
+    if (!signerAddress) return
     if (!hasTalentLayerId) {
-      const res = await talentLayerContract.mintProfile({ handle })
-      console.log('🦋 | onIPFSUploadSuccess | res', res)
+      mintProfile.mutate({ handle, address: signerAddress })
+    } else {
+      updateProfileData.mutate({ cid, id: talentLayerId })
     }
-    setShouldUpdateData(true)
   }
 
   async function handleClick() {
-    if (!handle) return console.error('missing connectedProfile handle')
-    //TODO check if data has changed from IPFS before upload new data
-    uploadToIPFS.mutate({ name: handle, content: data })
+    if (buttonIsDisabled) return
+    uploadToIPFS.mutate({ name: handle, content: dataToUpload })
   }
 
+  const buttonIsDisabled =
+    !signerAddress || !handle || !deepEqual(profileData.data, dataToUpload)
+
   return (
-    <Button isLoading={uploadToIPFS.isLoading} onClick={handleClick}>
+    <Button
+      isLoading={uploadToIPFS.isLoading}
+      isDisabled={buttonIsDisabled}
+      onClick={handleClick}>
       Mint my profile NFT
     </Button>
   )

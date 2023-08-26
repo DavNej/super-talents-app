@@ -1,22 +1,25 @@
 import { toast } from 'react-toastify'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
-import { fetchFromIPFS } from '@/lib/ipfs'
+import api from '@/lib/api'
 
 import { IPFSProfile } from '@/lib/profile/schemas'
 import { IPFSProfileType } from '@/lib/profile/types'
 
+
+//TODO typesafe api IPFS call with zod
 export default function useProfileData({
   cid,
 }: {
   cid: string | undefined | null
 }): UseQueryResult<IPFSProfileType | null> {
   return useQuery<IPFSProfileType | null>({
-    queryKey: ['profile', { cid }],
+    queryKey: ['profile-data', { cid }],
+    enabled: Boolean(cid),
     queryFn: async () => {
       if (!cid) return null
 
-      const data = await fetchFromIPFS({ cid })
+      const data = await api.GET(`/api/ipfs/${cid}`)
       if (!data) return null
 
       const result = IPFSProfile.safeParse(data)

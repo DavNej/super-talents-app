@@ -1,22 +1,18 @@
 'use client'
 
 import React from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'react-toastify'
 
 import { BackLink, Button, ProfilePreview } from '@/app/components'
 import TalentLayerButton from '@/app/components/TalentLayerButton'
 
-import { useAuth, useTalentLayerUser } from '@/lib/hooks'
-
+import type { DataUrlType } from '@/lib/avatar/types'
 import type { IPFSProfileType, NewProfileType } from '@/lib/profile/types'
 import { IPFSProfile } from '@/lib/profile/schemas'
 
-import { DataUrlType } from '@/lib/avatar/types'
-
 export default function ProfilePreviewPage() {
-  const router = useRouter()
   const [newProfile] = useLocalStorage<NewProfileType | null>(
     'newProfile',
     null
@@ -26,29 +22,8 @@ export default function ProfilePreviewPage() {
     null
   )
 
-  const { provider } = useAuth()
-  const connectedUser = useTalentLayerUser({ address: provider?.signerAddress })
-
-  let redirectPath = ''
-
-  React.useEffect(() => {
-    if (redirectPath) {
-      router.push(redirectPath)
-    }
-  }, [redirectPath, router])
-
-  if (connectedUser.data) {
-    redirectPath = `/profile/${connectedUser.data.handle}`
-    return null
-  }
-  if (!newProfile) {
-    redirectPath = '/profile/new/info'
-    return null
-  }
-  if (!selectedAvatar) {
-    redirectPath = '/profile/new/avatar'
-    return null
-  }
+  if (!newProfile) return redirect('/profile/new/info')
+  if (!selectedAvatar) return redirect('/profile/new/avatar')
 
   let IPFSProfileData: IPFSProfileType
 
@@ -64,7 +39,7 @@ export default function ProfilePreviewPage() {
     IPFSProfileData = dataToUpload as IPFSProfileType
   }
 
-  return redirectPath ? null : (
+  return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-col flex-1'>
         <BackLink />
@@ -72,12 +47,8 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          {provider?.signer && handle ? (
-            <TalentLayerButton
-              signer={provider.signer}
-              handle={handle}
-              data={dataToUpload}
-            />
+          {handle ? (
+            <TalentLayerButton handle={handle} dataToUpload={dataToUpload} />
           ) : (
             <Button isDisabled>Mint my profile NFT</Button>
           )}

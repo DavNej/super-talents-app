@@ -4,14 +4,8 @@ import { WALLET_ADAPTERS } from '@web3auth/base'
 
 import { log } from '@/lib/utils'
 
-import { Web3AuthLoginParams } from './types'
+import type { Web3AuthLoginParams, IProvider } from './types'
 import { web3auth } from './config'
-
-type IProvider = {
-  provider: ethers.providers.Web3Provider
-  signer: ethers.providers.JsonRpcSigner
-  signerAddress: string
-}
 
 export async function init() {
   log('🍇 | init')

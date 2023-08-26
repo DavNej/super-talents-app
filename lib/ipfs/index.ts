@@ -2,16 +2,20 @@ import type { AxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
+import { log } from '@/lib/utils'
+
 import { urlFromCid } from './helpers'
 
 const baseUrl = 'https://api.pinata.cloud/pinning'
 const JWT = `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`
 
-export async function fetchFromIPFS({ cid }: { cid: string }) {
+export async function fetchFromIPFS<T>({ cid }: { cid: string }) {
+  log('📂 | fetchFromIPFS')
   if (!cid) return null
+  log('📂 | fetchFromIPFS hit')
 
   try {
-    const res = await axios.get(urlFromCid(cid))
+    const res = await axios.get<T>(urlFromCid(cid))
     return res.data
   } catch (error) {
     toast.error('Could not fetch data from IPFS')
