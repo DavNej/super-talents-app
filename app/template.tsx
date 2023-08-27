@@ -8,6 +8,7 @@ import { PageLoader } from '@/app/components'
 
 // TODO check pathname regex pattern with zod
 const authenticatedRoutes = [
+  '/',
   '/profile/new/avatar',
   '/profile/new/info',
   '/profile/new/preview',
