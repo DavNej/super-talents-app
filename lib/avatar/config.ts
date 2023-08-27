@@ -21,7 +21,7 @@ export function buildPayload(image: DataUrlType) {
       low_threshold: '100',
       high_threshold: '200',
       guidance_scale: '10',
-      seed: '-1',
+      seed: String(Math.floor(Math.random() * 10e9)),
       no_of_images: 4,
       image: imgDataUrlToBase64(image),
     },

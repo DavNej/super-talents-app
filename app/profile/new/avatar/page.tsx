@@ -14,21 +14,16 @@ const UploadFile = dynamic(() => import('@/app/components/UploadFile'), {
 })
 
 export default function AvatarPage() {
-  const createAvatar = useCreateAvatars()
+  const { createAvatar, isLoading } = useCreateAvatars()
 
   const [uploadedPicture, setUploadedPicture] =
     React.useState<DataUrlType | null>(null)
 
   //TODO delete images in local storage after mint
-  const [avatars, setAvatars] = useLocalStorage<DataUrlType[]>('avatars', [])
+  const [avatars] = useLocalStorage<DataUrlType[]>('avatars', [])
+
   const [selectedAvatar, setSelectedAvatar] =
     useLocalStorage<DataUrlType | null>('selectedAvatar', null)
-
-  React.useEffect(() => {
-    if (createAvatar.data) {
-      setAvatars(createAvatar.data)
-    }
-  }, [createAvatar.data, setAvatars])
 
   return (
     <main className='flex-1 px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
@@ -61,13 +56,13 @@ export default function AvatarPage() {
                 if (uploadedPicture)
                   createAvatar.mutate({ image: uploadedPicture })
               }}
-              isDisabled={!uploadedPicture || createAvatar.isLoading}>
+              isDisabled={!uploadedPicture || isLoading}>
               {createAvatar.data ? 'Regenerate avatar' : 'Generate avatar'}
             </Button>
           )}
         </div>
 
-        {createAvatar.isLoading ? (
+        {isLoading ? (
           <div className='flex flex-col self-stretch justify-center items-center'>
             <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>
               Generating your avatar...

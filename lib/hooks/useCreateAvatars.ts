@@ -1,15 +1,51 @@
-import type { UseMutationOptions } from '@tanstack/react-query'
-import { useMutation } from '@tanstack/react-query'
+import React from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 import api from '@/lib/api'
 import type { DataUrlType } from '@/lib/avatar/types'
+import { useLocalStorage } from 'usehooks-ts'
 
-export default function useCreateAvatars(
-  options?: UseMutationOptions<DataUrlType[], unknown, { image: DataUrlType }>
-) {
-  return useMutation<DataUrlType[], unknown, { image: DataUrlType }>({
+type JobId = string
+
+export default function useCreateAvatars() {
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [_, setAvatars] = useLocalStorage<DataUrlType[]>('avatars', [])
+
+  const createJob = useMutation<
+    { jobId: JobId },
+    unknown,
+    { image: DataUrlType }
+  >({
     mutationFn: ({ image }) =>
-      api.POST<DataUrlType[]>('/api/avatar-gen', { image }),
-    ...options,
+      api.POST<{ jobId: JobId }>('/api/avatar-gen', { image }),
+    onMutate() {
+      setIsLoading(true)
+    },
   })
+
+  const jobId = createJob.data?.jobId
+
+  const checkJobStatus = useQuery({
+    queryKey: ['check-job-status', jobId],
+    enabled: Boolean(jobId),
+    queryFn: () => {
+      if (!jobId) return null
+      return api.GET<DataUrlType[] | null>(`/api/avatar-gen?jobId=${jobId}`)
+    },
+    refetchInterval: isLoading ? 7000 : false,
+  })
+
+  React.useEffect(() => {
+    if (!isLoading) return
+
+    if (checkJobStatus.isError || checkJobStatus.data) {
+      setIsLoading(false)
+    }
+
+    if (checkJobStatus.data) {
+      setAvatars(checkJobStatus.data)
+    }
+  }, [checkJobStatus, isLoading, setAvatars])
+
+  return { createAvatar: createJob, isLoading }
 }
