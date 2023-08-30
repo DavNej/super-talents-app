@@ -32,7 +32,17 @@ export default function ChooseAboutDialog({
         <h3 className='font-semibold text-5xl text-center whitespace-nowrap'>
           Choose your about
         </h3>
-        <div className={clsx('my-8', 'flex', 'flex-col', 'gap-4')}>
+
+        <div
+          className={clsx(
+            'my-8',
+            'flex',
+            'flex-col',
+            'flex-1',
+            'gap-4',
+            'overflow-y-scroll',
+            'max-h-80'
+          )}>
           {options?.map(option => (
             <div
               key={option}

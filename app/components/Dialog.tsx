@@ -27,7 +27,7 @@ export default function Dialog({
 
   return (
     <div
-      className='fixed inset-0 bg-black/[.6] flex items-center justify-center'
+      className='fixed inset-0 bg-black/[.6] flex justify-center p-24'
       onClick={() => {
         onClose()
       }}>

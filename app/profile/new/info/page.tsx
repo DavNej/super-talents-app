@@ -73,13 +73,16 @@ export default function ProfileInfoPage() {
 
   React.useEffect(() => {
     if (chatGPT.data?.content) {
-      let options
+      let options: string[]
       try {
-        options = JSON.parse(chatGPT.data.content.trim())
+        options = chatGPT.data.content
+          .split('++++++++++')
+          .map(opt => opt.trim())
+          .filter(Boolean)
       } catch (err) {
         toast.warn('Could not parse options')
         console.log(chatGPT.data)
-        options = JSON.parse(chatGPT.data.content.replace('\n', '').trim())
+        options = chatGPT.data.content.split('++++++++++')
       }
 
       setGPTOptions(options)
@@ -312,7 +315,8 @@ export default function ProfileInfoPage() {
         </form>
 
         <ChooseAboutDialog
-          open={Boolean(GPTOptions) && openDialog}
+          open={true}
+          // open={Boolean(GPTOptions) && openDialog}
           options={GPTOptions}
           onSelectAbout={about => {
             formik.setFieldValue('about', about)

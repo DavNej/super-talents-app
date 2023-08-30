@@ -30,7 +30,7 @@ export default function TalentLayerButton({
   const updateProfileData = useUpdateProfileData()
   const { data: talentLayerId } = useProfileIdOfHandle({ handle })
   const handleExists = talentLayerId || talentLayerId === 0
-  const signerAddress = provider?.signerAddress
+  const signerAddress = provider.data?.signerAddress
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
 
   const mintProfile = useMintProfile({
