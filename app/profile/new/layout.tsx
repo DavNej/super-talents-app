@@ -18,7 +18,7 @@ export default function ProgressBarLayout({
     return redirect(`/profile/${connectedUser.data.handle}`)
   }
 
-  if (!provider.data) {
+  if (!provider.data === null) {
     return redirect('/login')
   }
 

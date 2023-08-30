@@ -1,11 +1,16 @@
 'use client'
 
 import React from 'react'
+import { redirect } from 'next/navigation'
 
 import { useAuth } from '@/lib/hooks'
 
 export default function LogoutButton() {
   const { logout } = useAuth()
+
+  if (logout.isSuccess) {
+    return redirect('/login')
+  }
 
   return (
     <button

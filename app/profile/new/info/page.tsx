@@ -315,8 +315,7 @@ export default function ProfileInfoPage() {
         </form>
 
         <ChooseAboutDialog
-          open={true}
-          // open={Boolean(GPTOptions) && openDialog}
+          open={Boolean(GPTOptions) && openDialog}
           options={GPTOptions}
           onSelectAbout={about => {
             formik.setFieldValue('about', about)
