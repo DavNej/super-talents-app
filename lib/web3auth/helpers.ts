@@ -11,15 +11,11 @@ export async function init() {
   log('🔑 | init')
   try {
     await web3auth.init()
-    if (web3auth.connected) {
-      const provider = await getProvider()
-      return provider
-    }
+    return web3auth.status
   } catch (err) {
     console.error(err)
     throw 'Auth initilization failed'
   }
-  return null
 }
 
 export async function login({ loginProvider, email }: Web3AuthLoginParams) {
@@ -32,8 +28,7 @@ export async function login({ loginProvider, email }: Web3AuthLoginParams) {
       : { loginProvider }
 
   await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, loginParams)
-  const provider = await getProvider()
-  return provider
+  return web3auth.status
 }
 
 export async function logout() {
@@ -41,10 +36,10 @@ export async function logout() {
   if (!web3auth.connected) return null
   log('🔑 | logout hit')
   await web3auth.logout()
-  return null
+  return web3auth.status
 }
 
-async function getProvider() {
+export async function getProvider() {
   log('🔑 | get-provider')
   if (!web3auth.provider || !web3auth.connected) return null
   log('🔑 | get-provider hit')

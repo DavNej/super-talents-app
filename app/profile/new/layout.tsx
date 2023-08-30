@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/app/components'
+import { useAuth } from '@/lib/hooks'
 
 export default function ProgressBarLayout({
   children,
@@ -11,6 +12,16 @@ export default function ProgressBarLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const { provider, connectedUser } = useAuth()
+
+  if (connectedUser.data?.handle) {
+    return redirect(`/profile/${connectedUser.data.handle}`)
+  }
+
+  if (!provider.data) {
+    return redirect('/login')
+  }
+
   //TODO redirect if signer has a TL id
   return (
     <>

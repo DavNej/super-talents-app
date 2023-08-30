@@ -1,11 +1,10 @@
-export { default as useAuth } from './useAuth'
+export { useInitAuth, useAuth } from './useAuth'
 export { default as useDropzone } from './useDropzone'
 //TODO dynamic import of hook
 // export { default as useImageProcessing } from './useImageProcessing'
 export { default as useProfileData } from './useProfileData'
 export { default as useProfileIdOfHandle } from './useProfileIdOfHandle'
 export { default as useTalentLayerUser } from './useTalentLayerUser'
-export { default as useConnectedUser } from './useConnectedUser'
 export { default as useUploadToIPFS } from './useUploadToIPFS'
 export { default as useChatGPT } from './useChatGPT'
 export { default as useCreateAvatars } from './useCreateAvatars'

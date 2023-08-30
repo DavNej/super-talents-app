@@ -20,9 +20,13 @@ const loginProviders: {
 ]
 
 export default function LoginPage() {
-  const { login, provider } = useAuth()
+  const { login, connectedUser, provider } = useAuth()
 
-  if (provider) {
+  if (connectedUser.data?.handle) {
+    return redirect(`/profile/${connectedUser.data.handle}`)
+  }
+
+  if (provider.data) {
     return redirect('/profile/new/avatar')
   }
 

@@ -25,7 +25,7 @@ export default function ProfileHandlePage({
       ) : (
         <p>No profile to show</p>
       )}
-      {provider && (
+      {provider.data && (
         <div className='flex justify-center mt-8'>
           <LogoutButton />
         </div>

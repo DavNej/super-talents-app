@@ -1,6 +1,6 @@
 import { CHAIN_NAMESPACES } from '@web3auth/base'
-import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 import { Web3AuthNoModal } from '@web3auth/no-modal'
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 
 const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
