@@ -157,7 +157,7 @@ export default function ProfileInfoPage() {
               onBlur={formik.handleBlur}
               type='text'
               name='handle'
-              placeholder='Choose a newProfile handle (ex: alanturing)'
+              placeholder='Choose a profile handle (ex: alanturing)'
             />
           </fieldset>
           <fieldset id='name'>

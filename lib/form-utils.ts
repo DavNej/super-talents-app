@@ -7,7 +7,7 @@ export const validationSchema = Yup.object().shape({
     .min(5, 'Handle too short')
     .max(31, 'Handle too long')
     .matches(/^([a-z|\-|\_])+$/, 'Must contain only letters, - or _')
-    .test('handle-available', 'Handle is yo taken', handle =>
+    .test('handle-available', 'Handle is taken', handle =>
       profileIdOfHandle(handle)
         .then(res => !res)
         .catch(err => !err)
@@ -19,7 +19,7 @@ export const validationSchema = Yup.object().shape({
     .required(),
   about: Yup.string()
     .min(20, 'Bio too short')
-    .max(500, 'Bio too long')
+    .max(2000, 'Bio too long')
     .trim()
     .required('Bio is a required field'),
   skills: Yup.array()
