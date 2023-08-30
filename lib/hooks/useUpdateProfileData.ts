@@ -25,7 +25,7 @@ export default function useUpdateProfileData(
   const { provider } = useAuth()
   const biconomy = useBiconomy()
 
-  const signer = provider?.signer
+  const signer = provider.data?.signer
 
   return useMutation<
     string | null,

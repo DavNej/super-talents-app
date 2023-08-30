@@ -11,7 +11,7 @@ const initialData = { smartAccount: null, address: null }
 export default function useBiconomy() {
   const { provider } = useAuth()
 
-  const signer = provider?.signer || null
+  const signer = provider.data?.signer || null
 
   const init = useQuery<{
     address: string | null
