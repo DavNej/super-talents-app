@@ -1,14 +1,14 @@
-import type { CreateChatCompletionRequest } from 'openai'
 import { Configuration, OpenAIApi } from 'openai'
+import type { CreateChatCompletionRequest } from 'openai'
 
 const configuration = new Configuration({
   organization: process.env.OPENAI_ORGANIZATION,
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-export const openai = new OpenAIApi(configuration)
+const openai = new OpenAIApi(configuration)
 
-export const settings: Omit<CreateChatCompletionRequest, 'messages'> = {
+const settings: Omit<CreateChatCompletionRequest, 'messages'> = {
   model: 'gpt-3.5-turbo-16k-0613',
   temperature: 1.48,
   max_tokens: 2146,
@@ -17,7 +17,7 @@ export const settings: Omit<CreateChatCompletionRequest, 'messages'> = {
   presence_penalty: 0.31,
 }
 
-export const systemPrompt = `
+const systemPrompt = `
   You will be provided with keywords or a simple information for a person's bio and you will generate 3 options from which they can choose.
   The output options must be clear, attractive with a friendly and welcoming tone.
   Each option must include 3 sections:
@@ -27,3 +27,20 @@ export const systemPrompt = `
   Do not miss any of the sections in the output, the introduction, the bullet points with emojies and the CTA sections must exist in every option!
   Your output MUST contain nothing else but the content of the three options separated by ++++++++++.
 `
+
+export async function askChatGPT(prompt: string) {
+  try {
+    const res = await openai.createChatCompletion({
+      ...settings,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt },
+      ],
+    })
+
+    return res.data.choices.at(0)?.message || null
+  } catch (err) {
+    console.error(err)
+    throw 'Empty 😿 response'
+  }
+}

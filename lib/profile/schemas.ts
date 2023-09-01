@@ -31,7 +31,7 @@ export const About = z
     invalid_type_error: 'About must be a string',
   })
   .min(20, { message: 'About must be at least 20 characters long' })
-  .max(500, { message: 'About cannot exceed 500 characters' })
+  .max(5000, { message: 'About cannot exceed 5000 characters' })
 
 export const Skills = z
   .array(z.string().min(2, { message: 'Skill too short' }))
@@ -48,7 +48,9 @@ export const Github = z
 export const Twitter = z
   .string()
   .url({ message: 'Must be a valid url' })
-  .includes('twitter', { message: 'Must be a valid twitter url' })
+  .regex(/^.+(\/\/twitter.com|\/\/x.com){1}.+$/, {
+    message: 'Must be a valid twitter url',
+  })
   .optional()
 
 export const Link = z

@@ -18,8 +18,8 @@ export const validationSchema = Yup.object().shape({
     .trim()
     .required(),
   about: Yup.string()
-    .min(20, 'Bio too short')
-    .max(2000, 'Bio too long')
+    .min(20, 'Bio must be at least 20 characters long')
+    .max(5000, 'Bio cannot exceed 5000 characters')
     .trim()
     .required('Bio is a required field'),
   skills: Yup.array()
