@@ -21,13 +21,25 @@ import { useChatGPT } from '@/lib/hooks'
 // TODO remove Yup
 import { validationSchema } from '@/lib/form-utils'
 
-import { roleCaptions, initialValues } from '@/lib/profile/helpers'
+import { roleCaptions } from '@/lib/profile/helpers'
 import { NewProfile } from '@/lib/profile/schemas'
 import type {
   NewProfileType,
   FormProfileType,
   SkillsType,
 } from '@/lib/profile/types'
+
+const initialValues: FormProfileType = {
+  handle: '',
+  name: '',
+  about: '',
+  skills: [],
+  github: '',
+  otherLink: '',
+  portefolio: '',
+  twitter: '',
+  role: '',
+}
 
 export default function ProfileInfoPage() {
   const router = useRouter()

@@ -1,4 +1,6 @@
-import { FormProfileType } from './types'
+import { log } from '@/lib/utils'
+import { validateIPFSProfile } from './schemas'
+import { fetchFromIPFS } from '../ipfs'
 
 export const roleCaptions = {
   seller: 'Talent',
@@ -6,14 +8,11 @@ export const roleCaptions = {
   both: 'Both',
 }
 
-export const initialValues: FormProfileType = {
-  handle: '',
-  name: '',
-  about: '',
-  skills: [],
-  github: '',
-  otherLink: '',
-  portefolio: '',
-  twitter: '',
-  role: '',
+export async function getProfileData(cid: string | undefined) {
+  log('📖 | Profile data')
+  if (!cid) return null
+  log('📖 | Profile data hit')
+
+  const data = await fetchFromIPFS({ cid })
+  return validateIPFSProfile(data)
 }

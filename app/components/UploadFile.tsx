@@ -3,7 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import { useDropzone } from '@/lib/hooks'
+import useDropzone from '@/lib/hooks/useDropzone'
 import useImageProcessing from '@/lib/hooks/useImageProcessing'
 import { DataUrlType } from '@/lib/avatar/types'
 

@@ -1,4 +1,5 @@
 import z from 'zod'
+import { IPFSProfileType } from './types'
 
 export const RoleEnum = z.enum(['buyer', 'seller', 'both'])
 
@@ -97,3 +98,14 @@ export const IPFSProfile = z.object({
   portefolio: Link,
   otherLink: Link,
 })
+
+export function validateIPFSProfile(profile: unknown) {
+  if (!profile) return null
+
+  const result = IPFSProfile.safeParse(profile)
+  if (result.success) return result.data
+
+  console.warn('Zod validation', JSON.stringify(result.error.issues, null, 2))
+
+  return profile as IPFSProfileType
+}

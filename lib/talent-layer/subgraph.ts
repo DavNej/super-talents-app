@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 
 import { log } from '@/lib/utils'
 import type { IFetchTalentLayerUserParams, TalentLayerUserType } from './types'
+import { validateTalentLayerUser } from './schemas'
 
 const subgraphUrl =
   'https://api.thegraph.com/subgraphs/name/talentlayer/talent-layer-mumbai'
@@ -12,17 +13,21 @@ export async function getTalentLayerUser({
   address,
   handle,
 }: IFetchTalentLayerUserParams) {
+  log('👤 | TL user')
   if (!Boolean(handle || address || id)) return null
   const query = buildUserGraphQuery({ id, address, handle })
 
   try {
+    log('👤 | TL user hit')
     const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
     const user = res.users.at(0)
+
     if (!user) {
-      log('👤 | No TalentLayer found', address || handle || id)
+      log('👤 | No user found', address || handle || id)
       return null
     }
-    return user
+
+    return validateTalentLayerUser(user)
   } catch (error) {
     console.log('Could not fetch TalentLayer user', { id, address, handle })
     throw error

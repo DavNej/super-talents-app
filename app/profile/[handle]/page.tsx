@@ -1,35 +1,29 @@
-'use client'
-
 import React from 'react'
 
-import { LogoutButton, PageLoader, ProfilePreview } from '@/app/components'
-import { useAuth, useProfileData, useTalentLayerUser } from '@/lib/hooks'
+import { ProfilePreview } from '@/app/components'
+import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
+import { getProfileData } from '@/lib/profile/helpers'
+import Logout from './Logout'
 
-export default function ProfileHandlePage({
+export default async function ProfileHandlePage({
   params,
 }: {
   params: { handle: string }
 }) {
   const { handle } = params
 
-  const { provider } = useAuth()
-  const user = useTalentLayerUser({ handle })
-  const profile = useProfileData({ cid: user.data?.cid })
-
-  if (profile.isFetching || user.isFetching) return <PageLoader />
+  const user = await getTalentLayerUser({ handle })
+  const profile = await getProfileData(user?.cid)
 
   return (
     <main className='p-24'>
-      {profile.data ? (
-        <ProfilePreview handle={handle} profileData={profile.data} />
+      {profile ? (
+        <ProfilePreview handle={handle} profileData={profile} />
       ) : (
         <p>No profile to show</p>
       )}
-      {provider.data && (
-        <div className='flex justify-center mt-8'>
-          <LogoutButton />
-        </div>
-      )}
+
+      <Logout />
     </main>
   )
 }
