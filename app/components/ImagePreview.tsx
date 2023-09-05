@@ -7,20 +7,18 @@ import clsx from 'clsx'
 import { DataUrlType } from '@/lib/avatar/types'
 
 import { Dialog } from '@/app/components'
+import { useLocalStorage } from 'usehooks-ts'
 
-export default function ImagePreview({
-  images,
-  selectedAvatar,
-  onSelect,
-}: {
-  images: DataUrlType[]
-  selectedAvatar: DataUrlType | null
-  onSelect: (image: DataUrlType | null) => void
-}) {
+export default function ImagePreview() {
+  //TODO delete images in local storage after mint
+  const [avatars] = useLocalStorage<DataUrlType[]>('avatars', [])
+  const [selectedAvatar, setSelectedAvatar] =
+    useLocalStorage<DataUrlType | null>('selectedAvatar', null)
+
   const [showDialog, setShowDialog] = React.useState(false)
   const [dialogImage, setDialogImage] = React.useState(selectedAvatar)
 
-  if (images.length === 0) {
+  if (avatars.length === 0) {
     return (
       <div className='flex justify-center'>
         <Image
@@ -41,7 +39,7 @@ export default function ImagePreview({
           Select avatar
         </h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>
-          {images.map((dataUrl, idx) => {
+          {avatars.map((dataUrl, idx) => {
             const isSelected = dataUrl === selectedAvatar
             return (
               <div key={idx} className='relative'>
@@ -72,7 +70,7 @@ export default function ImagePreview({
                   priority
                   onClick={() => {
                     const _data = isSelected ? null : dataUrl
-                    onSelect(_data)
+                    setSelectedAvatar(_data)
                   }}
                 />
               </div>

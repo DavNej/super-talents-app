@@ -2,25 +2,14 @@
 
 import React from 'react'
 import Image from 'next/image'
-
-import type { LoginProvider } from '@/lib/web3auth/types'
-import { useAuth } from '@/lib/hooks'
-
-import { EmailForm } from '@/app/components'
 import { redirect } from 'next/navigation'
 
-const loginProviders: {
-  icon: string
-  name: LoginProvider
-}[] = [
-  { icon: '/linkedin.svg', name: 'linkedin' },
-  { icon: '/github.svg', name: 'github' },
-  { icon: '/twitter.svg', name: 'twitter' },
-  { icon: '/google.svg', name: 'google' },
-]
+import EmailForm from './EmailForm'
+import SocialLogin from './SocialLogin'
+import { useAuth } from '@/lib/hooks'
 
 export default function LoginPage() {
-  const { login, connectedUser, provider } = useAuth()
+  const { connectedUser, provider } = useAuth()
 
   if (connectedUser.data?.handle) {
     return redirect(`/profile/${connectedUser.data.handle}`)
@@ -28,10 +17,6 @@ export default function LoginPage() {
 
   if (provider.data) {
     return redirect('/profile/new/avatar')
-  }
-
-  function handleEmailSubmit({ email }: { email: string }) {
-    login.mutate({ loginProvider: 'email_passwordless', email })
   }
 
   return (
@@ -48,6 +33,7 @@ export default function LoginPage() {
         <h3 className='font-semibold text-5xl my-7'>
           Sharing the Future of Work with Web3 and AI
         </h3>
+
         <ul>
           <li className='my-7'>
             <p className='uppercase text-2xl text-blue'>talents</p>
@@ -74,30 +60,18 @@ export default function LoginPage() {
         <h3 className='font-semibold text-5xl mb-14 whitespace-nowrap'>
           Let’s get started
         </h3>
+
         <p className='mb-8 font-normal text-xl uppercase'>Continue with</p>
-        <ul className='flex justify-between'>
-          {loginProviders.map(provider => (
-            <li
-              className='cursor-pointer'
-              key={provider.name}
-              onClick={() => login.mutate({ loginProvider: provider.name })}>
-              <Image
-                src={provider.icon}
-                alt={provider.name}
-                width={48}
-                height={48}
-                priority
-              />
-            </li>
-          ))}
-        </ul>
+
+        <SocialLogin />
+
         <div className='my-12 flex items-center gap-5 opacity-50'>
           <hr className='flex-1' />
           <span>or</span>
           <hr className='flex-1' />
         </div>
 
-        <EmailForm onSubmit={handleEmailSubmit} />
+        <EmailForm />
       </div>
     </main>
   )

@@ -9,20 +9,22 @@ import { Button } from '@/app/components'
 import { cn } from '@/lib/utils'
 
 import { inputClassNames } from '@/app/components'
+import { useAuth } from '@/lib/hooks'
 
-export default function EmailForm({
-  onSubmit,
-}: {
-  onSubmit: ({ email }: { email: string }) => void
-}) {
+export default function EmailForm() {
+  const { login } = useAuth()
+
   return (
     <Formik
       initialValues={{ email: '' }}
       validationSchema={Yup.object({
         email: Yup.string().email('Invalid email address').required('Required'),
       })}
-      onSubmit={async (values, { setSubmitting }) => {
-        await onSubmit({ email: values.email })
+      onSubmit={(values, { setSubmitting }) => {
+        login.mutate({
+          loginProvider: 'email_passwordless',
+          email: values.email,
+        })
         setSubmitting(false)
       }}>
       {({ isSubmitting }) => (

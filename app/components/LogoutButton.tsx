@@ -3,7 +3,7 @@
 import React from 'react'
 import { redirect } from 'next/navigation'
 
-import { useAuth } from '@/lib/hooks'
+import { useAuth } from '@/lib/hooks/useAuth'
 
 export default function LogoutButton() {
   const { logout } = useAuth()
