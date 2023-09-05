@@ -22,8 +22,8 @@ export default function ProfilePreviewPage() {
     null
   )
 
-  if (!newProfile) return redirect('/profile/new/info')
-  if (!selectedAvatar) return redirect('/profile/new/avatar')
+  if (!newProfile) return redirect('/create-profile/info')
+  if (!selectedAvatar) return redirect('/create-profile/avatar')
 
   let IPFSProfileData: IPFSProfileType
 

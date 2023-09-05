@@ -21,7 +21,7 @@ export default function ProfilePreview({
       {isSigner && (
         <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
           <Image src='/mask.png' alt='logo' width={72} height={27} priority />
-          <Link href='/profile/new/info'>
+          <Link href='/create-profile/info'>
             <Image src='/edit.svg' alt='edit' width={24} height={24} priority />
           </Link>
         </div>

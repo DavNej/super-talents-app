@@ -74,7 +74,7 @@ export default function ProfileInfoPage() {
 
         //! ATTENTION
         setSubmitting(false)
-        router.push('/profile/new/preview')
+        router.push('/create-profile/preview')
       } else {
         toast.error('Could not parse newProfile')
         console.error(result.error.issues)

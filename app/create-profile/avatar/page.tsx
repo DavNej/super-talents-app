@@ -19,11 +19,10 @@ export default function AvatarPage() {
   const [uploadedPicture, setUploadedPicture] =
     React.useState<DataUrlType | null>(null)
 
-  //TODO delete images in local storage after mint
-  const [avatars] = useLocalStorage<DataUrlType[]>('avatars', [])
-
-  const [selectedAvatar, setSelectedAvatar] =
-    useLocalStorage<DataUrlType | null>('selectedAvatar', null)
+  const [selectedAvatar] = useLocalStorage<DataUrlType | null>(
+    'selectedAvatar',
+    null
+  )
 
   return (
     <main className='flex-1 px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
@@ -46,7 +45,7 @@ export default function AvatarPage() {
           {!!selectedAvatar ? (
             <Link
               className='mt-5 py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-xl bg-white text-pink'
-              href='/profile/new/info'>
+              href='/create-profile/info'>
               Next
             </Link>
           ) : (
@@ -72,11 +71,7 @@ export default function AvatarPage() {
             </div>
           </div>
         ) : (
-          <ImagePreview
-            images={avatars}
-            onSelect={setSelectedAvatar}
-            selectedAvatar={selectedAvatar}
-          />
+          <ImagePreview />
         )}
       </div>
     </main>
