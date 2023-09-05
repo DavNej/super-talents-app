@@ -21,7 +21,7 @@ export default function EmailForm() {
         email: Yup.string().email('Invalid email address').required('Required'),
       })}
       onSubmit={(values, { setSubmitting }) => {
-        login.mutate({
+        login?.mutate({
           loginProvider: 'email_passwordless',
           email: values.email,
         })

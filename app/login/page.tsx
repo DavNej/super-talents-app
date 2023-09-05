@@ -7,16 +7,21 @@ import { redirect } from 'next/navigation'
 import EmailForm from './EmailForm'
 import SocialLogin from './SocialLogin'
 import { useAuth } from '@/lib/hooks'
+import { PageLoader } from '../components'
 
 export default function LoginPage() {
-  const { connectedUser, provider } = useAuth()
+  const { connectedUser, status } = useAuth()
 
-  if (connectedUser.data?.handle) {
+  if (connectedUser?.data?.handle) {
     return redirect(`/${connectedUser.data.handle}`)
   }
-  
-  if (connectedUser.data === null && provider.data) {
-    return redirect('/create-profile/avatar')
+
+  if (status === 'connected') {
+    return connectedUser?.data === null ? (
+      redirect('/create-profile/avatar')
+    ) : (
+      <PageLoader />
+    )
   }
 
   return (

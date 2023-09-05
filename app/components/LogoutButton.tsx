@@ -3,19 +3,19 @@
 import React from 'react'
 import { redirect } from 'next/navigation'
 
-import { useAuth } from '@/lib/hooks/useAuth'
+import { useAuth } from '@/lib/hooks'
 
 export default function LogoutButton() {
   const { logout } = useAuth()
 
-  if (logout.isSuccess) {
+  if (logout?.isSuccess) {
     return redirect('/login')
   }
 
   return (
     <button
       className='px-5 py-2 bg-pink rounded-xl'
-      onClick={() => logout.mutate()}>
+      onClick={() => logout?.mutate()}>
       Logout
     </button>
   )

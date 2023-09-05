@@ -9,9 +9,7 @@ import { toast } from 'react-toastify'
 const initialData = { smartAccount: null, address: null }
 
 export default function useBiconomy() {
-  const { provider } = useAuth()
-
-  const signer = provider.data?.signer || null
+  const { signer } = useAuth()
 
   const init = useQuery<{
     address: string | null

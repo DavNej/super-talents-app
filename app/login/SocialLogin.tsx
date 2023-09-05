@@ -1,10 +1,9 @@
 'use client'
 
-import React from 'react'
 import Image from 'next/image'
 
 import { useAuth } from '@/lib/hooks'
-import type { LoginProvider } from '@/lib/web3auth/types'
+import type { LoginProvider } from '@/lib/web3auth'
 
 const loginProviders: {
   icon: string
@@ -25,7 +24,7 @@ export default function SocialLogin() {
         <li
           className='cursor-pointer'
           key={provider.name}
-          onClick={() => login.mutate({ loginProvider: provider.name })}>
+          onClick={() => login?.mutate({ loginProvider: provider.name })}>
           <Image
             src={provider.icon}
             alt={provider.name}

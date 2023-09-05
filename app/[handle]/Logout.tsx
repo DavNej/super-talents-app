@@ -5,11 +5,9 @@ import { LogoutButton } from '@/app/components'
 import { useAuth } from '@/lib/hooks'
 
 export default function Logout() {
-  const { provider } = useAuth()
+  const { signer } = useAuth()
 
-  if (!provider.data?.provider) {
-    return null
-  }
+  if (!signer) return null
 
   return (
     <div className='flex justify-center mt-8'>

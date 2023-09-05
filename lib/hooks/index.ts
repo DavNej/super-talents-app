@@ -1,4 +1,4 @@
-export { useInitAuth, useAuth } from './useAuth'
+export { useAuth } from './useAuth'
 export { default as useProfileData } from './useProfileData'
 export { default as useProfileIdOfHandle } from './useProfileIdOfHandle'
 export { default as useTalentLayerUser } from './useTalentLayerUser'

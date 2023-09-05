@@ -11,17 +11,16 @@ export default function ProgressBarLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { provider, connectedUser } = useAuth()
+  const { status, connectedUser } = useAuth()
 
-  if (connectedUser.data?.handle) {
-    return redirect(`/${connectedUser.data.handle}`)
-  }
-
-  if (provider.isStale && !provider.data) {
+  if (status === 'ready') {
     return redirect('/login')
   }
 
-  //TODO redirect if signer has a TL id
+  if (connectedUser?.data?.handle) {
+    return redirect(`/${connectedUser.data.handle}`)
+  }
+
   return (
     <>
       <div className='py-12 px-24 flex flex-row gap-7'>

@@ -23,14 +23,13 @@ export default function TalentLayerButton({
   handle: string
   dataToUpload: IPFSProfileType
 }) {
-  const { provider } = useAuth()
+  const { signerAddress } = useAuth()
 
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const profileData = useProfileData({ cid: pinataCid })
   const updateProfileData = useUpdateProfileData()
   const { data: talentLayerId } = useProfileIdOfHandle({ handle })
   const handleExists = talentLayerId || talentLayerId === 0
-  const signerAddress = provider.data?.signerAddress
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
 
   const mintProfile = useMintProfile({

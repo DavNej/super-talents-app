@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { useInitAuth } from '@/lib/hooks'
+import { useAuth } from '@/lib/hooks'
 import { PageLoader } from '@/app/components'
 
 export default function RootTemplate({
@@ -10,9 +10,9 @@ export default function RootTemplate({
 }: {
   children: React.ReactNode
 }) {
-  const init = useInitAuth()
+  const { status } = useAuth()
 
-  if (init.isFetching) return <PageLoader />
+  if (status === 'not_ready') return <PageLoader />
 
   return children
 }
