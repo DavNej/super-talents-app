@@ -59,7 +59,7 @@ export default function TalentLayerButton({
     <Button
       isLoading={uploadToIPFS.isLoading || mintProfile.isLoading}
       isDisabled
-      // isDisabled={buttonIsDisabled }
+      // isDisabled={buttonIsDisabled}
       onClick={handleClick}>
       Mint my profile NFT
     </Button>

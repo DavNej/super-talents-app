@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { toast } from 'react-toastify'
@@ -28,18 +29,21 @@ export default function ReactQueryProvider({
 }: {
   children: React.ReactNode
 }) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        onError: defaultOnError,
-        retry: false,
-        refetchOnWindowFocus: false,
-      },
-      mutations: {
-        onError: defaultOnError,
-      },
-    },
-  })
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            onError: defaultOnError,
+            retry: false,
+            refetchOnWindowFocus: false,
+          },
+          mutations: {
+            onError: defaultOnError,
+          },
+        },
+      })
+  )
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -1,7 +1,5 @@
-import axios from 'axios'
-import { toast } from 'react-toastify'
-
 import { log } from '@/lib/utils'
+
 import type { IFetchTalentLayerUserParams, TalentLayerUserType } from './types'
 import { validateTalentLayerUser } from './schemas'
 
@@ -17,21 +15,15 @@ export async function getTalentLayerUser({
   if (!Boolean(handle || address || id)) return null
   const query = buildUserGraphQuery({ id, address, handle })
 
-  try {
-    log('👤 | TL user hit')
-    const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
-    const user = res.users.at(0)
+  log('👤 | TL user hit')
+  const res: { users: TalentLayerUserType[] } | null = await querSubgraph(query)
+  const user = validateTalentLayerUser(res?.users?.at(0))
 
-    if (!user) {
-      log('👤 | No user found', address || handle || id)
-      return null
-    }
-
-    return validateTalentLayerUser(user)
-  } catch (error) {
-    console.log('Could not fetch TalentLayer user', { id, address, handle })
-    throw error
+  if (!user) {
+    log('👤 | No user found', address || handle || id)
   }
+
+  return user
 }
 
 export async function profileIdOfHandle(handle: string) {
@@ -42,18 +34,12 @@ export async function profileIdOfHandle(handle: string) {
     }
   }
   `
-  try {
-    const res = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
-    const user = res.users.at(0)
+  const res: { users: { id: string }[] } = await querSubgraph(query)
+  const user = res.users.at(0)
 
-    if (!user) return null
-    if (user.id === undefined) return null
+  if (user?.id === undefined) return null
 
-    return Number(user.id)
-  } catch (err) {
-    console.error(err)
-    throw 'Could not check handle availability'
-  }
+  return Number(user.id)
 }
 
 function buildUserGraphQuery({
@@ -83,12 +69,21 @@ function buildUserGraphQuery({
     `
 }
 
-async function querSubgraph<T>(query: string) {
-  try {
-    const res = await axios.post<{ data: T }>(subgraphUrl, { query })
-    return res.data.data
-  } catch (error) {
-    toast.error('Could not query subgraph')
-    throw error
+async function querSubgraph(query: string) {
+  const res = await fetch(subgraphUrl, {
+    method: 'POST',
+    body: JSON.stringify({
+      query,
+    }),
+    next: { revalidate: 3600 },
+  })
+
+  if (!res.ok) {
+    console.error('💥', res.status, res.statusText)
+    console.error('💥', await res.json())
+    throw new Error('Could not query TL subgraph')
   }
+
+  const response = await res.json()
+  return response.data
 }
