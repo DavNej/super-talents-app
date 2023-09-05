@@ -8,7 +8,6 @@ import type { Web3AuthLoginParams } from '@/lib/web3auth/types'
 import { getProvider, init, login, logout } from '@/lib/web3auth/helpers'
 
 import { TalentLayerUserType } from '@/lib/talent-layer/types'
-import { TalentLayerUser } from '@/lib/talent-layer/schemas'
 import { log } from '@/lib/utils'
 import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
 
@@ -40,18 +39,7 @@ export function useAuth() {
       log('👤 | TL connected-user hit')
 
       const data = await getTalentLayerUser({ address })
-      if (!data) return null
-
-      const result = TalentLayerUser.safeParse(data)
-      if (result.success) return result.data
-
-      console.warn(
-        'Zod validation',
-        JSON.stringify(result.error.issues, null, 2)
-      )
-
-      toast.warn('Wrong TalentLayer user format', { toastId: 'wrong format' })
-      return data as TalentLayerUserType
+      return data
     },
   })
 

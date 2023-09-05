@@ -12,11 +12,11 @@ export default function LoginPage() {
   const { connectedUser, provider } = useAuth()
 
   if (connectedUser.data?.handle) {
-    return redirect(`/profile/${connectedUser.data.handle}`)
+    return redirect(`/${connectedUser.data.handle}`)
   }
-
-  if (provider.data) {
-    return redirect('/profile/new/avatar')
+  
+  if (connectedUser.data === null && provider.data) {
+    return redirect('/create-profile/avatar')
   }
 
   return (

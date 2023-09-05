@@ -106,6 +106,5 @@ export function validateIPFSProfile(profile: unknown) {
   if (result.success) return result.data
 
   console.warn('Zod validation', JSON.stringify(result.error.issues, null, 2))
-
   return profile as IPFSProfileType
 }

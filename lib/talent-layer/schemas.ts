@@ -1,5 +1,4 @@
 import z from 'zod'
-import { toast } from 'react-toastify'
 import { type TalentLayerUserType } from './types'
 
 export const Handle = z.string({
@@ -35,7 +34,5 @@ export function validateTalentLayerUser(user: unknown) {
   if (result.success) return result.data
 
   console.warn('Zod validation', JSON.stringify(result.error.issues, null, 2))
-  toast.warn('Wrong TalentLayer user format')
-
   return user as TalentLayerUserType
 }
