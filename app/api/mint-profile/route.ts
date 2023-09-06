@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     log('📓 | Get handle price')
     handlePrice = await contract.getHandlePrice(handle)
   } catch (err) {
-    console.error(err)
+    console.error('💥', err)
     return NextResponse.json(
       { message: 'Could not get handle price' },
       { status: 400 }
@@ -67,6 +67,7 @@ export async function POST(request: Request) {
     log('📓 | TL profile minted')
     console.log('🤝 | Transaction hash', mintTxReceipt.transactionHash)
   } catch (err) {
+    console.error('💥', err)
     return NextResponse.json(
       { message: 'Could not mint TL profile' },
       { status: 500 }
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
     profileId = await contract.ids(address)
     log('📓 | profileId', profileId)
   } catch (err) {
-    console.error(err)
+    console.error('💥', err)
     return NextResponse.json(
       { message: 'Could not get minted Id' },
       { status: 500 }
