@@ -8,19 +8,18 @@ import { log } from '@/lib/utils'
 
 export default function useMintProfile(
   options?: UseMutationOptions<
-    { profileId: BigInt },
+    { profileId: number },
     unknown,
     { handle: string; address: string }
   >
 ) {
   return useMutation<
-    { profileId: BigInt },
+    { profileId: number },
     unknown,
     { handle: string; address: string }
   >({
     mutationFn: async ({ handle, address }) => {
       log('📓 | Mint profile')
-
       return api.POST('/api/mint-profile', { handle, address })
     },
     onError(err) {

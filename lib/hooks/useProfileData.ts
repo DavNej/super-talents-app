@@ -1,13 +1,11 @@
-import { toast } from 'react-toastify'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 
 import api from '@/lib/api'
 import { log } from '@/lib/utils'
 
-import { IPFSProfile } from '@/lib/profile/schemas'
+import { validateIPFSProfile } from '@/lib/profile/schemas'
 import { IPFSProfileType } from '@/lib/profile/types'
 
-//TODO typesafe api IPFS call with zod
 export default function useProfileData({
   cid,
 }: {
@@ -22,17 +20,7 @@ export default function useProfileData({
       log('📖 | Profile data hit')
 
       const data = await api.GET(`/api/ipfs/${cid}`)
-      if (!data) return null
-
-      const result = IPFSProfile.safeParse(data)
-      if (result.success) return result.data
-
-      console.warn(
-        'Zod validation',
-        JSON.stringify(result.error.issues, null, 2)
-      )
-      toast.warn('Wrong Profile data format')
-      return data as IPFSProfileType
+      return validateIPFSProfile(data)
     },
   })
 }

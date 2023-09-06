@@ -16,6 +16,7 @@ export async function POST(request: Request) {
   //TODO typecheck body with zod
   const { handle, address } = body
 
+  log('📓 | Check if handle is available')
   let profileId = await profileIdOfHandle(handle)
 
   if (profileId !== null)
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
   let handlePrice: ethers.BigNumber
 
   try {
+    log('📓 | Get handle price')
     handlePrice = await contract.getHandlePrice(handle)
   } catch (err) {
     console.error(err)
@@ -46,14 +48,23 @@ export async function POST(request: Request) {
   }
 
   try {
+    log('📓 | Send mint tx', {
+      address,
+      platfromId,
+      handle,
+      value: handlePrice,
+    })
+
     const mintTx: ethers.ContractTransaction = await contract.mintForAddress(
       address,
       platfromId,
       handle,
       { value: handlePrice }
     )
+
     const mintTxReceipt = await mintTx.wait(1)
-    console.log('🤝 |  Mint transaction hash', mintTxReceipt.transactionHash)
+    log('📓 | TL profile minted')
+    console.log('🤝 | Transaction hash', mintTxReceipt.transactionHash)
   } catch (err) {
     return NextResponse.json(
       { message: 'Could not mint TL profile' },
@@ -62,7 +73,9 @@ export async function POST(request: Request) {
   }
 
   try {
+    log('📓 | Retrieve profile id')
     profileId = await contract.ids(address)
+    log('📓 | profileId', profileId)
   } catch (err) {
     console.error(err)
     return NextResponse.json(

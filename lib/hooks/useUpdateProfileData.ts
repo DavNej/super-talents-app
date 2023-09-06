@@ -9,7 +9,6 @@ import {
 } from '@/lib/talent-layer/contract/config'
 import { buildUpdateProfileDataTx } from '@/lib/talent-layer/contract/utils'
 import { useAuth, useBiconomy } from '@/lib/hooks'
-import { sendUserOp } from '@/lib/biconomy/helpers'
 import { log } from '@/lib/utils'
 
 export default function useUpdateProfileData(
@@ -17,25 +16,24 @@ export default function useUpdateProfileData(
     string | null,
     unknown,
     {
-      profileId: BigInt
+      profileId: number
       cid: string
     }
   >
 ) {
   const { signer } = useAuth()
-  const biconomy = useBiconomy()
+  const { smartAccount, sendUserOp } = useBiconomy()
 
   return useMutation<
     string | null,
     unknown,
     {
-      profileId: BigInt
+      profileId: number
       cid: string
     }
   >({
     mutationFn: async ({ profileId, cid }) => {
       log('📓 | Update TL profile data')
-      const smartAccount = biconomy.data.smartAccount
       if (!smartAccount) {
         toast.warn('Smart account not ready yet')
         return null
@@ -51,8 +49,10 @@ export default function useUpdateProfileData(
         talentLayerInterface,
         signer
       )
+
       const tx = await buildUpdateProfileDataTx({ contract, profileId, cid })
-      const txHash = await sendUserOp({ smartAccount, transactions: [tx] })
+      const txHash = await sendUserOp({ transactions: [tx] })
+      log('📓 | TL profile data updated')
       return txHash
     },
     onError(err) {

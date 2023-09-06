@@ -27,7 +27,7 @@ export async function buildUpdateProfileDataTx({
   cid,
 }: {
   contract: ethers.Contract
-  profileId: BigInt
+  profileId: number
   cid: string
 }) {
   const updateProfileDataTx =

@@ -26,9 +26,9 @@ export function AuthProvider(props: React.PropsWithChildren) {
   const isConnected = web3auth.connected
 
   const init = React.useCallback(async () => {
-    log('🔑 | init')
+    log('🔑 | Init auth')
     if (web3auth.status === 'not_ready') {
-      log('🔑 | init hit')
+      log('🔑 | Init auth hit')
       await web3auth.init()
       setStatus(web3auth.status)
     }
@@ -36,9 +36,9 @@ export function AuthProvider(props: React.PropsWithChildren) {
 
   const login = React.useCallback(
     async ({ loginProvider, email }: Web3AuthLoginParams) => {
-      log('🔑 | login')
+      log('🔑 | Login')
       if (web3auth.connected) return null
-      log('🔑 | login hit')
+      log('🔑 | Login hit')
       const loginParams =
         loginProvider === 'email_passwordless'
           ? { loginProvider, extraLoginOptions: { login_hint: email } }
@@ -52,9 +52,9 @@ export function AuthProvider(props: React.PropsWithChildren) {
   )
 
   const logout = React.useCallback(async () => {
-    log('🔑 | logout')
+    log('🔑 | Logout')
     if (!web3auth.connected) return null
-    log('🔑 | logout hit')
+    log('🔑 | Logout hit')
     await web3auth.logout()
     setStatus(web3auth.status)
     return web3auth.status
@@ -62,7 +62,7 @@ export function AuthProvider(props: React.PropsWithChildren) {
 
   const getSigner = React.useCallback(async () => {
     if (web3auth.provider) {
-      log('🔑 | get-signer')
+      log('🔑 | Get signer')
       const _provider = new ethers.providers.Web3Provider(web3auth.provider)
       const _signer = _provider.getSigner()
       const _address = await _signer.getAddress()

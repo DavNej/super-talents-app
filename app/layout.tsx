@@ -8,7 +8,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'SuperTalents',
   description:
-    'At SuperTalents, we’re crafting a space where extraordinary professionals, converge with dynamic businesses. By harnessing the principles of AI and the decentralized ethos of Web3, we’re redefining how talent meets opportunity where he unleashes the inner Super Talent and emphasizing both ownership and the power of professional networks.',
+    'At SuperTalents, we connect top professionals with dynamic businesses. Using AI and Web3, we’re changing how talent meets opportunity, empowering everyone to showcase their unique skills and value the power of networks.',
 }
 
 export default function RootLayout({

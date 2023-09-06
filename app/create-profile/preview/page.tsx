@@ -9,8 +9,9 @@ import { BackLink, Button, ProfilePreview } from '@/app/components'
 import TalentLayerButton from '@/app/components/TalentLayerButton'
 
 import type { DataUrlType } from '@/lib/avatar/types'
-import type { IPFSProfileType, NewProfileType } from '@/lib/profile/types'
-import { IPFSProfile } from '@/lib/profile/schemas'
+import type { NewProfileType } from '@/lib/profile/types'
+import { validateIPFSProfile } from '@/lib/profile/schemas'
+import { useProfileIdOfHandle } from '@/lib/hooks'
 
 export default function ProfilePreviewPage() {
   const [newProfile] = useLocalStorage<NewProfileType | null>(
@@ -22,22 +23,22 @@ export default function ProfilePreviewPage() {
     null
   )
 
-  if (!newProfile) return redirect('/create-profile/info')
-  if (!selectedAvatar) return redirect('/create-profile/avatar')
+  const handle = newProfile?.handle || ''
+  const { data: talentLayerId } = useProfileIdOfHandle({ handle })
 
-  let IPFSProfileData: IPFSProfileType
-
-  const dataToUpload = newProfile && { ...newProfile, picture: selectedAvatar }
-  const handle = newProfile?.handle
-  const result = IPFSProfile.safeParse(dataToUpload)
-
-  if (result.success) {
-    IPFSProfileData = result.data
-  } else {
-    toast.error('Could not parse data before upload')
-    console.error(result.error.issues)
-    IPFSProfileData = dataToUpload as IPFSProfileType
+  if (talentLayerId) {
+    toast.error('Handle already exists')
   }
+
+  if (!selectedAvatar) return redirect('/create-profile/avatar')
+  if (!newProfile) return redirect('/create-profile/info')
+
+  const profileToUpload = validateIPFSProfile({
+    ...newProfile,
+    picture: selectedAvatar,
+  })
+
+  const allowMint = handle && profileToUpload && !talentLayerId
 
   return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
@@ -47,17 +48,20 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
-          {handle ? (
-            <TalentLayerButton handle={handle} dataToUpload={dataToUpload} />
+          {allowMint ? (
+            <TalentLayerButton
+              handle={handle}
+              profileToUpload={profileToUpload}
+            />
           ) : (
             <Button isDisabled>Mint my profile NFT</Button>
           )}
         </div>
 
-        {handle && IPFSProfileData && (
+        {handle && profileToUpload && (
           <ProfilePreview
             handle={handle}
-            profileData={IPFSProfileData}
+            profileData={profileToUpload}
             isSigner
           />
         )}
