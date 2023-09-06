@@ -2,20 +2,11 @@
 import React from 'react'
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
-import {
-  useQuery,
-  useMutation,
-  UseMutationResult,
-  UseQueryResult,
-} from '@tanstack/react-query'
+import { useMutation, UseMutationResult } from '@tanstack/react-query'
 
 import { log } from '@/lib/utils'
-
 import { web3auth, type Web3AuthLoginParams } from '@/lib/web3auth'
 import { type ADAPTER_STATUS_TYPE, WALLET_ADAPTERS } from '@web3auth/base'
-
-import { TalentLayerUserType } from '@/lib/talent-layer/types'
-import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
 
 export function AuthProvider(props: React.PropsWithChildren) {
   const [signerAddress, setSignerAddress] = React.useState<string | null>(null)
@@ -26,9 +17,8 @@ export function AuthProvider(props: React.PropsWithChildren) {
   const isConnected = web3auth.connected
 
   const init = React.useCallback(async () => {
-    log('🔑 | Init auth')
     if (web3auth.status === 'not_ready') {
-      log('🔑 | Init auth hit')
+      log('🔑 | Init auth')
       await web3auth.init()
       setStatus(web3auth.status)
     }
@@ -36,9 +26,8 @@ export function AuthProvider(props: React.PropsWithChildren) {
 
   const login = React.useCallback(
     async ({ loginProvider, email }: Web3AuthLoginParams) => {
-      log('🔑 | Login')
       if (web3auth.connected) return null
-      log('🔑 | Login hit')
+      log('🔑 | Login')
       const loginParams =
         loginProvider === 'email_passwordless'
           ? { loginProvider, extraLoginOptions: { login_hint: email } }
@@ -52,9 +41,8 @@ export function AuthProvider(props: React.PropsWithChildren) {
   )
 
   const logout = React.useCallback(async () => {
-    log('🔑 | Logout')
     if (!web3auth.connected) return null
-    log('🔑 | Logout hit')
+    log('🔑 | Logout')
     await web3auth.logout()
     setStatus(web3auth.status)
     return web3auth.status
@@ -79,19 +67,6 @@ export function AuthProvider(props: React.PropsWithChildren) {
       getSigner()
     }
   }, [getSigner, init, isConnected])
-
-  const connectedUserQuery = useQuery<TalentLayerUserType | null>({
-    queryKey: ['connected-user', setSignerAddress],
-    enabled: Boolean(signerAddress),
-    queryFn: async () => {
-      log('👤 | TL connected-user')
-      if (!signerAddress) return null
-      log('👤 | TL connected-user hit')
-
-      const data = await getTalentLayerUser({ address: signerAddress })
-      return data
-    },
-  })
 
   const loginMutation = useMutation<
     ADAPTER_STATUS_TYPE | null,
@@ -128,17 +103,8 @@ export function AuthProvider(props: React.PropsWithChildren) {
       signerAddress: signerAddress,
       login: loginMutation,
       logout: logoutMutation,
-      connectedUser: connectedUserQuery,
     }),
-    [
-      status,
-      isConnected,
-      signer,
-      signerAddress,
-      loginMutation,
-      logoutMutation,
-      connectedUserQuery,
-    ]
+    [status, isConnected, signer, signerAddress, loginMutation, logoutMutation]
   )
 
   return <AuthContext.Provider value={value} {...props} />
@@ -160,7 +126,6 @@ interface IContext {
   logout:
     | UseMutationResult<ADAPTER_STATUS_TYPE | null, unknown, void, unknown>
     | undefined
-  connectedUser: UseQueryResult<TalentLayerUserType | null, unknown> | undefined
 }
 
 const initialContext: IContext = {
@@ -170,7 +135,6 @@ const initialContext: IContext = {
   signerAddress: undefined,
   login: undefined,
   logout: undefined,
-  connectedUser: undefined,
 }
 
 const AuthContext = React.createContext<IContext>(initialContext)

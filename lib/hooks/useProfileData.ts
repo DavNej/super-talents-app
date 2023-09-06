@@ -15,9 +15,8 @@ export default function useProfileData({
     queryKey: ['profile-data', { cid }],
     enabled: Boolean(cid),
     queryFn: async () => {
-      log('📖 | Profile data')
       if (!cid) return null
-      log('📖 | Profile data hit')
+      log('📖 | Get profile data from IPFS')
 
       const data = await api.GET(`/api/ipfs/${cid}`)
       return validateIPFSProfile(data)

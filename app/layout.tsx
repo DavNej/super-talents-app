@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { ReactQueryProvider, Toast } from '@/app/components'
 import { AuthProvider } from '@/lib/hooks/useAuth'
+import { BiconomyProvider } from '@/lib/hooks/useBiconomy'
 
 import './globals.css'
 
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang='en'>
       <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
         <ReactQueryProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <BiconomyProvider>{children}</BiconomyProvider>
+          </AuthProvider>
           <Toast />
         </ReactQueryProvider>
       </body>

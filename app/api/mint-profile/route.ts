@@ -7,6 +7,7 @@ import {
   talentLayerAddress,
   talentLayerInterface,
 } from '@/lib/talent-layer/contract/config'
+import { log } from '@/lib/utils'
 
 const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY || ''
 const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET || ''

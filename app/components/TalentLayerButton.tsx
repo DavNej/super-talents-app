@@ -4,7 +4,6 @@ import React from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
 import {
-  useAuth,
   useProfileData,
   useUploadToIPFS,
   useUpdateProfileData,
@@ -13,6 +12,10 @@ import {
 import { IPFSProfileType } from '@/lib/profile/types'
 import { deepEqual, log } from '@/lib/utils'
 import { Button } from '@/app/components'
+import { useBiconomy } from '@/lib/hooks/useBiconomy'
+import { toast } from 'react-toastify'
+import { useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 
 export default function TalentLayerButton({
   handle,
@@ -21,16 +24,23 @@ export default function TalentLayerButton({
   handle: string
   profileToUpload: IPFSProfileType
 }) {
-  const { signerAddress } = useAuth()
+  const router = useRouter()
+  const { smartAccountAddress } = useBiconomy()
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const profileData = useProfileData({ cid: pinataCid })
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
+  const qc = useQueryClient()
+  const updateProfileData = useUpdateProfileData({
+    onSuccess(txHash) {
+      toast.success(`Profil successfully minted 🎉\nTx hash: ${txHash}`)
+      router.push(`/${handle}`)
+    },
+  })
 
-  const updateProfileData = useUpdateProfileData()
   const mintProfile = useMintProfile({
     onMutate() {
       if (deepEqual(profileData.data, profileToUpload)) {
-        log('🪐 Not uploading, data already on IPFS', )
+        log('🪐 Not uploading, data already on IPFS')
         return
       }
       uploadToIPFS.mutate({ name: handle, content: profileToUpload })
@@ -41,14 +51,18 @@ export default function TalentLayerButton({
   })
 
   function handleClick() {
-    if (!signerAddress) return
-    mintProfile.mutate({ handle, address: signerAddress })
+    if (!smartAccountAddress) return
+    mintProfile.mutate({ handle, address: smartAccountAddress })
   }
 
   return (
     <Button
-      isLoading={uploadToIPFS.isLoading || mintProfile.isLoading}
-      isDisabled={!signerAddress}
+      isLoading={
+        uploadToIPFS.isLoading ||
+        mintProfile.isLoading ||
+        updateProfileData.isLoading
+      }
+      isDisabled={!smartAccountAddress}
       onClick={handleClick}>
       Mint my profile NFT
     </Button>

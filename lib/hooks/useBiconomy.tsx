@@ -1,5 +1,7 @@
+'use client'
 import React from 'react'
 import { toast } from 'react-toastify'
+
 import { BiconomySmartAccount } from '@biconomy/account'
 import type { Transaction, UserOperation } from '@biconomy/core-types'
 import type {
@@ -7,25 +9,26 @@ import type {
   SponsorUserOperationDto,
 } from '@biconomy/paymaster'
 
-import { useAuth } from '@/lib/hooks'
-import { log } from '@/lib/utils'
-
 import {
   chainId,
   bundler,
   paymaster,
   paymasterServiceData,
 } from '@/lib/biconomy/config'
+import { log } from '@/lib/utils'
+import { useAuth } from './useAuth'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { TalentLayerUserType } from '../talent-layer/types'
+import { getTalentLayerUser } from '../talent-layer/subgraph'
 
-export default function useBiconomy() {
+export function BiconomyProvider(props: React.PropsWithChildren) {
   const { signer } = useAuth()
   const [smartAccountAddress, setSmartAccountAddress] = React.useState<string>()
   const [smartAccount, setSmartAccount] = React.useState<BiconomySmartAccount>()
 
   const init = React.useCallback(async () => {
-    log('📜 | Smart account init')
     if (signer) {
-      log('📜 | Smart account init hit')
+      log('📜 | Smart account init')
       try {
         const biconomySmartAccount = new BiconomySmartAccount({
           signer,
@@ -53,9 +56,8 @@ export default function useBiconomy() {
 
   const sendUserOp = React.useCallback(
     async ({ transactions }: { transactions: Transaction[] }) => {
-      log('🎟️ | Send user op')
       if (!smartAccount) return null
-      log('🎟️ | Send user op hit')
+      log('🎟️ | Send user op')
 
       let userOp: Partial<UserOperation>
 
@@ -100,9 +102,57 @@ export default function useBiconomy() {
     [smartAccount]
   )
 
-  return {
-    sendUserOp,
-    smartAccount,
-    smartAccountAddress,
+  const connectedUserQuery = useQuery<TalentLayerUserType | null>({
+    queryKey: ['connected-user', smartAccountAddress],
+    enabled: Boolean(smartAccountAddress),
+    queryFn: async () => {
+      if (!smartAccountAddress) return null
+      log('👤 | Get TL connected-user')
+
+      const data = await getTalentLayerUser({ address: smartAccountAddress })
+      return data
+    },
+  })
+
+  const value = React.useMemo(
+    () => ({
+      sendUserOp,
+      smartAccount,
+      smartAccountAddress,
+      connectedUser: connectedUserQuery,
+    }),
+    [connectedUserQuery, sendUserOp, smartAccount, smartAccountAddress]
+  )
+
+  return <BiconomyContext.Provider value={value} {...props} />
+}
+
+interface IContext {
+  smartAccount: BiconomySmartAccount | undefined
+  smartAccountAddress: string | undefined
+  sendUserOp:
+    | (({
+        transactions,
+      }: {
+        transactions: Transaction[]
+      }) => Promise<string | null>)
+    | undefined
+  connectedUser: UseQueryResult<TalentLayerUserType | null, unknown> | undefined
+}
+
+const initialContext: IContext = {
+  smartAccount: undefined,
+  sendUserOp: undefined,
+  smartAccountAddress: undefined,
+  connectedUser: undefined,
+}
+
+const BiconomyContext = React.createContext<IContext>(initialContext)
+
+export function useBiconomy() {
+  const context = React.useContext(BiconomyContext)
+  if (!context) {
+    throw new Error('useBiconomy must be used within the BiconomyProvider')
   }
+  return context
 }

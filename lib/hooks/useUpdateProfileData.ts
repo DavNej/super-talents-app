@@ -33,8 +33,7 @@ export default function useUpdateProfileData(
     }
   >({
     mutationFn: async ({ profileId, cid }) => {
-      log('📓 | Update TL profile data')
-      if (!smartAccount) {
+      if (!smartAccount || !sendUserOp) {
         toast.warn('Smart account not ready yet')
         return null
       }
@@ -43,7 +42,7 @@ export default function useUpdateProfileData(
         return null
       }
 
-      log('📓 | Update TL profile data hit')
+      log('📓 | Update TL profile data')
       const contract = new ethers.Contract(
         talentLayerAddress,
         talentLayerInterface,

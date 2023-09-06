@@ -8,9 +8,11 @@ import EmailForm from './EmailForm'
 import SocialLogin from './SocialLogin'
 import { useAuth } from '@/lib/hooks'
 import { PageLoader } from '../components'
+import { useBiconomy } from '@/lib/hooks/useBiconomy'
 
 export default function LoginPage() {
-  const { connectedUser, status } = useAuth()
+  const { status } = useAuth()
+  const { connectedUser } = useBiconomy()
 
   if (connectedUser?.data?.handle) {
     return redirect(`/${connectedUser.data.handle}`)

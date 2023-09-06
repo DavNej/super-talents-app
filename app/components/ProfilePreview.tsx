@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -85,7 +83,7 @@ export default function ProfilePreview({
 
           <div id='links'>
             <h4 className='text-lg font-medium border-b-[1px] border-gray-700'>
-              Links (optional)
+              Links
             </h4>
             <div className='py-5 flex gap-2'>
               {profileData.portefolio && (

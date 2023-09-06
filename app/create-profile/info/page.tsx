@@ -208,7 +208,7 @@ export default function ProfileInfoPage() {
             </div>
           </fieldset>
           <fieldset id='links'>
-            <SimpleLabel name='portefolio'>Links</SimpleLabel>
+            <SimpleLabel name='portefolio'>Links (optional)</SimpleLabel>
             <input
               className={cn(inputClassNames)}
               type='text'

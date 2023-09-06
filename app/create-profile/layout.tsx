@@ -5,13 +5,15 @@ import { LogoutButton } from '@/app/components'
 import NavStep from './NavStep'
 import { useAuth } from '@/lib/hooks'
 import { redirect } from 'next/navigation'
+import { useBiconomy } from '@/lib/hooks/useBiconomy'
 
 export default function ProgressBarLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { status, connectedUser } = useAuth()
+  const { status } = useAuth()
+  const { connectedUser } = useBiconomy()
 
   if (status === 'ready') {
     return redirect('/login')

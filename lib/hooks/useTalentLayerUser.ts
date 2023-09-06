@@ -18,9 +18,8 @@ export default function useTalentLayerUser({
     queryKey: ['user', { handle, address, id }],
     enabled: Boolean(handle || address || id),
     queryFn: async () => {
-      log('👤 | TL user')
       if (!Boolean(handle || address || id)) return null
-      log('👤 | TL user hit')
+      log('👤 | Get TL user')
 
       const data = await getTalentLayerUser({ handle, address, id })
       if (!data) return null
