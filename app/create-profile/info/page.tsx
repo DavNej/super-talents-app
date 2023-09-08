@@ -86,15 +86,17 @@ export default function ProfileInfoPage() {
   React.useEffect(() => {
     if (chatGPT.data?.content) {
       let options: string[]
+      const regex = /(Option \d:)/
+
       try {
         options = chatGPT.data.content
-          .split('++++++++++')
+          .split(regex)
           .map(opt => opt.trim())
-          .filter(Boolean)
+          .filter(opt => Boolean(opt) && !regex.test(opt))
       } catch (err) {
         toast.warn('Could not parse options')
         console.log(chatGPT.data)
-        options = chatGPT.data.content.split('++++++++++')
+        options = chatGPT.data.content.split('Option')
       }
 
       setGPTOptions(options)

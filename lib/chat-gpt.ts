@@ -25,8 +25,19 @@ const systemPrompt = `
   - A skills section that presents skills in bullet point style with emojis. Create at least 3-5 bullet points and be very creative! IMPORTANT: In the skills section, use your creativity and include hard and soft skills based on the profession of the talent. For example, if a "blockchain developer" keyword is given in the input, you can add specific skills like javascript, python or solidity, or if a "designer" keyword is given, you can use Adobe, photoshop, figma etc.
   - A CTA section which is a closing paragraph with a CTA that invites clients to work and succeed together.
   Do not miss any of the sections in the output, the introduction, the bullet points with emojies and the CTA sections must exist in every option!
-  Your output MUST contain nothing else but the content of the three options separated by ++++++++++.
-`
+  The options MUST respect the following format:
+
+  """
+  option:
+  ...
+
+  option:
+  ...
+  
+  option:
+  ...
+  """
+  `
 
 export async function askChatGPT(prompt: string) {
   try {
