@@ -11,11 +11,10 @@ export async function getTalentLayerUser({
   address,
   handle,
 }: IFetchTalentLayerUserParams) {
-  log('👤 | TL user')
   if (!Boolean(handle || address || id)) return null
   const query = buildUserGraphQuery({ id, address, handle })
 
-  log('👤 | TL user hit')
+  log('👤 | TL user')
   const res: { users: TalentLayerUserType[] } | null = await querSubgraph(query)
   const user = validateTalentLayerUser(res?.users?.at(0))
 

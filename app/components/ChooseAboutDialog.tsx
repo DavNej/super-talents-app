@@ -2,6 +2,7 @@
 
 import clsx from 'clsx'
 import React from 'react'
+import { v4 as uuid } from 'uuid'
 
 import { Button, Dialog } from '@/app/components'
 
@@ -70,7 +71,7 @@ export default function ChooseAboutDialog({
 
                 <div className='flex-1 flex flex-col'>
                   {option.split('\n').map(line => (
-                    <p key={line}>{line}</p>
+                    <p key={uuid()}>{line}</p>
                   ))}
                 </div>
               </div>

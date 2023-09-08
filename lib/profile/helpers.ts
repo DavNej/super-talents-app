@@ -9,9 +9,8 @@ export const roleCaptions = {
 }
 
 export async function getProfileData(cid: string | undefined) {
-  log('📖 | Profile data')
   if (!cid) return null
-  log('📖 | Profile data hit')
+  log('📖 | Profile data')
 
   const data = await fetchFromIPFS({ cid })
   return validateIPFSProfile(data)

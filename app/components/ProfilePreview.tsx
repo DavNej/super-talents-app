@@ -1,11 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { v4 as uuid } from 'uuid';
 
 import { roleCaptions } from '@/lib/profile/helpers'
 import { IPFSProfileType } from '@/lib/profile/types'
 
-import { randomUUID } from 'crypto'
 
 export default function ProfilePreview({
   handle,
@@ -37,8 +37,8 @@ export default function ProfilePreview({
                   'path("M74.0171 4.16112L12.0171 39.8888C4.58185 44.1734 0 52.1018 0 60.6833V132.06C0 140.641 4.58186 148.569 12.0171 152.854L74.0171 188.582C81.434 192.856 90.566 192.856 97.9829 188.582L159.983 152.854C167.418 148.569 172 140.641 172 132.06V60.6833C172 52.1018 167.418 44.1734 159.983 39.8888L97.9829 4.16112C90.566 -0.112901 81.434 -0.112899 74.0171 4.16112Z")',
               }}
               alt='logo'
-              width={172}
-              height={172}
+              width={192}
+              height={192}
             />
             <div className='flex flex-col justify-between'>
               <p className='font-semibold text-2xl'>{profileData.name}</p>
@@ -48,7 +48,7 @@ export default function ProfilePreview({
               </p>
               <div className='font-light'>
                 {profileData.about.split('\n').map(paragraph => (
-                  <p key={randomUUID()}>{paragraph}</p>
+                  <p key={uuid()}>{paragraph}</p>
                 ))}
               </div>
             </div>

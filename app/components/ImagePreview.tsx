@@ -3,6 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import clsx from 'clsx'
+import { v4 as uuid } from 'uuid';
 
 import { DataUrlType } from '@/lib/avatar/types'
 
@@ -39,10 +40,10 @@ export default function ImagePreview() {
           Select avatar
         </h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>
-          {avatars.map((dataUrl, idx) => {
+          {avatars.map(dataUrl => {
             const isSelected = dataUrl === selectedAvatar
             return (
-              <div key={idx} className='relative'>
+              <div key={uuid()} className='relative'>
                 <Image
                   className='absolute bottom-4 left-4 cursor-pointer '
                   src={isSelected ? '/check.svg' : '/expand.svg'}
