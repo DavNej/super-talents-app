@@ -14,8 +14,8 @@ import { deepEqual, log } from '@/lib/utils'
 import { Button } from '@/app/components'
 import { useBiconomy } from '@/lib/hooks/useBiconomy'
 import { toast } from 'react-toastify'
-import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function TalentLayerButton({
   handle,
@@ -29,11 +29,19 @@ export default function TalentLayerButton({
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const profileData = useProfileData({ cid: pinataCid })
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
-  const qc = useQueryClient()
   const updateProfileData = useUpdateProfileData({
     onSuccess(txHash) {
-      toast.success(`Profil successfully minted 🎉\nTx hash: ${txHash}`)
-      router.push(`/${handle}`)
+      toast.success(
+        <Link
+          href={`https://mumbai.polygonscan.com/tx/${txHash}`}
+          target='_blank'>
+          Profil successfully minted 🎉
+          <br />
+          See transaction in explorer
+        </Link>,
+        { autoClose: false }
+      )
+      router.push(`/${handle}?`)
     },
   })
 
@@ -62,7 +70,7 @@ export default function TalentLayerButton({
         mintProfile.isLoading ||
         updateProfileData.isLoading
       }
-      isDisabled={!smartAccountAddress}
+      isDisabled={!smartAccountAddress || updateProfileData.isSuccess}
       onClick={handleClick}>
       Mint my profile NFT
     </Button>

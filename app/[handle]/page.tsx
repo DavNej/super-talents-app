@@ -5,6 +5,8 @@ import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
 import { getProfileData } from '@/lib/profile/helpers'
 import Logout from './Logout'
 
+export const revalidate = 0
+
 export default async function ProfileHandlePage({
   params,
 }: {

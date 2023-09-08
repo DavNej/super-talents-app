@@ -13,6 +13,9 @@ const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY || ''
 const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET || ''
 
 export async function POST(request: Request) {
+  console.log('🦋 | HOST', request.headers.get('host'))
+  console.log('🦋 | RPC_TARGET', RPC_TARGET)
+
   const body = await request.json()
   //TODO typecheck body with zod
   const { handle, address } = body
@@ -28,7 +31,6 @@ export async function POST(request: Request) {
 
   const provider = new ethers.providers.JsonRpcProvider(RPC_TARGET)
   const wallet = new ethers.Wallet(PK, provider)
-
   const contract = new ethers.Contract(
     talentLayerAddress,
     talentLayerInterface,
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
     console.error('💥', err)
     return NextResponse.json(
       { message: 'Could not get handle price' },
-      { status: 400 }
+      { status: 500 }
     )
   }
 
