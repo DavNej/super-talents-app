@@ -26,7 +26,12 @@ export default function TalentLayerButton({
 }) {
   const router = useRouter()
   const { smartAccountAddress } = useBiconomy()
+
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
+  const [, setAvatars] = useLocalStorage('avatars', [])
+  const [, setSelectedAvatar] = useLocalStorage('selectedAvatar', null)
+  const [, setNewProfile] = useLocalStorage('newProfile', null)
+
   const profileData = useProfileData({ cid: pinataCid })
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
   const updateProfileData = useUpdateProfileData({
@@ -41,6 +46,10 @@ export default function TalentLayerButton({
         </Link>,
         { autoClose: false }
       )
+      setPinataCid('')
+      setAvatars([])
+      setSelectedAvatar(null)
+      setNewProfile(null)
       router.push(`/${handle}?`)
     },
   })
