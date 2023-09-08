@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { roleCaptions } from '@/lib/profile/helpers'
 import { IPFSProfileType } from '@/lib/profile/types'
 
+import { randomUUID } from 'crypto'
+
 export default function ProfilePreview({
   handle,
   profileData,
@@ -16,25 +18,27 @@ export default function ProfilePreview({
 }) {
   return (
     <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
-      {isSigner && (
-        <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
-          <Image src='/mask.png' alt='logo' width={72} height={27} priority />
+      <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
+        <Image src='/mask.png' alt='logo' width={72} height={27} />
+        {isSigner && (
           <Link href='/create-profile/info'>
-            <Image src='/edit.svg' alt='edit' width={24} height={24} priority />
+            <Image src='/edit.svg' alt='edit' width={24} height={24} />
           </Link>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className='px-14 py-11 flex gap-14'>
-        <div className='w-1/2 flex flex-col gap-8'>
+        <div className='w-4/6 flex flex-col gap-8'>
           <div className='flex gap-8 items-start'>
             <Image
-              className='rounded-full'
               src={profileData.picture}
+              style={{
+                clipPath:
+                  'path("M74.0171 4.16112L12.0171 39.8888C4.58185 44.1734 0 52.1018 0 60.6833V132.06C0 140.641 4.58186 148.569 12.0171 152.854L74.0171 188.582C81.434 192.856 90.566 192.856 97.9829 188.582L159.983 152.854C167.418 148.569 172 140.641 172 132.06V60.6833C172 52.1018 167.418 44.1734 159.983 39.8888L97.9829 4.16112C90.566 -0.112901 81.434 -0.112899 74.0171 4.16112Z")',
+              }}
               alt='logo'
               width={172}
               height={172}
-              priority
             />
             <div className='flex flex-col justify-between'>
               <p className='font-semibold text-2xl'>{profileData.name}</p>
@@ -42,7 +46,11 @@ export default function ProfilePreview({
               <p className='font-normal text-pink whitespace-nowrap'>
                 {profileData.role && roleCaptions[profileData.role]}
               </p>
-              <p className='font-light text-justify'>{profileData.about}</p>
+              <div className='font-light'>
+                {profileData.about.split('\n').map(paragraph => (
+                  <p key={randomUUID()}>{paragraph}</p>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -71,7 +79,7 @@ export default function ProfilePreview({
           </div>
         </div>
 
-        <div className='w-1/2 flex flex-col gap-8'>
+        <div className='w-2/6 flex flex-col gap-8'>
           <div id='projects'>
             <h4 className='text-lg font-medium border-b-[1px] border-gray-700'>
               Projects
@@ -93,7 +101,6 @@ export default function ProfilePreview({
                     alt='portefolio'
                     width={32}
                     height={32}
-                    priority
                   />
                 </Link>
               )}
@@ -104,7 +111,6 @@ export default function ProfilePreview({
                     alt='github'
                     width={32}
                     height={32}
-                    priority
                   />
                 </Link>
               )}
@@ -115,7 +121,6 @@ export default function ProfilePreview({
                     alt='twitter'
                     width={32}
                     height={32}
-                    priority
                   />
                 </Link>
               )}
@@ -126,7 +131,6 @@ export default function ProfilePreview({
                     alt='otherLink'
                     width={32}
                     height={32}
-                    priority
                   />
                 </Link>
               )}

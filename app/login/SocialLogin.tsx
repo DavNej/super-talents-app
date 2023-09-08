@@ -30,7 +30,6 @@ export default function SocialLogin() {
             alt={provider.name}
             width={48}
             height={48}
-            priority
           />
         </li>
       ))}

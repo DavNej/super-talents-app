@@ -35,7 +35,6 @@ export default function LoginPage() {
           alt='SuperTalents Logo'
           width={128}
           height={48}
-          priority
         />
         <h3 className='font-semibold text-5xl my-7'>
           Sharing the Future of Work with Web3 and AI

@@ -49,7 +49,6 @@ export default function ImagePreview() {
                   alt={isSelected ? 'Selected' : 'Expand'}
                   width={44}
                   height={44}
-                  priority
                   onClick={() => {
                     setShowDialog(true)
                     setDialogImage(dataUrl)
@@ -67,7 +66,6 @@ export default function ImagePreview() {
                   alt='Avatar'
                   width={248}
                   height={248}
-                  priority
                   onClick={() => {
                     const _data = isSelected ? null : dataUrl
                     setSelectedAvatar(_data)

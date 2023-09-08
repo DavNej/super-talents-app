@@ -45,7 +45,6 @@ export default function Dialog({
           alt='Close'
           width={44}
           height={44}
-          priority
           onClick={() => {
             onClose()
           }}
