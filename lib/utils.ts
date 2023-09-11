@@ -11,7 +11,10 @@ export async function pause(duration: number) {
 }
 
 export async function log(message?: any, ...optionalParams: any[]) {
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.LOG_LEVEL === 'debug'
+  ) {
     console.log(message, ...optionalParams)
   }
 }
