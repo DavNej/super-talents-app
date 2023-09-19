@@ -94,11 +94,11 @@ export default function ProfilePreview({
               Links
             </h4>
             <div className='py-5 flex gap-2'>
-              {profileData.portefolio && (
-                <Link href={profileData.portefolio} className='py-2 px-4'>
+              {profileData.portfolio && (
+                <Link href={profileData.portfolio} className='py-2 px-4'>
                   <Image
-                    src='/pink-portefolio.svg'
-                    alt='portefolio'
+                    src='/pink-portfolio.svg'
+                    alt='portfolio'
                     width={32}
                     height={32}
                   />
@@ -127,7 +127,7 @@ export default function ProfilePreview({
               {profileData.otherLink && (
                 <Link href={profileData.otherLink} className='py-2 px-4'>
                   <Image
-                    src='/pink-portefolio.svg'
+                    src='/pink-portfolio.svg'
                     alt='otherLink'
                     width={32}
                     height={32}

@@ -71,7 +71,7 @@ export const FormProfile = z.object({
   role: RoleEnum.or(z.string().length(0)),
   github: Github.or(z.string().length(0)),
   twitter: Twitter.or(z.string().length(0)),
-  portefolio: Link.or(z.string().length(0)),
+  portfolio: Link.or(z.string().length(0)),
   otherLink: Link.or(z.string().length(0)),
 })
 
@@ -83,7 +83,7 @@ export const NewProfile = z.object({
   role: RoleEnum,
   github: Github,
   twitter: Twitter,
-  portefolio: Link,
+  portfolio: Link,
   otherLink: Link,
 })
 
@@ -95,7 +95,7 @@ export const IPFSProfile = z.object({
   role: RoleEnum,
   github: Github,
   twitter: Twitter,
-  portefolio: Link,
+  portfolio: Link,
   otherLink: Link,
 })
 

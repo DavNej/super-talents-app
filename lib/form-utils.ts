@@ -28,7 +28,7 @@ export const validationSchema = Yup.object().shape({
     .required(),
   github: Yup.string().url('Must be a github url').trim(),
   otherLink: Yup.string().url('Must be a url').trim(),
-  portefolio: Yup.string().url('Must be a url').trim(),
+  portfolio: Yup.string().url('Must be a url').trim(),
   twitter: Yup.string().url('Must be a twitter url').trim(),
   role: Yup.string().required(),
 })
