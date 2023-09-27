@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/app/components'
 import { useAuth } from '@/features/auth'
-import { useBiconomy } from '@/features/biconomy'
+import { useSmartAccount } from '@/features/smart-account'
 
 export default function ProgressBarLayout({
   children,
@@ -13,7 +13,7 @@ export default function ProgressBarLayout({
   children: React.ReactNode
 }) {
   const { status } = useAuth()
-  const { connectedUser } = useBiconomy()
+  const { connectedUser } = useSmartAccount()
 
   if (status === 'ready') {
     return redirect('/login')

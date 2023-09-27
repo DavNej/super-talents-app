@@ -37,7 +37,7 @@ const initialContext: IContext = {
   connectedUser: undefined,
 }
 
-export default function BiconomyProvider(props: React.PropsWithChildren) {
+export default function SmartAccountProvider(props: React.PropsWithChildren) {
   const { signer } = useAuth()
   const [smartAccountAddress, setSmartAccountAddress] = React.useState<string>()
   const [smartAccount, setSmartAccount] = React.useState<BiconomySmartAccount>()
@@ -140,7 +140,7 @@ export default function BiconomyProvider(props: React.PropsWithChildren) {
     [connectedUserQuery, sendUserOp, smartAccount, smartAccountAddress]
   )
 
-  return <BiconomyContext.Provider value={value} {...props} />
+  return <SmartAccountContext.Provider value={value} {...props} />
 }
 
-export const BiconomyContext = React.createContext<IContext>(initialContext)
+export const SmartAccountContext = React.createContext<IContext>(initialContext)

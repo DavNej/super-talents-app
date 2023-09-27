@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { Button } from '@/app/components'
 import type { IPFSProfileType } from '@/features/profile/types'
 import { useProfileData } from '@/features/profile'
-import { useBiconomy } from '@/features/biconomy'
+import { useSmartAccount } from '@/features/smart-account'
 import { useUploadToIPFS } from '@/features/ipfs'
 import { useUpdateProfileData, useMintProfile } from '@/features/talent-layer'
 import { deepEqual, log } from '@/utils'
@@ -22,7 +22,7 @@ export default function TalentLayerButton({
   profileToUpload: IPFSProfileType
 }) {
   const router = useRouter()
-  const { smartAccountAddress } = useBiconomy()
+  const { smartAccountAddress } = useSmartAccount()
 
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
   const [, setAvatars] = useLocalStorage('avatars', [])

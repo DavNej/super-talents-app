@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import type { UseMutationOptions } from '@tanstack/react-query'
 
 import { useAuth } from '@/features/auth'
-import { useBiconomy } from '@/features/biconomy'
+import { useSmartAccount } from '@/features/smart-account'
 import { log } from '@/utils'
 
 import { talentLayerAddress, talentLayerInterface } from '../contract/config'
@@ -21,7 +21,7 @@ export default function useUpdateProfileData(
   >
 ) {
   const { signer } = useAuth()
-  const { smartAccount, sendUserOp } = useBiconomy()
+  const { smartAccount, sendUserOp } = useSmartAccount()
 
   return useMutation<
     string | null,

@@ -6,14 +6,14 @@ import { redirect } from 'next/navigation'
 
 import { PageLoader } from '@/app/components'
 import { useAuth } from '@/features/auth'
-import {  useBiconomy } from '@/features/biconomy'
+import { useSmartAccount } from '@/features/smart-account'
 
 import EmailForm from './EmailForm'
 import SocialLogin from './SocialLogin'
 
 export default function LoginPage() {
   const { status } = useAuth()
-  const { connectedUser } = useBiconomy()
+  const { connectedUser } = useSmartAccount()
 
   if (connectedUser?.data?.handle) {
     return redirect(`/${connectedUser.data.handle}`)
