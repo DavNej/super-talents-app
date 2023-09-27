@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 
-import { useAuth } from '@/lib/hooks'
-import type { LoginProvider } from '@/lib/web3auth'
+import { useAuth, type LoginProvider } from '@/features/auth'
 
 const loginProviders: {
   icon: string

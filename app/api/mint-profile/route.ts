@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
-import { profileIdOfHandle } from '@/lib/talent-layer/subgraph'
 import { ethers } from 'ethers'
 
 import {
+  profileIdOfHandle,
   platfromId,
   talentLayerAddress,
   talentLayerInterface,
-} from '@/lib/talent-layer/contract/config'
-import { log } from '@/lib/utils'
+} from '@/features/talent-layer'
+
+import { log } from '@/utils'
 
 const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY || ''
 const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET || ''

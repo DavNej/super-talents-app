@@ -3,12 +3,11 @@
 import React from 'react'
 import Image from 'next/image'
 import clsx from 'clsx'
-import { v4 as uuid } from 'uuid';
-
-import { DataUrlType } from '@/lib/avatar/types'
+import { v4 as uuid } from 'uuid'
+import { useLocalStorage } from 'usehooks-ts'
 
 import { Dialog } from '@/app/components'
-import { useLocalStorage } from 'usehooks-ts'
+import { type DataUrlType } from '@/utils/data-url'
 
 export default function ImagePreview() {
   //TODO delete images in local storage after mint

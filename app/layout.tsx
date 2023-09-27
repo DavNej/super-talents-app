@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 
 import { ReactQueryProvider, Toast } from '@/app/components'
-import { AuthProvider } from '@/lib/hooks/useAuth'
-import { BiconomyProvider } from '@/lib/hooks/useBiconomy'
+import { AuthProvider } from '@/features/auth'
+import { BiconomyProvider } from '@/features/biconomy'
 
 import './globals.css'
 

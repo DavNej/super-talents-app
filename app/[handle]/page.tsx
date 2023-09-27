@@ -1,8 +1,9 @@
 import React from 'react'
 
 import { ProfilePreview } from '@/app/components'
-import { getTalentLayerUser } from '@/lib/talent-layer/subgraph'
-import { getProfileData } from '@/lib/profile/helpers'
+import { getTalentLayerUser } from '@/features/talent-layer'
+import { getProfileData } from '@/features/profile'
+
 import Logout from './Logout'
 
 export const revalidate = 0

@@ -5,9 +5,9 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useLocalStorage } from 'usehooks-ts'
 
-import { useCreateAvatars } from '@/lib/hooks'
-import type { DataUrlType } from '@/lib/avatar/types'
 import { Button, Loader, BackLink, ImagePreview } from '@/app/components'
+import { useCreateAvatars } from '@/features/avatar'
+import type { DataUrlType } from '@/utils/data-url'
 
 const UploadFile = dynamic(() => import('@/app/components/UploadFile'), {
   ssr: false,

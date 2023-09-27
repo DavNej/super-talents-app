@@ -6,10 +6,10 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
 import { Button } from '@/app/components'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils'
 
 import { inputClassNames } from '@/app/components'
-import { useAuth } from '@/lib/hooks'
+import { useAuth } from '@/features/auth'
 
 export default function EmailForm() {
   const { login } = useAuth()

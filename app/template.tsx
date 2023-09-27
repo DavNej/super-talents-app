@@ -2,8 +2,8 @@
 
 import React from 'react'
 
-import { useAuth } from '@/lib/hooks'
 import { PageLoader } from '@/app/components'
+import { useAuth } from '@/features/auth'
 
 export default function RootTemplate({
   children,

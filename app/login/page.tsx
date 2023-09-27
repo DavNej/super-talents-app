@@ -4,11 +4,12 @@ import React from 'react'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
+import { PageLoader } from '@/app/components'
+import { useAuth } from '@/features/auth'
+import {  useBiconomy } from '@/features/biconomy'
+
 import EmailForm from './EmailForm'
 import SocialLogin from './SocialLogin'
-import { useAuth } from '@/lib/hooks'
-import { PageLoader } from '../components'
-import { useBiconomy } from '@/lib/hooks/useBiconomy'
 
 export default function LoginPage() {
   const { status } = useAuth()

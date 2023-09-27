@@ -1,21 +1,18 @@
 'use client'
 
 import React from 'react'
-import { useLocalStorage } from 'usehooks-ts'
-
-import {
-  useProfileData,
-  useUploadToIPFS,
-  useUpdateProfileData,
-  useMintProfile,
-} from '@/lib/hooks'
-import { IPFSProfileType } from '@/lib/profile/types'
-import { deepEqual, log } from '@/lib/utils'
-import { Button } from '@/app/components'
-import { useBiconomy } from '@/lib/hooks/useBiconomy'
-import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocalStorage } from 'usehooks-ts'
+import { toast } from 'react-toastify'
+
+import { Button } from '@/app/components'
+import type { IPFSProfileType } from '@/features/profile/types'
+import { useProfileData } from '@/features/profile'
+import { useBiconomy } from '@/features/biconomy'
+import { useUploadToIPFS } from '@/features/ipfs'
+import { useUpdateProfileData, useMintProfile } from '@/features/talent-layer'
+import { deepEqual, log } from '@/utils'
 
 export default function TalentLayerButton({
   handle,

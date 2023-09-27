@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
+import { redirect } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/app/components'
-import NavStep from './NavStep'
-import { useAuth } from '@/lib/hooks'
-import { redirect } from 'next/navigation'
-import { useBiconomy } from '@/lib/hooks/useBiconomy'
+import { useAuth } from '@/features/auth'
+import { useBiconomy } from '@/features/biconomy'
 
 export default function ProgressBarLayout({
   children,
@@ -47,5 +47,29 @@ export default function ProgressBarLayout({
 
       {children}
     </>
+  )
+}
+
+
+
+function NavStep({
+  activeOnPages,
+  caption,
+}: {
+  activeOnPages: string[]
+  caption: string
+}) {
+  const pathname = usePathname()
+
+  return activeOnPages.includes(pathname) ? (
+    <div className='flex-1'>
+      <p className='font-medium text-xl text-center'>{caption}</p>
+      <div className='mt-3 h-3 rounded-full bg-pink'></div>
+    </div>
+  ) : (
+    <div className='flex-1'>
+      <p className='font-medium text-xl text-center opacity-70'>{caption}</p>
+      <div className='mt-3 h-3 rounded-full bg-gray-700' />
+    </div>
   )
 }

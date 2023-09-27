@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { checkJobStatus, createJob } from '@/lib/avatar'
-import { base64ToImgDataUrl } from '@/lib/avatar/utils'
+import { checkJobStatus, createJob } from '@/features/avatar'
+import { base64ToImgDataUrl } from '@/utils/data-url'
 
 export async function POST(request: Request) {
   const body = await request.json()

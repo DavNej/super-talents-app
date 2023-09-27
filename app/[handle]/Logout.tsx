@@ -2,7 +2,7 @@
 import React from 'react'
 
 import { LogoutButton } from '@/app/components'
-import { useAuth } from '@/lib/hooks'
+import { useAuth } from '@/features/auth'
 
 export default function Logout() {
   const { signer } = useAuth()

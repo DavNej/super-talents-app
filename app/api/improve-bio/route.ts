@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { askChatGPT } from '@/lib/chat-gpt'
-import { log } from '@/lib/utils'
+import { askChatGPT } from '@/utils/chat-gpt'
+import { log } from '@/utils'
 
 import type { ChatCompletionResponseMessage } from 'openai'
 

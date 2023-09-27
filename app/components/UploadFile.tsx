@@ -3,9 +3,9 @@
 import React from 'react'
 import Image from 'next/image'
 
-import useDropzone from '@/lib/hooks/useDropzone'
-import useImageProcessing from '@/lib/hooks/useImageProcessing'
-import { DataUrlType } from '@/lib/avatar/types'
+import useDropzone from '@/utils/hooks/useDropzone'
+import useImageProcessing from '@/utils/hooks/useImageProcessing'
+import { type DataUrlType } from '@/utils/data-url'
 
 export default function UploadFile({
   onSuccess,

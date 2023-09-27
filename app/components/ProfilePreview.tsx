@@ -1,11 +1,10 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid'
 
-import { roleCaptions } from '@/lib/profile/helpers'
-import { IPFSProfileType } from '@/lib/profile/types'
-
+import { roleCaptions } from '@/features/profile'
+import { type IPFSProfileType } from '@/features/profile/types'
 
 export default function ProfilePreview({
   handle,

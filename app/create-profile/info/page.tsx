@@ -14,20 +14,20 @@ import {
   Button,
   inputClassNames,
 } from '@/app/components'
-import { cn } from '@/lib/utils'
-import { useChatGPT } from '@/lib/hooks'
+import { cn } from '@/utils'
+import { useChatGPT } from '@/utils/chat-gpt'
 
 //! ATTENTION
 // TODO remove Yup
-import { validationSchema } from '@/lib/form-utils'
+import { validationSchema } from '@/features/profile/form-utils'
 
-import { roleCaptions } from '@/lib/profile/helpers'
-import { NewProfile } from '@/lib/profile/schemas'
+import { roleCaptions } from '@/features/profile'
+import { NewProfile } from '@/features/profile/schemas'
 import type {
   NewProfileType,
   FormProfileType,
   SkillsType,
-} from '@/lib/profile/types'
+} from '@/features/profile/types'
 
 const initialValues: FormProfileType = {
   handle: '',
