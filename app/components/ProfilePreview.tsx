@@ -3,8 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
-import { roleCaptions } from '@/features/profile'
-import { type IPFSProfileType } from '@/features/profile/types'
+import { roleCaptions, type ProfileWithPictureType } from '@/features/profile'
 
 export default function ProfilePreview({
   handle,
@@ -12,7 +11,7 @@ export default function ProfilePreview({
   isSigner = false,
 }: {
   handle: string
-  profileData: IPFSProfileType
+  profileData: ProfileWithPictureType
   isSigner?: boolean
 }) {
   return (

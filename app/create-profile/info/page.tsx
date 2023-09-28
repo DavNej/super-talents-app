@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
+import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { useLocalStorage } from 'usehooks-ts'
 
 import {
@@ -14,20 +15,17 @@ import {
   Button,
   inputClassNames,
 } from '@/app/components'
+import {
+  roleCaptions,
+  type ProfileWithHandleType,
+  type SkillsType,
+  type FormProfileType,
+} from '@/features/profile'
+import { ProfileWithHandle } from '@/features/profile/schemas'
+
 import { cn } from '@/utils'
 import { useChatGPT } from '@/utils/chat-gpt'
-
-//! ATTENTION
-// TODO remove Yup
-import { validationSchema } from '@/features/profile/form-utils'
-
-import { roleCaptions } from '@/features/profile'
-import { NewProfile } from '@/features/profile/schemas'
-import type {
-  NewProfileType,
-  FormProfileType,
-  SkillsType,
-} from '@/features/profile/types'
+import { profileIdOfHandle } from '@/features/talent-layer'
 
 const initialValues: FormProfileType = {
   handle: '',
@@ -47,17 +45,29 @@ export default function ProfileInfoPage() {
   const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [skill, setSkill] = React.useState('')
-  const [newProfile, setNewProfile] = useLocalStorage<NewProfileType | null>(
-    'newProfile',
-    null
-  )
+  const [newProfile, setNewProfile] =
+    useLocalStorage<ProfileWithHandleType | null>('newProfile', null)
 
   const chatGPT = useChatGPT()
-  const formik = useFormik({
+  const formik = useFormik<FormProfileType>({
     initialValues: newProfile ? newProfile : initialValues,
-    validationSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      const result = NewProfile.safeParse({
+    validationSchema: toFormikValidationSchema(ProfileWithHandle),
+    onSubmit: async (values, { setSubmitting, setFieldError }) => {
+      try {
+        const profileId = await profileIdOfHandle(values.handle)
+        if (!!profileId) {
+          setFieldError('handle', 'Handle is taken')
+          setSubmitting(false)
+          return
+        }
+      } catch (err) {
+        toast.error('Could not parse newProfile')
+        console.error(err)
+        setSubmitting(false)
+        return
+      }
+
+      const result = ProfileWithHandle.safeParse({
         handle: values.handle,
         name: values.name,
         about: values.about,
@@ -124,7 +134,7 @@ export default function ProfileInfoPage() {
     formik.setFieldValue('skills', newSkillSet)
   }
 
-  function fieldError(fieldName: keyof FormProfileType) {
+  function fieldError(fieldName: keyof ProfileWithHandleType) {
     return formik.touched[fieldName] && formik.errors[fieldName]
   }
 
@@ -132,7 +142,7 @@ export default function ProfileInfoPage() {
     name,
     children,
   }: {
-    name: keyof FormProfileType
+    name: keyof ProfileWithHandleType
     children: React.ReactNode
   }) {
     return (
@@ -159,9 +169,9 @@ export default function ProfileInfoPage() {
             <SimpleLabel name='handle'>
               <div className='flex justify-between'>
                 <span>Handle</span>
-                {formik.touched.handle && !formik.errors.handle && (
+                {/* {formik.touched.handle && !formik.errors.handle && (
                   <span className='text-sm text-green'>Handle available</span>
-                )}
+                )} */}
               </div>
             </SimpleLabel>
             <input

@@ -7,13 +7,15 @@ import { toast } from 'react-toastify'
 
 import { BackLink, Button, ProfilePreview } from '@/app/components'
 import TalentLayerButton from '@/app/components/TalentLayerButton'
-import type { NewProfileType } from '@/features/profile/types'
+
+import type { ProfileWithHandleType } from '@/features/profile'
 import { validateIPFSProfile } from '@/features/profile/schemas'
+
 import { useProfileIdOfHandle } from '@/features/talent-layer'
 import type { DataUrlType } from '@/utils/data-url'
 
 export default function ProfilePreviewPage() {
-  const [newProfile] = useLocalStorage<NewProfileType | null>(
+  const [newProfile] = useLocalStorage<ProfileWithHandleType | null>(
     'newProfile',
     null
   )

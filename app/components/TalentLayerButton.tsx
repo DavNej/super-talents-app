@@ -7,8 +7,7 @@ import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'react-toastify'
 
 import { Button } from '@/app/components'
-import type { IPFSProfileType } from '@/features/profile/types'
-import { useProfileData } from '@/features/profile'
+import { useProfileData, type ProfileWithPictureType } from '@/features/profile'
 import { useSmartAccount } from '@/features/smart-account'
 import { useUploadToIPFS } from '@/features/ipfs'
 import { useUpdateProfileData, useMintProfile } from '@/features/talent-layer'
@@ -19,7 +18,7 @@ export default function TalentLayerButton({
   profileToUpload,
 }: {
   handle: string
-  profileToUpload: IPFSProfileType
+  profileToUpload: ProfileWithPictureType
 }) {
   const router = useRouter()
   const { smartAccountAddress } = useSmartAccount()

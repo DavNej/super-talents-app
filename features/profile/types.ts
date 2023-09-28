@@ -1,16 +1,17 @@
 import z from 'zod'
 import * as schemas from './schemas'
+import * as partials from './schemas/partials'
 
-export type RoleType = z.infer<typeof schemas.RoleEnum>
-export type HandleType = z.infer<typeof schemas.Handle>
-export type NameType = z.infer<typeof schemas.Name>
-export type AboutType = z.infer<typeof schemas.About>
-export type SkillsType = z.infer<typeof schemas.Skills>
-export type GithubType = z.infer<typeof schemas.Github>
-export type TwitterType = z.infer<typeof schemas.Twitter>
-export type LinkType = z.infer<typeof schemas.Link>
-export type PictureType = z.infer<typeof schemas.Picture>
+export type RoleType = z.infer<typeof partials.RoleEnum>
+export type HandleType = z.infer<typeof partials.Handle>
+export type NameType = z.infer<typeof partials.Name>
+export type AboutType = z.infer<typeof partials.About>
+export type SkillsType = z.infer<typeof partials.Skills>
+export type GithubType = z.infer<typeof partials.Github>
+export type TwitterType = z.infer<typeof partials.Twitter>
+export type LinkType = z.infer<typeof partials.Link>
+export type PictureType = z.infer<typeof partials.Picture>
 
 export type FormProfileType = z.infer<typeof schemas.FormProfile>
-export type NewProfileType = z.infer<typeof schemas.NewProfile>
-export type IPFSProfileType = z.infer<typeof schemas.IPFSProfile>
+export type ProfileWithHandleType = z.infer<typeof schemas.ProfileWithHandle>
+export type ProfileWithPictureType = z.infer<typeof schemas.ProfileWithPicture>
