@@ -4,14 +4,14 @@ import api from '@/utils/api'
 import { log } from '@/utils'
 
 import { validateIPFSProfile } from './schemas'
-import { IPFSProfileType } from './types'
+import { ProfileWithPictureType } from './types'
 
 export default function useProfileData({
   cid,
 }: {
   cid: string | undefined | null
-}): UseQueryResult<IPFSProfileType | null> {
-  return useQuery<IPFSProfileType | null>({
+}): UseQueryResult<ProfileWithPictureType | null> {
+  return useQuery<ProfileWithPictureType | null>({
     queryKey: ['profile-data', { cid }],
     enabled: Boolean(cid),
     queryFn: async () => {

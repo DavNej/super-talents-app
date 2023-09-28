@@ -13,7 +13,7 @@ import { useUploadToIPFS } from '@/features/ipfs'
 import { useUpdateProfileData, useMintProfile } from '@/features/talent-layer'
 import { deepEqual, log } from '@/utils'
 
-export default function TalentLayerButton({
+export default function MintButton({
   handle,
   profileToUpload,
 }: {

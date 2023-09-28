@@ -8,13 +8,7 @@ import { useFormik } from 'formik'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { useLocalStorage } from 'usehooks-ts'
 
-import {
-  BackLink,
-  ChooseAboutDialog,
-  Chip,
-  Button,
-  inputClassNames,
-} from '@/app/components'
+import { BackLink, Chip, Button, inputClassNames } from '@/app/components'
 import {
   roleCaptions,
   type ProfileWithHandleType,
@@ -22,10 +16,11 @@ import {
   type FormProfileType,
 } from '@/features/profile'
 import { ProfileWithHandle } from '@/features/profile/schemas'
-
+import { profileIdOfHandle } from '@/features/talent-layer'
 import { cn } from '@/utils'
 import { useChatGPT } from '@/utils/chat-gpt'
-import { profileIdOfHandle } from '@/features/talent-layer'
+
+import { ChooseAboutDialog } from '../components'
 
 const initialValues: FormProfileType = {
   handle: '',

@@ -1,15 +1,13 @@
 export { default as BackLink } from './BackLink'
 export { default as Button } from './Button'
 export { default as Chip } from './Chip'
-export { default as ChooseAboutDialog } from './ChooseAboutDialog'
 export { default as Dialog } from './Dialog'
-export { default as ImagePreview } from './ImagePreview'
 export { default as Loader } from './Loader'
 export { default as LogoutButton } from './LogoutButton'
 export { default as PageLoader } from './PageLoader'
-export { default as ProfilePreview } from './ProfilePreview'
 export { default as ReactQueryProvider } from './ReactQueryProvider'
 export { default as Toast } from './Toast'
+export { default as ProfilePreview } from './ProfilePreview'
 
 export const inputClassNames = [
   'py-4',

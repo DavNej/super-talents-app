@@ -8,8 +8,7 @@ import { PageLoader } from '@/app/components'
 import { useAuth } from '@/features/auth'
 import { useSmartAccount } from '@/features/smart-account'
 
-import EmailForm from './EmailForm'
-import SocialLogin from './SocialLogin'
+import { SocialLogin, EmailForm } from './components'
 
 export default function LoginPage() {
   const { status } = useAuth()

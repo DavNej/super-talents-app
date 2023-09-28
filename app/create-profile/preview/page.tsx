@@ -6,13 +6,13 @@ import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'react-toastify'
 
 import { BackLink, Button, ProfilePreview } from '@/app/components'
-import TalentLayerButton from '@/app/components/TalentLayerButton'
 
 import type { ProfileWithHandleType } from '@/features/profile'
 import { validateIPFSProfile } from '@/features/profile/schemas'
-
 import { useProfileIdOfHandle } from '@/features/talent-layer'
 import type { DataUrlType } from '@/utils/data-url'
+
+import { MintButton } from '../components'
 
 export default function ProfilePreviewPage() {
   const [newProfile] = useLocalStorage<ProfileWithHandleType | null>(
@@ -50,10 +50,7 @@ export default function ProfilePreviewPage() {
             Profile preview
           </h3>
           {allowMint ? (
-            <TalentLayerButton
-              handle={handle}
-              profileToUpload={profileToUpload}
-            />
+            <MintButton handle={handle} profileToUpload={profileToUpload} />
           ) : (
             <Button isDisabled>Mint my profile NFT</Button>
           )}
