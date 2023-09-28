@@ -1,7 +1,6 @@
 'use client'
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'react-toastify'
@@ -20,7 +19,6 @@ export default function MintButton({
   handle: string
   profileToUpload: ProfileWithPictureType
 }) {
-  const router = useRouter()
   const { smartAccountAddress } = useSmartAccount()
 
   const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
@@ -40,13 +38,12 @@ export default function MintButton({
           <br />
           See transaction in explorer
         </Link>,
-        { autoClose: false }
+        { autoClose: false, closeOnClick: false }
       )
       setPinataCid('')
       setAvatars([])
       setSelectedAvatar(null)
       setNewProfile(null)
-      router.push(`/${handle}?`)
     },
   })
 
@@ -62,6 +59,10 @@ export default function MintButton({
       updateProfileData.mutate({ profileId, cid: pinataCid })
     },
   })
+
+  if (updateProfileData.isSuccess) {
+    return redirect(`/${handle}`)
+  }
 
   function handleClick() {
     if (!smartAccountAddress) return

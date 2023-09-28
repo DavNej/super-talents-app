@@ -11,6 +11,7 @@ export const Handle = z
     message:
       'Handle must contain only letters, - or _ and should start with a letter',
   })
+  .min(5, { message: 'Handle too short' })
   .max(31, { message: 'Handle cannot exceed 31 characters' })
 
 export const Name = z
