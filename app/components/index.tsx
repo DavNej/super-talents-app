@@ -1,5 +1,6 @@
 export { default as BackLink } from './BackLink'
 export { default as Button } from './Button'
+export { default as Chip } from './Chip'
 export { default as Dialog } from './Dialog'
 export { default as Loader } from './Loader'
 export { default as LogoutButton } from './LogoutButton'
