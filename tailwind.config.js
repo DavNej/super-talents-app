@@ -33,6 +33,7 @@ module.exports = {
       },
       backgroundImage: {
         'sign-up': "url('/bg-signup.svg')",
+        avatar: "url('/bg-avatar.svg')",
       },
     },
   },
