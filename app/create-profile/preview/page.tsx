@@ -12,6 +12,8 @@ import { validateIPFSProfile } from '@/features/profile/schemas'
 import { useProfileIdOfHandle } from '@/features/talent-layer'
 import type { DataUrlType } from '@/utils/data-url'
 
+import { MintButton } from '../components'
+
 export default function ProfilePreviewPage() {
   const [newProfile] = useLocalStorage<ProfileWithHandleType | null>(
     'newProfile',
@@ -37,6 +39,8 @@ export default function ProfilePreviewPage() {
     picture: selectedAvatar,
   })
 
+  const allowMint = handle && profileToUpload && !talentLayerId
+
   return (
     <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
       <div className='flex flex-col flex-1'>
@@ -45,7 +49,11 @@ export default function ProfilePreviewPage() {
           <h3 className='font-semibold text-5xl whitespace-nowrap'>
             Profile preview
           </h3>
+          {allowMint ? (
+            <MintButton handle={handle} profileToUpload={profileToUpload} />
+          ) : (
             <Button isDisabled>Mint my profile NFT</Button>
+          )}
         </div>
 
         {handle && profileToUpload && (
