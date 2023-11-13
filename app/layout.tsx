@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 
 import { ReactQueryProvider, Toast } from '@/app/components'
+import { AuthProvider } from '@/features/auth'
 
 import './globals.css'
 
@@ -19,6 +20,8 @@ export default function RootLayout({
     <html lang='en'>
       <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
         <ReactQueryProvider>
+          <AuthProvider>
+          </AuthProvider>
           <Toast />
         </ReactQueryProvider>
       </body>
