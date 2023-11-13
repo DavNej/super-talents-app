@@ -18,6 +18,9 @@ import {
 import { ProfileWithHandle } from '@/features/profile/schemas'
 import { profileIdOfHandle } from '@/features/talent-layer'
 import { cn } from '@/utils'
+import { useChatGPT } from '@/utils/chat-gpt'
+
+import { ChooseAboutDialog } from '../components'
 
 const initialValues: FormProfileType = {
   handle: '',
@@ -34,9 +37,13 @@ const initialValues: FormProfileType = {
 export default function ProfileInfoPage() {
   const router = useRouter()
 
+  const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
+  const [openDialog, setOpenDialog] = React.useState(false)
   const [skill, setSkill] = React.useState('')
   const [newProfile, setNewProfile] =
     useLocalStorage<ProfileWithHandleType | null>('newProfile', null)
+
+  const chatGPT = useChatGPT()
   const formik = useFormik<FormProfileType>({
     initialValues: newProfile ? newProfile : initialValues,
     validationSchema: toFormikValidationSchema(ProfileWithHandle),
@@ -80,6 +87,28 @@ export default function ProfileInfoPage() {
       }
     },
   })
+
+  React.useEffect(() => {
+    if (chatGPT.data?.content) {
+      let options: string[]
+      const regex = /(Option \d:)/
+
+      try {
+        options = chatGPT.data.content
+          .split(regex)
+          .map(opt => opt.trim())
+          .filter(opt => Boolean(opt) && !regex.test(opt))
+      } catch (err) {
+        toast.warn('Could not parse options')
+        console.log(chatGPT.data)
+        options = chatGPT.data.content.split('Option')
+      }
+
+      setGPTOptions(options)
+      setOpenDialog(true)
+    }
+  }, [chatGPT.data])
+
   function addSkill(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       const newSkill = event.currentTarget.value.trim()
@@ -176,6 +205,11 @@ export default function ProfileInfoPage() {
               <Button
                 className='bg-opacity-0 scale-75'
                 isDisabled={!Boolean(formik.values.about)}
+                isLoading={chatGPT.isLoading}
+                onClick={() => {
+                  const prompt = formik.values.about
+                  if (prompt) chatGPT.mutate(prompt)
+                }}>
                 Improve bio with AI
               </Button>
             </div>
@@ -298,6 +332,17 @@ export default function ProfileInfoPage() {
             Next
           </Button>
         </form>
+
+        <ChooseAboutDialog
+          open={Boolean(GPTOptions) && openDialog}
+          options={GPTOptions}
+          onSelectAbout={about => {
+            formik.setFieldValue('about', about)
+          }}
+          onClose={() => {
+            setOpenDialog(false)
+          }}
+        />
       </div>
     </main>
   )
