@@ -5,3 +5,12 @@ import { twMerge } from 'tailwind-merge'
 export function cn(...input: ClassValue[]) {
   return twMerge(clsx(input))
 }
+export async function log(message?: any, ...optionalParams: any[]) {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.LOG_LEVEL === 'debug'
+  ) {
+    console.log(message, ...optionalParams)
+  }
+}
+
