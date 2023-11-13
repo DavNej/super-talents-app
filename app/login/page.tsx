@@ -6,11 +6,25 @@ import { redirect } from 'next/navigation'
 
 import { PageLoader } from '@/app/components'
 import { useAuth } from '@/features/auth'
+import { useSmartAccount } from '@/features/smart-account'
 
 import { SocialLogin, EmailForm } from './components'
 
 export default function LoginPage() {
   const { status } = useAuth()
+  const { connectedUser } = useSmartAccount()
+
+  if (connectedUser?.data?.handle) {
+    return redirect(`/${connectedUser.data.handle}`)
+  }
+
+  if (status === 'connected') {
+    return connectedUser?.data === null ? (
+      redirect('/create-profile/avatar')
+    ) : (
+      <PageLoader />
+    )
+  }
 
   return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
