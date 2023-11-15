@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const job = await createJob({ image: body.image })
-    if (!job.id) return null
+    if (!job.id) return new Response('Job could not be created. No job id', { status: 500 })
     return NextResponse.json({ jobId: job.id })
   } catch (err) {
     return new Response(String(err), { status: 500 })
