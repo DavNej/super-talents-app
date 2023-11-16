@@ -1,3 +1,5 @@
+'use client'
+
 import { ConnectButton } from '@particle-network/connect-react-ui'
 import '@particle-network/connect-react-ui/dist/index.css'
 
@@ -8,7 +10,10 @@ export default function ParticleConnectButton() {
     <ConnectButton.Custom>
       {({ account, openConnectModal }) => {
         return (
-          <Button onClick={openConnectModal} isDisabled={!!account}>
+          <Button
+            className='mt-5 w-full'
+            onClick={openConnectModal}
+            isDisabled={!!account}>
             Connect
           </Button>
         )
