@@ -13,7 +13,7 @@ export default function LogoutButton() {
   const account = useAccount()
 
   if (!account) {
-    return redirect('/')
+    redirect('/')
   }
 
   return (

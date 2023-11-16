@@ -3,12 +3,12 @@
 import React from 'react'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
+
 import { ConnectButton } from '@/features/particle'
-import {
-  useAccount,
-} from '@particle-network/connect-react-ui'
+import { useSmartAccount } from '@/features/smart-account'
 
 export default function HomePage() {
+  const { connectedUser } = useSmartAccount()
 
   const account = useAccount()
   if (account)
@@ -50,7 +50,7 @@ export default function HomePage() {
         </ul>
       </div>
 
-      <div className='px-14 py-16 bg-gradient-to-b from-purple-500 to-pink h-[644px] w-[521px] rounded-[50px]'>
+      <div className='px-14 py-16 bg-gradient-to-b from-purple-500 to-pink w-[521px] rounded-[50px]'>
         <h3 className='font-semibold text-5xl mb-14 whitespace-nowrap'>
           Let’s get started
         </h3>
