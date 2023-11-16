@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
 import type { UseMutationOptions } from '@tanstack/react-query'
 
-import { useAuth } from '@/features/auth'
 import { useSmartAccount } from '@/features/smart-account'
 import { log } from '@/utils'
 
@@ -20,8 +19,7 @@ export default function useUpdateProfileData(
     }
   >
 ) {
-  const { signer } = useAuth()
-  const { smartAccount, sendUserOp } = useSmartAccount()
+  const { smartAccount, sendUserOp, signer } = useSmartAccount()
 
   return useMutation<
     string | null,

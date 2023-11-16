@@ -18,7 +18,10 @@ import { log } from '@/utils'
 
 import { chainId, bundler, paymaster, paymasterServiceData } from './config'
 
+const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
+
 interface IContext {
+  signer: ethers.providers.JsonRpcSigner | undefined
   smartAccount: BiconomySmartAccount | undefined
   smartAccountAddress: string | undefined
   sendUserOp:
@@ -32,29 +35,30 @@ interface IContext {
 }
 
 const initialContext: IContext = {
+  signer: undefined,
   smartAccount: undefined,
   sendUserOp: undefined,
   smartAccountAddress: undefined,
   connectedUser: undefined,
 }
 
-const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
-
 export default function SmartAccountProvider(props: React.PropsWithChildren) {
   const account = useAccount()
 
   const [smartAccountAddress, setSmartAccountAddress] = React.useState<string>()
   const [smartAccount, setSmartAccount] = React.useState<BiconomySmartAccount>()
+  const [signer, setSigner] = React.useState<ethers.providers.JsonRpcSigner>()
 
   const init = React.useCallback(async () => {
     if (account) {
       log('⚛️ | connected EOA', account)
       log('📜 | Smart account init')
       const ethersProvider = new ethers.providers.JsonRpcProvider(RPC_TARGET)
-      const signer = ethersProvider.getSigner(account)
+      const _signer = ethersProvider.getSigner(account)
+
       try {
         const biconomySmartAccount = new BiconomySmartAccount({
-          signer,
+          signer: _signer,
           chainId,
           bundler,
           paymaster,
@@ -65,6 +69,7 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
 
         setSmartAccount(_smartAccount)
         setSmartAccountAddress(_address)
+        setSigner(_signer)
         log('📜 | Smart account created', _address)
       } catch (err) {
         console.error(err)
@@ -139,12 +144,13 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
 
   const value = React.useMemo(
     () => ({
+      signer,
       sendUserOp,
       smartAccount,
       smartAccountAddress,
       connectedUser: connectedUserQuery,
     }),
-    [connectedUserQuery, sendUserOp, smartAccount, smartAccountAddress]
+    [connectedUserQuery, sendUserOp, smartAccount, smartAccountAddress, signer]
   )
 
   return <SmartAccountContext.Provider value={value} {...props} />
