@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 import { ReactQueryProvider, Toast } from '@/app/components'
 import { ParticleProvider } from '@/features/particle'
+import { SmartAccountProvider } from '@/features/smart-account'
 
 import './globals.css'
 
@@ -21,9 +22,9 @@ export default function RootLayout({
       <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
         <ReactQueryProvider>
           <ParticleProvider>
-            <AuthProvider>
-              <SmartAccountProvider>{children}</SmartAccountProvider>
-            </AuthProvider>
+              <SmartAccountProvider>
+              {children}
+              </SmartAccountProvider>
           </ParticleProvider>
           <Toast />
         </ReactQueryProvider>

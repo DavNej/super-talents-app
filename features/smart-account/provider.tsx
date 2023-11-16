@@ -3,6 +3,8 @@
 import React from 'react'
 import { toast } from 'react-toastify'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { useAccount } from '@particle-network/connect-react-ui'
+import { ethers } from 'ethers'
 import { BiconomySmartAccount } from '@biconomy/account'
 import type { Transaction, UserOperation } from '@biconomy/core-types'
 import type {
@@ -10,7 +12,6 @@ import type {
   SponsorUserOperationDto,
 } from '@biconomy/paymaster'
 
-import { useAuth } from '@/features/auth'
 import { getTalentLayerUser } from '@/features/talent-layer'
 import { type TalentLayerUserType } from '@/features/talent-layer/types'
 import { log } from '@/utils'
@@ -37,14 +38,20 @@ const initialContext: IContext = {
   connectedUser: undefined,
 }
 
+const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
+
 export default function SmartAccountProvider(props: React.PropsWithChildren) {
-  const { signer } = useAuth()
+  const account = useAccount()
+
   const [smartAccountAddress, setSmartAccountAddress] = React.useState<string>()
   const [smartAccount, setSmartAccount] = React.useState<BiconomySmartAccount>()
 
   const init = React.useCallback(async () => {
-    if (signer) {
+    if (account) {
+      log('⚛️ | connected EOA', account)
       log('📜 | Smart account init')
+      const ethersProvider = new ethers.providers.JsonRpcProvider(RPC_TARGET)
+      const signer = ethersProvider.getSigner(account)
       try {
         const biconomySmartAccount = new BiconomySmartAccount({
           signer,
@@ -64,7 +71,7 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
         toast.error('Could not initialize smart account')
       }
     }
-  }, [signer])
+  }, [account])
 
   React.useEffect(() => {
     init()

@@ -1,10 +1,10 @@
 'use client'
+
 import React from 'react'
 import { redirect } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/app/components'
-import { useAuth } from '@/features/auth'
 import { useSmartAccount } from '@/features/smart-account'
 
 export default function ProgressBarLayout({
@@ -12,12 +12,7 @@ export default function ProgressBarLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { status } = useAuth()
   const { connectedUser } = useSmartAccount()
-
-  if (status === 'ready') {
-    return redirect('/login')
-  }
 
   if (connectedUser?.data?.handle) {
     return redirect(`/${connectedUser.data.handle}`)
@@ -49,8 +44,6 @@ export default function ProgressBarLayout({
     </>
   )
 }
-
-
 
 function NavStep({
   activeOnPages,
