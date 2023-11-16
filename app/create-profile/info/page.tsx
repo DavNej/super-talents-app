@@ -29,7 +29,7 @@ const initialValues: FormProfileType = {
   skills: [],
   github: '',
   otherLink: '',
-  portfolio: '',
+  linkedin: '',
   twitter: '',
   role: '',
 }
@@ -69,7 +69,7 @@ export default function ProfileInfoPage() {
         skills: values.skills,
         github: values.github || undefined,
         otherLink: values.otherLink || undefined,
-        portfolio: values.portfolio || undefined,
+        linkedin: values.linkedin || undefined,
         twitter: values.twitter || undefined,
         role: values.role,
       })
@@ -171,7 +171,9 @@ export default function ProfileInfoPage() {
             </SimpleLabel>
             <input
               className={cn(inputClassNames)}
-              onChange={formik.handleChange}
+              onChange={e => {
+                formik.setFieldValue('handle', e.target.value.toLowerCase())
+              }}
               value={formik.values.handle}
               onBlur={formik.handleBlur}
               type='text'
@@ -215,15 +217,15 @@ export default function ProfileInfoPage() {
             </div>
           </fieldset>
           <fieldset id='links'>
-            <SimpleLabel name='portfolio'>Links (optional)</SimpleLabel>
+            <SimpleLabel name='linkedin'>Links (optional)</SimpleLabel>
             <input
               className={cn(inputClassNames)}
               type='text'
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              name='portfolio'
-              value={formik.values.portfolio}
-              placeholder='Add portfolio'
+              name='linkedin'
+              value={formik.values.linkedin}
+              placeholder='Add linkedin link'
             />
 
             {formik.errors.twitter && (
