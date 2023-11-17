@@ -10,8 +10,8 @@ import {
 
 import { log } from '@/utils'
 
-const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY || ''
-const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET || ''
+const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY as string
+const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
 
 export async function POST(request: Request) {
   console.log('🦋 | HOST', request.headers.get('host'))
