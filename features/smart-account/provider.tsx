@@ -5,7 +5,14 @@ import { toast } from 'react-toastify'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { useAccount } from '@particle-network/connect-react-ui'
 import { ethers } from 'ethers'
-import { BiconomySmartAccount } from '@biconomy/account'
+import {
+  BiconomySmartAccountV2,
+  DEFAULT_ENTRYPOINT_ADDRESS,
+} from '@biconomy/account'
+import {
+  ECDSAOwnershipValidationModule,
+  DEFAULT_ECDSA_OWNERSHIP_MODULE,
+} from '@biconomy/modules'
 import type { Transaction, UserOperation } from '@biconomy/core-types'
 import type {
   IHybridPaymaster,
@@ -22,7 +29,7 @@ const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
 
 interface IContext {
   signer: ethers.providers.JsonRpcSigner | undefined
-  smartAccount: BiconomySmartAccount | undefined
+  smartAccount: BiconomySmartAccountV2 | undefined
   smartAccountAddress: string | undefined
   sendUserOp:
     | (({
@@ -46,7 +53,8 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
   const account = useAccount()
 
   const [smartAccountAddress, setSmartAccountAddress] = React.useState<string>()
-  const [smartAccount, setSmartAccount] = React.useState<BiconomySmartAccount>()
+  const [smartAccount, setSmartAccount] =
+    React.useState<BiconomySmartAccountV2>()
   const [signer, setSigner] = React.useState<ethers.providers.JsonRpcSigner>()
 
   const init = React.useCallback(async () => {
@@ -57,17 +65,23 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
       const _signer = ethersProvider.getSigner(account)
 
       try {
-        const biconomySmartAccount = new BiconomySmartAccount({
+        const ownerShipModule = await ECDSAOwnershipValidationModule.create({
           signer: _signer,
+          moduleAddress: DEFAULT_ECDSA_OWNERSHIP_MODULE,
+        })
+
+        const biconomyAccount = await BiconomySmartAccountV2.create({
           chainId,
           bundler,
           paymaster,
+          entryPointAddress: DEFAULT_ENTRYPOINT_ADDRESS,
+          defaultValidationModule: ownerShipModule,
+          activeValidationModule: ownerShipModule,
         })
 
-        const _smartAccount = await biconomySmartAccount.init()
-        const _address = await _smartAccount.getSmartAccountAddress()
+        const _address = await biconomyAccount.getAccountAddress()
 
-        setSmartAccount(_smartAccount)
+        setSmartAccount(biconomyAccount)
         setSmartAccountAddress(_address)
         setSigner(_signer)
         log('📜 | Smart account created', _address)
