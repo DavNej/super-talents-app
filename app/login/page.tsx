@@ -15,7 +15,7 @@ export default function LoginPage() {
   const { connectedUser } = useSmartAccount()
 
   if (connectedUser?.data?.handle) {
-    return redirect(`/${connectedUser.data.handle}`)
+    redirect(`/${connectedUser.data.handle}`)
   }
 
   if (status === 'connected') {

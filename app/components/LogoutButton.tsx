@@ -10,11 +10,6 @@ import {
 
 export default function LogoutButton() {
   const { disconnect } = useParticleConnect()
-  const account = useAccount()
-
-  if (!account) {
-    redirect('/')
-  }
 
   return (
     <button className='px-5 py-2 bg-pink rounded-xl' onClick={disconnect}>

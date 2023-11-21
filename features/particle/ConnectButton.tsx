@@ -3,12 +3,16 @@
 import { ConnectButton } from '@particle-network/connect-react-ui'
 import '@particle-network/connect-react-ui/dist/index.css'
 
-import { Button } from '@/app/components'
+import { Button, PageLoader } from '@/app/components'
 
 export default function ParticleConnectButton() {
   return (
     <ConnectButton.Custom>
-      {({ account, openConnectModal }) => {
+      {({ account, openConnectModal, accountLoading }) => {
+        if (accountLoading) {
+          return <PageLoader />
+        }
+
         return (
           <Button
             className='mt-5 w-full'

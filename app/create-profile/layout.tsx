@@ -3,6 +3,10 @@
 import React from 'react'
 import { redirect } from 'next/navigation'
 import { usePathname } from 'next/navigation'
+import {
+  ConnectButton,
+  useAccountInfo,
+} from '@particle-network/connect-react-ui'
 
 import { LogoutButton } from '@/app/components'
 import { useSmartAccount } from '@/features/smart-account'
@@ -13,9 +17,18 @@ export default function ProgressBarLayout({
   children: React.ReactNode
 }) {
   const { connectedUser } = useSmartAccount()
+  const { account, accountLoading } = useAccountInfo()
+
+  if (accountLoading) {
+    return <ConnectButton />
+  }
+
+  if (!account) {
+    redirect('/')
+  }
 
   if (connectedUser?.data?.handle) {
-    return redirect(`/${connectedUser.data.handle}`)
+    redirect(`/${connectedUser.data.handle}`)
   }
 
   return (

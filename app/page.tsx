@@ -3,6 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
+import { useAccount } from '@particle-network/connect-react-ui'
 
 import { ConnectButton } from '@/features/particle'
 import { useSmartAccount } from '@/features/smart-account'
@@ -11,8 +12,13 @@ export default function HomePage() {
   const { connectedUser } = useSmartAccount()
 
   const account = useAccount()
-  if (account)
-    return redirect('/create-profile/avatar')
+
+  if (connectedUser?.data?.handle) {
+    redirect(`/${connectedUser.data.handle}`)
+  }
+
+  if (account && connectedUser?.data === null)
+    redirect('/create-profile/avatar')
 
   return (
     <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
