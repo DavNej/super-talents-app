@@ -21,12 +21,14 @@ export default function Button({
     <button
       type={type}
       className={clsx(
-        'py-5',
+        'py-3',
+        'md:py-5',
         'px-8',
         'rounded-full',
         'uppercase',
         'font-medium',
-        'text-xl',
+        'text-base',
+        'md:text-xl',
         'bg-white',
         'border-2',
         'border-white',
