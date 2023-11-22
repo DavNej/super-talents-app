@@ -27,14 +27,14 @@ export default function AvatarPage() {
   )
 
   return (
-    <main className='flex-1 px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
-      <div className='grid grid-cols-2 gap-x-24'>
+    <main className='flex-1 px-6 pb-6 md:px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
+      <div className='md:grid md:grid-cols-2 md:gap-x-24'>
         <div className='col-span-2'>
           <BackLink />
         </div>
         <div>
-          <h3 className='font-semibold text-5xl whitespace-nowrap'>
-            Create Your Avatar
+          <h3 className='font-semibold text-4xl md:text-5xl my-7 md:my-7 whitespace-nowrap'>
+            Create <span className='hidden md:inline'>Your</span> Avatar
           </h3>
 
           <UploadFile onSuccess={setUploadedPicture} />
@@ -46,7 +46,7 @@ export default function AvatarPage() {
 
           {!!selectedAvatar ? (
             <Link
-              className='mt-5 py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-xl bg-white text-pink'
+              className='mt-5 py-3 md:py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-base md:text-xl bg-white text-pink'
               href='/create-profile/info'>
               Next
             </Link>
@@ -65,7 +65,7 @@ export default function AvatarPage() {
 
         {isLoading ? (
           <div className='flex flex-col self-stretch justify-center items-center'>
-            <h3 className='font-semibold text-center text-4xl whitespace-nowrap'>
+            <h3 className='mt-4 mb-2 md:my-0 font-semibold text-center text-2xl md:text-4xl whitespace-nowrap'>
               Generating your avatar...
             </h3>
             <div className='mt-4 w-full flex justify-center items-center h-full rounded-[28px] backdrop-blur-xl'>

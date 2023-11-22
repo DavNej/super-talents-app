@@ -27,7 +27,7 @@ export default function Dialog({
 
   return (
     <div
-      className='fixed inset-0 bg-black/[.6] flex justify-center p-24'
+      className='fixed inset-0 bg-black/[.6] flex justify-center items-center p-5 md:p-24'
       onClick={() => {
         onClose()
       }}>
@@ -39,16 +39,20 @@ export default function Dialog({
         onClick={e => {
           e.stopPropagation()
         }}>
-        <Image
-          className='absolute top-6 right-6 cursor-pointer z-50'
-          src='/cross.svg'
-          alt='Close'
-          width={44}
-          height={44}
-          onClick={() => {
-            onClose()
-          }}
-        />
+        <div className='w-8 h-8 md:w-11 md:h-11 absolute top-2 md:top-6 right-2 md:right-6 cursor-pointer z-50'>
+          <Image
+            className='w-full h-auto'
+            src='/cross.svg'
+            alt='Close'
+            width={44}
+            height={44}
+            onClick={() => {
+              onClose()
+            }}
+            layout='responsive'
+          />
+        </div>
+
         <div className='inset-0'>{children}</div>
       </div>
     </div>
