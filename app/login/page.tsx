@@ -27,7 +27,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
+    <main className='px-24 flex flex-1 gap-x-4 place-items-center bg-sign-up bg-right bg-no-repeat bg-cover'>
       <div className='flex-col flex-1'>
         <Image
           className='relative'

@@ -21,7 +21,7 @@ export default function HomePage() {
     redirect('/create-profile/avatar')
 
   return (
-    <main className='flex-1 flex flex-col md:flex-row gap-x-4 px-5 md:px-24 py-5 md:py-0 place-items-center bg-sign-up bg-right bg-no-repeat bg-contain'>
+    <main className='flex-1 flex flex-col md:flex-row gap-x-4 px-5 md:px-24 py-5 md:py-0 place-items-center bg-sign-up bg-right bg-no-repeat bg-cover'>
       <div className='flex-col flex-1 flex md:block justify-around'>
         <div className='relative w-16 h-6 md:w-32 md:h-12'>
           <Image

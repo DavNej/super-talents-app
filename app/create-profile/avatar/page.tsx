@@ -27,7 +27,7 @@ export default function AvatarPage() {
   )
 
   return (
-    <main className='flex-1 px-6 pb-6 md:px-24 bg-avatar bg-right bg-no-repeat bg-contain'>
+    <main className='flex-1 px-6 pb-6 md:px-24 bg-avatar bg-right bg-no-repeat bg-cover'>
       <div className='md:grid md:grid-cols-2 md:gap-x-24'>
         <div className='col-span-2'>
           <BackLink />

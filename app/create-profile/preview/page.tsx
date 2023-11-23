@@ -46,7 +46,7 @@ export default function ProfilePreviewPage() {
   const allowMint = handle && profileToUpload && !talentLayerId
 
   return (
-    <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
+    <main className='px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-cover'>
       <div className='flex flex-col flex-1'>
         <BackLink />
         <div className='mb-12 flex justify-between items-center'>
