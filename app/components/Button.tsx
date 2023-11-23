@@ -1,6 +1,6 @@
 'use client'
 
-import clsx from 'clsx'
+import { cn } from '@/utils'
 
 export default function Button({
   children,
@@ -20,7 +20,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={clsx(
+      className={cn(
         'py-3',
         'md:py-5',
         'px-8',

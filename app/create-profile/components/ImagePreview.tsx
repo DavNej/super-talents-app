@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
-import clsx from 'clsx'
+import { cn } from '@/utils'
 import { v4 as uuid } from 'uuid'
 import { useLocalStorage } from 'usehooks-ts'
 
@@ -61,7 +61,7 @@ export default function ImagePreview() {
                 </div>
 
                 <Image
-                  className={clsx(
+                  className={cn(
                     'rounded-xl',
                     'md:rounded-[28px]',
                     'border-white',

@@ -1,6 +1,6 @@
 'use client'
 
-import clsx from 'clsx'
+import { cn } from '@/utils'
 import React from 'react'
 import { v4 as uuid } from 'uuid'
 
@@ -22,7 +22,7 @@ export default function ChooseAboutDialog({
   return (
     <Dialog open={open} onClose={onClose}>
       <div
-        className={clsx(
+        className={cn(
           'p-10',
           'rounded-[32px]',
           'font-light',
@@ -35,7 +35,7 @@ export default function ChooseAboutDialog({
         </h3>
 
         <div
-          className={clsx(
+          className={cn(
             'my-8',
             'flex',
             'flex-col',
@@ -47,7 +47,7 @@ export default function ChooseAboutDialog({
           {options?.map(option => (
             <div
               key={option}
-              className={clsx(
+              className={cn(
                 'px-4',
                 'py-5',
                 'rounded-[26px]',
