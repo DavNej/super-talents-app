@@ -1,16 +1,47 @@
 import React from 'react'
-import Image from 'next/image'
 
 export default function HexagonImage({ src }: { src: string }) {
-  const clipPath =
-    'path("M74.0171 4.16112L12.0171 39.8888C4.58185 44.1734 0 52.1018 0 60.6833V132.06C0 140.641 4.58186 148.569 12.0171 152.854L74.0171 188.582C81.434 192.856 90.566 192.856 97.9829 188.582L159.983 152.854C167.418 148.569 172 140.641 172 132.06V60.6833C172 52.1018 167.418 44.1734 159.983 39.8888L97.9829 4.16112C90.566 -0.112901 81.434 -0.112899 74.0171 4.16112Z")'
   return (
-    <Image
-      src={src}
-      style={{ clipPath, border: '2px solid red' }}
-      alt='Profile picture'
-      width={192}
-      height={192}
-    />
+    <div className='w-[172px] h-[190px]'>
+      <svg
+        width='172'
+        height='190'
+        viewBox='0 0 172 190'
+        fill='none'
+        xmlns='http://www.w3.org/2000/svg'>
+        <path
+          d='M14.5352 38.8353L72.3121 5.54121C80.5664 0.784642 90.7294 0.784633 98.9837 5.5412L156.761 38.8353C165.035 43.6037 170.135 52.4273 170.135 61.9776V128.474C170.135 138.024 165.035 146.848 156.761 151.616L98.9837 184.91C90.7294 189.667 80.5664 189.667 72.3121 184.91L14.5352 151.616C6.26046 146.848 1.16129 138.024 1.16129 128.474V61.9776C1.16129 52.4273 6.26044 43.6037 14.5352 38.8353Z'
+          stroke='url(#colorGradient)'
+          stroke-width='3'
+          fill='url(#pattern0)'
+        />
+
+        <defs>
+          <pattern
+            id='pattern0'
+            patternContentUnits='objectBoundingBox'
+            width='1'
+            height='1'>
+            <use
+              href='#image'
+              transform='matrix(0.00112549 0 0 0.000976562 -0.0762527 0)'
+            />
+          </pattern>
+
+          <linearGradient
+            id='colorGradient'
+            x1='36.0229'
+            y1='16.7067'
+            x2='79.5215'
+            y2='165.459'
+            gradientUnits='userSpaceOnUse'>
+            <stop stop-color='#34F5ED' />
+            <stop offset='1' stop-color='#DF00B1' />
+          </linearGradient>
+
+          <image id='image' width='1024' height='1024' href={src} />
+        </defs>
+      </svg>
+    </div>
   )
 }
