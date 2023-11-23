@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { useAccount } from '@particle-network/connect-react-ui'
 
-import { ConnectButton } from '@/features/particle'
+import { ConnectButton } from '@/features/auth'
 import { useSmartAccount } from '@/features/smart-account'
 
 export default function HomePage() {

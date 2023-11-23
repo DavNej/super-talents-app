@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { ReactQueryProvider, Toast } from '@/app/components'
-import { ParticleProvider } from '@/features/particle'
+import { ParticleProvider } from '@/features/auth'
 import { SmartAccountProvider } from '@/features/smart-account'
 
 import './globals.css'

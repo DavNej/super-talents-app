@@ -1,141 +1,50 @@
 'use client'
-import React from 'react'
-import { ethers } from 'ethers'
-import { toast } from 'react-toastify'
-import { useMutation, UseMutationResult } from '@tanstack/react-query'
-import { type ADAPTER_STATUS_TYPE, WALLET_ADAPTERS } from '@web3auth/base'
 
-import { log } from '@/utils'
+import { ModalProvider } from '@particle-network/connect-react-ui'
+import { PolygonMumbai } from '@particle-network/chains'
+import { evmWallets } from '@particle-network/connect'
 
-import { web3auth, type Web3AuthLoginParams } from './config'
+const PARTICLE_PROJECT_ID = process.env
+  .NEXT_PUBLIC_PARTICLE_NETWORK_PROJECT_ID as string
+const PARTICLE_CLIENT_KEY = process.env
+  .NEXT_PUBLIC_PARTICLE_NETWORK_CLIENT_KEY as string
+const PARTICLE_APP_ID = process.env
+  .NEXT_PUBLIC_PARTICLE_NETWORK_APP_ID as string
+const WALLET_CONNECT_PROJECT_ID = process.env
+  .NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string
 
-interface IContext {
-  status: ADAPTER_STATUS_TYPE
-  isConnected: boolean
-  signer: ethers.providers.JsonRpcSigner | null | undefined
-  signerAddress: string | null | undefined
-  login:
-    | UseMutationResult<
-        ADAPTER_STATUS_TYPE | null,
-        unknown,
-        Web3AuthLoginParams,
-        unknown
-      >
-    | undefined
-  logout:
-    | UseMutationResult<ADAPTER_STATUS_TYPE | null, unknown, void, unknown>
-    | undefined
-}
-
-const initialContext: IContext = {
-  status: 'not_ready',
-  isConnected: false,
-  signer: undefined,
-  signerAddress: undefined,
-  login: undefined,
-  logout: undefined,
-}
-
-export default function AuthProvider(props: React.PropsWithChildren) {
-  const [signerAddress, setSignerAddress] = React.useState<string | null>(null)
-  const [signer, setSigner] =
-    React.useState<ethers.providers.JsonRpcSigner | null>(null)
-
-  const [status, setStatus] = React.useState(web3auth.status)
-  const isConnected = web3auth.connected
-
-  const init = React.useCallback(async () => {
-    if (web3auth.status === 'not_ready') {
-      log('🔑 | Init auth')
-      await web3auth.init()
-      setStatus(web3auth.status)
-    }
-  }, [])
-
-  const login = React.useCallback(
-    async ({ loginProvider, email }: Web3AuthLoginParams) => {
-      if (web3auth.connected) return null
-      log('🔑 | Login')
-      const loginParams =
-        loginProvider === 'email_passwordless'
-          ? { loginProvider, extraLoginOptions: { login_hint: email } }
-          : { loginProvider }
-
-      await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, loginParams)
-      setStatus(web3auth.status)
-      return web3auth.status
-    },
-    []
+export default function ParticleProvider({
+  children,
+}: React.PropsWithChildren) {
+  return (
+    <ModalProvider
+      options={{
+        projectId: PARTICLE_PROJECT_ID,
+        clientKey: PARTICLE_CLIENT_KEY,
+        appId: PARTICLE_APP_ID,
+        chains: [PolygonMumbai],
+        wallets: evmWallets({
+          projectId: WALLET_CONNECT_PROJECT_ID,
+          showQrModal: false,
+        }),
+      }}
+      theme='dark'
+      language='en'
+      walletSort={['Particle Auth', 'Wallet']}
+      particleAuthSort={[
+        'email',
+        'phone',
+        'google',
+        'linkedin',
+        'github',
+        'twitter',
+        'discord',
+        'twitch',
+        'facebook',
+        'apple',
+        'microsoft',
+      ]}>
+      {children}
+    </ModalProvider>
   )
-
-  const logout = React.useCallback(async () => {
-    if (!web3auth.connected) return null
-    log('🔑 | Logout')
-    await web3auth.logout()
-    setStatus(web3auth.status)
-    return web3auth.status
-  }, [])
-
-  const getSigner = React.useCallback(async () => {
-    if (web3auth.provider) {
-      log('🔑 | Get signer')
-      const _provider = new ethers.providers.Web3Provider(web3auth.provider)
-      const _signer = _provider.getSigner()
-      const _address = await _signer.getAddress()
-
-      setSigner(_signer)
-      setSignerAddress(_address)
-    }
-  }, [])
-
-  React.useEffect(() => {
-    init()
-
-    if (isConnected) {
-      getSigner()
-    }
-  }, [getSigner, init, isConnected])
-
-  const loginMutation = useMutation<
-    ADAPTER_STATUS_TYPE | null,
-    unknown,
-    Web3AuthLoginParams
-  >({
-    mutationFn: login,
-    onError(err) {
-      console.error(err)
-      toast.error('Login failed')
-    },
-    onSuccess: getSigner,
-  })
-
-  const logoutMutation = useMutation<ADAPTER_STATUS_TYPE | null, unknown, void>(
-    {
-      mutationFn: logout,
-      onError(err) {
-        console.error(err)
-        toast.error('Logout failed')
-      },
-      onSuccess() {
-        setSigner(null)
-        setSignerAddress(null)
-      },
-    }
-  )
-
-  const value = React.useMemo(
-    () => ({
-      status,
-      isConnected,
-      signer,
-      signerAddress: signerAddress,
-      login: loginMutation,
-      logout: logoutMutation,
-    }),
-    [status, isConnected, signer, signerAddress, loginMutation, logoutMutation]
-  )
-
-  return <AuthContext.Provider value={value} {...props} />
 }
-
-export const AuthContext = React.createContext<IContext>(initialContext)
