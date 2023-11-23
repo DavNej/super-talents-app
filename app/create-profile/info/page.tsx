@@ -159,7 +159,9 @@ export default function ProfileInfoPage() {
         <h3 className='font-semibold text-4xl md:text-5xl my-3 md:my-7 md:mb-12 whitespace-nowrap'>
           Add Profile Info
         </h3>
-        <form onSubmit={formik.handleSubmit} className='md:grid md:grid-cols-2 md:gap-8'>
+        <form
+          onSubmit={formik.handleSubmit}
+          className='md:grid md:grid-cols-2 md:gap-8'>
           <fieldset id='handle' className='mt-5 md:mt-0'>
             <SimpleLabel name='handle'>
               <div className='flex justify-between'>

@@ -23,14 +23,17 @@ export default function ChooseAboutDialog({
     <Dialog open={open} onClose={onClose}>
       <div
         className={cn(
-          'p-10',
-          'rounded-[32px]',
+          'py-7',
+          'px-3',
+          'md:p-10',
+          'rounded-[20px]',
+          'md:rounded-[32px]',
           'font-light',
           'bg-white',
           'backdrop-blur-xl',
           'bg-opacity-20'
         )}>
-        <h3 className='font-semibold text-5xl text-center whitespace-nowrap'>
+        <h3 className='font-semibold text-4xl md:text-5xl mb-7 md:mb-0 md:whitespace-nowrap text-center'>
           Choose your about
         </h3>
 
@@ -40,7 +43,8 @@ export default function ChooseAboutDialog({
             'flex',
             'flex-col',
             'flex-1',
-            'gap-4',
+            'gap-2',
+            'md:gap-4',
             'overflow-y-scroll',
             'max-h-80'
           )}>
@@ -48,8 +52,10 @@ export default function ChooseAboutDialog({
             <div
               key={option}
               className={cn(
-                'px-4',
-                'py-5',
+                'px-2',
+                'md:px-4',
+                'py-3',
+                'md:py-5',
                 'rounded-[26px]',
                 'max-w-3xl',
                 'cursor-pointer',
