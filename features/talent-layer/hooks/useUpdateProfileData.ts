@@ -48,11 +48,16 @@ export default function useUpdateProfileData(
 
       const tx = await buildUpdateProfileDataTx({ contract, profileId, cid })
       const txHash = await sendUserOp({ transactions: [tx] })
+
+      if (!txHash) {
+        throw new Error('No transaction hash. Tx did not go through.')
+      }
+
       log('📓 | TL profile data updated')
       return txHash
     },
     onError(err) {
-      console.error(err)
+      console.error('💥', err)
       toast.error('Could not update profile data')
     },
     ...options,

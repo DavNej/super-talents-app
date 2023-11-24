@@ -34,7 +34,7 @@ export default function MintButton({
         <Link
           href={`https://mumbai.polygonscan.com/tx/${txHash}`}
           target='_blank'>
-          Profil successfully minted 🎉
+          Profile data successfully added 🎉
           <br />
           See transaction in explorer
         </Link>,
@@ -55,13 +55,23 @@ export default function MintButton({
       }
       uploadToIPFS.mutate({ name: handle, content: profileToUpload })
     },
-    onSuccess({ profileId }) {
+    onSuccess({ profileId, txHash }) {
+      toast.success(
+        <Link
+          href={`https://mumbai.polygonscan.com/tx/${txHash}`}
+          target='_blank'>
+          Profile {profileId.toString()} successfully minted 🎉
+          <br />
+          See transaction in explorer
+        </Link>,
+        { autoClose: false, closeOnClick: false }
+      )
       updateProfileData.mutate({ profileId, cid: pinataCid })
     },
   })
 
   if (updateProfileData.isSuccess) {
-    return redirect(`/${handle}`)
+    redirect(`/${handle}`)
   }
 
   function handleClick() {
