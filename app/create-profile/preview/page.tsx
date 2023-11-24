@@ -34,8 +34,12 @@ export default function ProfilePreviewPage() {
     toast.error('Handle already exists')
   }
 
-  if (!selectedAvatar) return redirect('/create-profile/avatar')
-  if (!newProfile) return redirect('/create-profile/info')
+  if (!selectedAvatar) {
+    redirect('/create-profile/avatar')
+  }
+  if (!newProfile) {
+    redirect('/create-profile/info')
+  }
 
   const profileToUpload = validateIPFSProfile({
     ...newProfile,

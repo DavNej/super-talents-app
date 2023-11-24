@@ -1,13 +1,13 @@
 'use client'
 import React from 'react'
+import { useAccount } from '@particle-network/connect-react-ui'
 
 import { LogoutButton } from '@/app/components'
-import { useAuth } from '@/features/auth'
 
 export default function Logout() {
-  const { signer } = useAuth()
+  const account = useAccount()
 
-  if (!signer) return null
+  if (!account) return null
 
   return (
     <div className='flex justify-center mt-8'>
