@@ -40,10 +40,10 @@ export default function MintButton({
         </Link>,
         { autoClose: false, closeOnClick: false }
       )
-      setPinataCid('')
-      setAvatars([])
-      setSelectedAvatar(null)
-      setNewProfile(null)
+      // setPinataCid('')
+      // setAvatars([])
+      // setSelectedAvatar(null)
+      // setNewProfile(null)
     },
   })
 

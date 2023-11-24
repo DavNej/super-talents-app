@@ -13,6 +13,7 @@ const BICONOMY_BUNDLER_URL =
 
 const BICONOMY_PAYMASTER_URL =
   'https://paymaster.biconomy.io/api/v1/80001/DqNBUdjR_.ad347838-4e86-4fe4-a47d-415dabee1d3b'
+// process.env.BICONOMY_PAYMASTER_URL as string
 
 export const chainId = ChainId.POLYGON_MUMBAI
 
