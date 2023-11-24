@@ -9,7 +9,7 @@ export const BaseProfile = z.object({
   role: partials.RoleEnum,
   github: partials.Github,
   twitter: partials.Twitter,
-  portfolio: partials.Link,
+  linkedin: partials.Link,
   otherLink: partials.Link,
 })
 
@@ -31,7 +31,7 @@ export const FormProfile = z.object({
   role: partials.RoleEnum.or(EmptyString),
   github: partials.Github.or(EmptyString),
   twitter: partials.Twitter.or(EmptyString),
-  portfolio: partials.Link.or(EmptyString),
+  linkedin: partials.Link.or(EmptyString),
   otherLink: partials.Link.or(EmptyString),
 })
 

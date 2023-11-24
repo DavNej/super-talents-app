@@ -7,7 +7,7 @@ export const Handle = z
     required_error: 'Handle is required',
     invalid_type_error: 'Handle must be a string',
   })
-  .regex(/^[a-z]+[a-z\-\_]+$/, {
+  .regex(/^[a-z]+[a-z\-\_]*$/, {
     message:
       'Handle must contain only letters, - or _ and should start with a letter',
   })
