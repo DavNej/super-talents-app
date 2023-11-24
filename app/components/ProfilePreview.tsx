@@ -25,7 +25,6 @@ export default function ProfilePreview({
             alt='SuperTalents Logo'
             width={72}
             height={27}
-            layout='responsive'
             className='w-full h-auto'
           />
         </div>
@@ -38,7 +37,6 @@ export default function ProfilePreview({
                 alt='edit'
                 width={24}
                 height={24}
-                layout='responsive'
                 className='w-full h-auto'
               />
             </div>

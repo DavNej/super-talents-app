@@ -46,7 +46,6 @@ export default function Dialog({
             onClick={() => {
               onClose()
             }}
-            layout='responsive'
           />
         </div>
 

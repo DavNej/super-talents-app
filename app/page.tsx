@@ -29,7 +29,6 @@ export default function HomePage() {
             alt='SuperTalents Logo'
             width={128}
             height={48}
-            layout='responsive'
             className='w-full h-auto'
           />
         </div>

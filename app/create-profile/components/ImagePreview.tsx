@@ -26,7 +26,6 @@ export default function ImagePreview() {
             alt='Avatar'
             width={520}
             height={600}
-            layout='responsive'
             className='w-full h-auto '
           />
         </div>
@@ -55,7 +54,6 @@ export default function ImagePreview() {
                     }}
                     width={44}
                     height={44}
-                    layout='responsive'
                     className='w-full h-auto '
                   />
                 </div>
