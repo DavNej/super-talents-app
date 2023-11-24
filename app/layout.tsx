@@ -19,10 +19,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
+      <body>
         <ReactQueryProvider>
           <AuthProvider>
-            <SmartAccountProvider>{children}</SmartAccountProvider>
+              <SmartAccountProvider>
+                <div className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
+                  {children}
+                </div>
+              </SmartAccountProvider>
           </AuthProvider>
           <Toast />
         </ReactQueryProvider>
