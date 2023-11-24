@@ -19,7 +19,7 @@ export default async function ProfileHandlePage({
   const profile = await getProfileData(user?.cid)
 
   return (
-    <main className='p-24'>
+    <main className='p-4 md:p-24'>
       {profile ? (
         <ProfilePreview handle={handle} profileData={profile} />
       ) : (
