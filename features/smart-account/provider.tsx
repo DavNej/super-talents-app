@@ -3,7 +3,7 @@
 import React from 'react'
 import { toast } from 'react-toastify'
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
-import { useAccount } from '@particle-network/connect-react-ui'
+import { useAccountInfo } from '@particle-network/connect-react-ui'
 import { ethers } from 'ethers'
 import {
   BiconomySmartAccountV2,
@@ -14,18 +14,12 @@ import {
   DEFAULT_ECDSA_OWNERSHIP_MODULE,
 } from '@biconomy/modules'
 import type { Transaction, UserOperation } from '@biconomy/core-types'
-import type {
-  IHybridPaymaster,
-  SponsorUserOperationDto,
-} from '@biconomy/paymaster'
 
 import { getTalentLayerUser } from '@/features/talent-layer'
 import { type TalentLayerUserType } from '@/features/talent-layer/types'
 import { log } from '@/utils'
 
 import { chainId, bundler, paymaster, paymasterServiceData } from './config'
-
-const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
 
 interface IContext {
   signer: ethers.providers.JsonRpcSigner | undefined
@@ -50,18 +44,20 @@ const initialContext: IContext = {
 }
 
 export default function SmartAccountProvider(props: React.PropsWithChildren) {
-  const account = useAccount()
+  const { account, particleProvider } = useAccountInfo()
 
   const [smartAccountAddress, setSmartAccountAddress] = React.useState<string>()
   const [smartAccount, setSmartAccount] =
     React.useState<BiconomySmartAccountV2>()
   const [signer, setSigner] = React.useState<ethers.providers.JsonRpcSigner>()
 
-  const init = React.useCallback(async () => {
-    if (account) {
+  React.useEffect(() => {
+    async function init() {
       log('⚛️ | connected EOA', account)
       log('📜 | Smart account init')
-      const ethersProvider = new ethers.providers.JsonRpcProvider(RPC_TARGET)
+      const ethersProvider = new ethers.providers.Web3Provider(
+        particleProvider as any
+      )
       const _signer = ethersProvider.getSigner(account)
 
       try {
@@ -90,50 +86,38 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
         toast.error('Could not initialize smart account')
       }
     }
-  }, [account])
 
-  React.useEffect(() => {
-    init()
-  }, [init])
+    if (account) {
+      init()
+    }
+  }, [account, particleProvider])
 
   const sendUserOp = React.useCallback(
     async ({ transactions }: { transactions: Transaction[] }) => {
       if (!smartAccount) return null
-      log('🎟️ | Send user op')
 
       let userOp: Partial<UserOperation>
 
+      log('🎟️ | Transactions', transactions)
       // Build user operations
       try {
-        userOp = await smartAccount.buildUserOp(transactions)
+        log('🎟️ | Build userOp')
+        userOp = await smartAccount.buildUserOp(transactions, {
+          paymasterServiceData,
+        })
       } catch (err) {
         console.error('💥', err)
         toast.error('Could not build user operation')
         return null
       }
 
-      // Setup paymaster
-      try {
-        const biconomyPaymaster =
-          smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>
-        const paymasterAndDataResponse =
-          await biconomyPaymaster.getPaymasterAndData(
-            userOp,
-            paymasterServiceData
-          )
-
-        userOp.paymasterAndData = paymasterAndDataResponse.paymasterAndData
-      } catch (err) {
-        console.error('💥', err)
-        toast.error('Paymaster setup error')
-        return null
-      }
-
       // Send user operations
       try {
+        log('🎟️ | Send userOp')
         const userOpResponse = await smartAccount.sendUserOp(userOp)
+        log('🎟️ | Waiting for receipt')
         const { receipt } = await userOpResponse.wait(1)
-        console.log('🤝 | Transaction hash', receipt.transactionHash)
+        log('🤝 | Transaction hash', receipt.transactionHash)
         return receipt.transactionHash
       } catch (err) {
         console.error('💥', err)

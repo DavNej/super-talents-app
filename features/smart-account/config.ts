@@ -8,6 +8,11 @@ import {
   PaymasterMode,
 } from '@biconomy/paymaster'
 
+const BICONOMY_BUNDLER_URL =
+  'https://bundler.biconomy.io/api/v2/80001/nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44'
+
+const BICONOMY_PAYMASTER_URL = process.env.BICONOMY_PAYMASTER_URL as string
+
 export const chainId = ChainId.POLYGON_MUMBAI
 
 export const bundler: IBundler = new Bundler({
