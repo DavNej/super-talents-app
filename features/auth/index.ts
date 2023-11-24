@@ -1,3 +1,2 @@
-export { default as useAuth } from './hooks'
-export { default as AuthProvider } from './provider'
-export { type LoginProvider } from './config'
+export { default as ParticleProvider } from './provider'
+export { default as ConnectButton } from './ConnectButton'
