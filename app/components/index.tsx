@@ -10,11 +10,14 @@ export { default as Toast } from './Toast'
 export { default as ProfilePreview } from './ProfilePreview'
 
 export const inputClassNames = [
-  'py-4',
-  'px-8',
+  'py-[10px]',
+  'px-[20px]',
+  'md:py-4',
+  'md:px-8',
   'mt-2',
   'w-full',
-  'rounded-[32px]',
+  'rounded-[20px]',
+  'md:rounded-[32px]',
   'font-light',
   'bg-white',
   'backdrop-blur-xl',

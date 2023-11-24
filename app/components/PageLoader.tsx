@@ -2,8 +2,8 @@ import { Loader } from '@/app/components'
 
 export default function PageLoader() {
   return (
-    <main className='flex-1 flex items-center justify-center'>
+    <div className='fixed inset-0 flex items-center justify-center bg-black z-50'>
       <Loader size={500} />
-    </main>
+    </div>
   )
 }

@@ -5,6 +5,8 @@ import { v4 as uuid } from 'uuid'
 
 import { roleCaptions, type ProfileWithPictureType } from '@/features/profile'
 
+import HexagonImage from './HexagonImage'
+
 export default function ProfilePreview({
   handle,
   profileData,
@@ -15,33 +17,42 @@ export default function ProfilePreview({
   isSigner?: boolean
 }) {
   return (
-    <div className='rounded-[40px] border-pink border-4 overflow-hidden'>
-      <div className='px-12 py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
-        <Image src='/mask.png' alt='logo' width={72} height={27} />
+    <div className='mb-6 md:mb-8 rounded-[20px] md:rounded-[40px] border-pink border-[3px] md:border-4 overflow-hidden'>
+      <div className='p-3 md:px-12 md:py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
+        <div className='w-[39px] h-[14px] md:w-[72px] md:h-[27px]'>
+          <Image
+            src='/mask.png'
+            alt='SuperTalents Logo'
+            width={72}
+            height={27}
+            className='w-full h-auto'
+          />
+        </div>
+
         {isSigner && (
           <Link href='/create-profile/info'>
-            <Image src='/edit.svg' alt='edit' width={24} height={24} />
+            <div className='w-5 h-5 md:w-6 md:h-6'>
+              <Image
+                src='/edit.svg'
+                alt='edit'
+                width={24}
+                height={24}
+                className='w-full h-auto'
+              />
+            </div>
           </Link>
         )}
       </div>
 
-      <div className='px-14 py-11 flex gap-14'>
-        <div className='w-4/6 flex flex-col gap-8'>
-          <div className='flex gap-8 items-start'>
-            <Image
-              src={profileData.picture}
-              style={{
-                clipPath:
-                  'path("M74.0171 4.16112L12.0171 39.8888C4.58185 44.1734 0 52.1018 0 60.6833V132.06C0 140.641 4.58186 148.569 12.0171 152.854L74.0171 188.582C81.434 192.856 90.566 192.856 97.9829 188.582L159.983 152.854C167.418 148.569 172 140.641 172 132.06V60.6833C172 52.1018 167.418 44.1734 159.983 39.8888L97.9829 4.16112C90.566 -0.112901 81.434 -0.112899 74.0171 4.16112Z")',
-              }}
-              alt='logo'
-              width={192}
-              height={192}
-            />
+      <div className='px-3 py-7 md:px-14 md:py-11 flex flex-col md:flex-row gap-8 md:gap-14'>
+        <div className='md:w-4/6 flex flex-col gap-8'>
+          <div className='flex flex-col md:flex-row gap-8 items-start'>
+            <HexagonImage src={profileData.picture} />
+
             <div className='flex flex-col justify-between'>
               <p className='font-semibold text-2xl'>{profileData.name}</p>
               <p className='font-light'>@{handle}</p>
-              <p className='font-normal text-pink whitespace-nowrap'>
+              <p className='my-4 md:my-0 font-normal text-pink whitespace-nowrap'>
                 {profileData.role && roleCaptions[profileData.role]}
               </p>
               <div className='font-light'>
@@ -77,16 +88,7 @@ export default function ProfilePreview({
           </div>
         </div>
 
-        <div className='w-2/6 flex flex-col gap-8'>
-          <div id='projects'>
-            <h4 className='text-lg font-medium border-b-[1px] border-gray-700'>
-              Projects
-            </h4>
-            <div className='py-5 flex gap-2'>
-              <p className='px-4'>No projects to show</p>
-            </div>
-          </div>
-
+        <div className='md:w-2/6 flex flex-col gap-8'>
           <div id='links'>
             <h4 className='text-lg font-medium border-b-[1px] border-gray-700'>
               Links
@@ -132,6 +134,15 @@ export default function ProfilePreview({
                   />
                 </Link>
               )}
+            </div>
+          </div>
+
+          <div id='projects'>
+            <h4 className='text-lg font-medium border-b-[1px] border-gray-700'>
+              Projects
+            </h4>
+            <div className='py-5 flex gap-2'>
+              <p className='px-4'>No projects to show</p>
             </div>
           </div>
         </div>
