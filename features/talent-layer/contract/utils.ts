@@ -11,14 +11,14 @@ export async function buildMintProfileTx({
   contract: ethers.Contract
   handle: string
   handlePrice: ethers.BigNumber
-}) {
+}): Promise<Transaction> {
   const mintTx = await contract.populateTransaction.mint(platfromId, handle)
 
   return {
     to: talentLayerAddress,
     data: mintTx.data,
     value: handlePrice,
-  } as Transaction
+  }
 }
 
 export async function buildUpdateProfileDataTx({
@@ -29,12 +29,12 @@ export async function buildUpdateProfileDataTx({
   contract: ethers.Contract
   profileId: number
   cid: string
-}) {
+}): Promise<Transaction> {
   const updateProfileDataTx =
     await contract.populateTransaction.updateProfileData(profileId, cid)
 
   return {
     to: talentLayerAddress,
     data: updateProfileDataTx.data,
-  } as Transaction
+  }
 }

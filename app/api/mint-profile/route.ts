@@ -10,8 +10,8 @@ import {
 
 import { log } from '@/utils'
 
-const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY || ''
-const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET || ''
+const PK = process.env.SUPERTALENTS_FUNDER_PRIVATE_KEY as string
+const RPC_TARGET = process.env.NEXT_PUBLIC_RPC_TARGET as string
 
 export async function POST(request: Request) {
   console.log('🦋 | HOST', request.headers.get('host'))
@@ -39,6 +39,7 @@ export async function POST(request: Request) {
   )
 
   let handlePrice: ethers.BigNumber
+  let txHash: string
 
   try {
     log('📓 | Get handle price')
@@ -68,6 +69,7 @@ export async function POST(request: Request) {
 
     const mintTxReceipt = await mintTx.wait(1)
     log('📓 | TL profile minted')
+    txHash = mintTxReceipt.transactionHash
     console.log('🤝 | Transaction hash', mintTxReceipt.transactionHash)
   } catch (err) {
     console.error('💥', err)
@@ -80,7 +82,7 @@ export async function POST(request: Request) {
   try {
     log('📓 | Retrieve profile id')
     profileId = await contract.ids(address)
-    log('📓 | profileId', profileId)
+    log('📓 | profileId', profileId?.toString())
   } catch (err) {
     console.error('💥', err)
     return NextResponse.json(
@@ -95,5 +97,8 @@ export async function POST(request: Request) {
       { status: 500 }
     )
 
-  return NextResponse.json<{ profileId: number }>({ profileId })
+  return NextResponse.json<{ profileId: number; txHash: string }>({
+    profileId,
+    txHash,
+  })
 }
