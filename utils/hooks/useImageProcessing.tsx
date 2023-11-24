@@ -23,8 +23,8 @@ export default function useImageProcessing({ file }: { file: File | null }) {
           })
           return newFile
         })
-        .catch(error => {
-          console.log(error)
+        .catch(err => {
+          console.error('💥', err)
           toast.error('Error converting HEIC/HEIF to JPEG')
           return file
         })
@@ -42,8 +42,8 @@ export default function useImageProcessing({ file }: { file: File | null }) {
 
     return imageCompression(file, options)
       .then(compressedFile => compressedFile)
-      .catch(error => {
-        console.log(error)
+      .catch(err => {
+        console.error('💥', err)
         toast.error('Error compressing image')
         return file
       })

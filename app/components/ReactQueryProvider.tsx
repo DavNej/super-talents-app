@@ -4,9 +4,10 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { toast } from 'react-toastify'
+import { log } from '@/utils'
 
 function defaultOnError(err: unknown, variables?: unknown, context?: unknown) {
-  console.log('============')
+  log('============')
 
   console.error(err)
 
@@ -21,7 +22,7 @@ function defaultOnError(err: unknown, variables?: unknown, context?: unknown) {
   if (context) {
     console.error({ context })
   }
-  console.log('============')
+  log('============')
 }
 
 export default function ReactQueryProvider({
