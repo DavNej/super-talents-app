@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 
 import { LogoutButton } from '@/app/components'
-import { useAuth } from '@/features/auth'
 import { useSmartAccount } from '@/features/smart-account'
+import { cn } from '@/utils'
 
 export default function ProgressBarLayout({
   children,
@@ -25,7 +25,7 @@ export default function ProgressBarLayout({
 
   return (
     <>
-      <div className='py-12 px-24 flex flex-row gap-7'>
+      <div className='py-7 px-5 md:py-12 md:px-24 flex flex-row gap-2 md:gap-7'>
         <NavStep
           caption='Create avatar'
           activeOnPages={[
@@ -50,8 +50,6 @@ export default function ProgressBarLayout({
   )
 }
 
-
-
 function NavStep({
   activeOnPages,
   caption,
@@ -60,16 +58,29 @@ function NavStep({
   caption: string
 }) {
   const pathname = usePathname()
+  const isActive = activeOnPages.includes(pathname)
 
-  return activeOnPages.includes(pathname) ? (
+  return (
     <div className='flex-1'>
-      <p className='font-medium text-xl text-center'>{caption}</p>
-      <div className='mt-3 h-3 rounded-full bg-pink'></div>
-    </div>
-  ) : (
-    <div className='flex-1'>
-      <p className='font-medium text-xl text-center opacity-70'>{caption}</p>
-      <div className='mt-3 h-3 rounded-full bg-gray-700' />
+      <p
+        className={cn(
+          'font-medium',
+          'text-xl',
+          'text-center',
+          'hidden',
+          'md:block',
+          isActive && 'opacity-70'
+        )}>
+        {caption}
+      </p>
+      <div
+        className={cn(
+          'mt-0',
+          'md:mt-3',
+          'h-1',
+          'rounded-full',
+          isActive ? 'bg-pink' : 'bg-gray-700'
+        )}></div>
     </div>
   )
 }

@@ -24,7 +24,7 @@ export default function UploadFile({
 
   return (
     <div
-      className='flex p-4 mt-12 bg-gray-700 rounded-[30px] justify-center cursor-pointer'
+      className='flex py-4 px-4 mt-8 md:mt-12 bg-gray-700 rounded-[22px] md:rounded-[30px] justify-center cursor-pointer'
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onClick={() => fileInputRef.current?.click()}>
@@ -46,7 +46,7 @@ export default function UploadFile({
         />
       )}
 
-      <div className='flex flex-col items-center '>
+      <div className='flex flex-col items-center gap-2'>
         <Image
           className='relative'
           src='/download.svg'
