@@ -153,14 +153,16 @@ export default function ProfileInfoPage() {
   }
 
   return (
-    <main className='px-24 pb-12 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-contain'>
+    <main className='px-6 pb-6 md:pb-12 md:px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-cover'>
       <div className='flex flex-col flex-1'>
         <BackLink />
-        <h3 className='font-semibold text-5xl mb-12 whitespace-nowrap'>
+        <h3 className='font-semibold text-4xl md:text-5xl my-3 md:my-7 md:mb-12 whitespace-nowrap'>
           Add Profile Info
         </h3>
-        <form onSubmit={formik.handleSubmit} className='grid grid-cols-2 gap-8'>
-          <fieldset id='handle'>
+        <form
+          onSubmit={formik.handleSubmit}
+          className='md:grid md:grid-cols-2 md:gap-8'>
+          <fieldset id='handle' className='mt-5 md:mt-0'>
             <SimpleLabel name='handle'>
               <div className='flex justify-between'>
                 <span>Handle</span>
@@ -179,7 +181,7 @@ export default function ProfileInfoPage() {
               placeholder='Choose a profile handle (ex: alanturing)'
             />
           </fieldset>
-          <fieldset id='name'>
+          <fieldset id='name' className='mt-5 md:mt-0'>
             <SimpleLabel name='name'>Name</SimpleLabel>
             <input
               className={cn(inputClassNames)}
@@ -191,11 +193,11 @@ export default function ProfileInfoPage() {
               placeholder='Choose a Full Name (ex: Alan Turing)'
             />
           </fieldset>
-          <fieldset id='about' className='flex flex-col'>
+          <fieldset id='about' className='flex flex-col mt-5 md:mt-0'>
             <SimpleLabel name='about'>Bio</SimpleLabel>
             <div className={cn(inputClassNames, 'flex flex-col flex-1')}>
               <textarea
-                className=' h-52 bg-transparent outline-none flex-1'
+                className='h-96 md:h-52 bg-transparent outline-none'
                 name='about'
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -214,7 +216,7 @@ export default function ProfileInfoPage() {
               </Button>
             </div>
           </fieldset>
-          <fieldset id='links'>
+          <fieldset id='links' className='mt-5 md:mt-0'>
             <SimpleLabel name='portfolio'>Links (optional)</SimpleLabel>
             <input
               className={cn(inputClassNames)}
@@ -269,7 +271,7 @@ export default function ProfileInfoPage() {
               placeholder='Add other link'
             />
           </fieldset>
-          <fieldset id='skills' className='row-span-2'>
+          <fieldset id='skills' className='row-span-2 mt-5 md:mt-0'>
             <SimpleLabel name='skills'>Skills</SimpleLabel>
             <input
               className={cn(inputClassNames)}
@@ -291,7 +293,7 @@ export default function ProfileInfoPage() {
               ))}
             </div>
           </fieldset>
-          <fieldset id='role'>
+          <fieldset id='role' className='mt-5 md:mt-0'>
             <SimpleLabel name='role'>Role</SimpleLabel>
             <div className='relative box-border mt-2'>
               <select
@@ -326,7 +328,7 @@ export default function ProfileInfoPage() {
           </fieldset>
 
           <Button
-            className='w-full'
+            className='w-full mt-8 md:mt-0'
             isDisabled={!formik.isValid || formik.isSubmitting}
             onClick={formik.handleSubmit}>
             Next
