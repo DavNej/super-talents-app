@@ -50,7 +50,7 @@ export default function ChooseAboutDialog({
           )}>
           {options?.map(option => (
             <div
-              key={option}
+              key={uuid()}
               className={cn(
                 'px-2',
                 'md:px-4',
