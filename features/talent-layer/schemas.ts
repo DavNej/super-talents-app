@@ -10,11 +10,9 @@ export const Id = z.string({
   invalid_type_error: 'Id must be a string',
 })
 
-export const Cid = z
-  .string({
-    invalid_type_error: 'Cid must be a string',
-  })
-  .optional()
+export const Cid = z.string({
+  invalid_type_error: 'Cid must be a string',
+})
 
 export const Address = z.string({
   invalid_type_error: 'Address must be a string',
@@ -23,13 +21,11 @@ export const Address = z.string({
 export const TalentLayerUser = z.object({
   handle: Handle,
   id: Id,
-  cid: Cid,
+  cid: Cid.optional(),
   address: Address,
 })
 
 export function validateTalentLayerUser(user: unknown) {
-  if (!user) return null
-
   const result = TalentLayerUser.safeParse(user)
   if (result.success) return result.data
 

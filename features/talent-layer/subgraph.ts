@@ -15,14 +15,15 @@ export async function getTalentLayerUser({
   const query = buildUserGraphQuery({ id, address, handle })
 
   log('👤 | Get TL user')
-  const res: { users: TalentLayerUserType[] } | null = await querSubgraph(query)
-  const user = validateTalentLayerUser(res?.users?.at(0))
+  const { users } = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
+  const [user] = users
 
   if (!user) {
     log('👤 | No user found', address || handle || id)
+    return null
   }
 
-  return user
+  return validateTalentLayerUser(user)
 }
 
 export async function profileIdOfHandle(handle: string) {
@@ -68,21 +69,18 @@ function buildUserGraphQuery({
     `
 }
 
-async function querSubgraph(query: string) {
-  const res = await fetch(subgraphUrl, {
+async function querSubgraph<T>(query: string): Promise<T> {
+  const response = await fetch(subgraphUrl, {
     method: 'POST',
-    body: JSON.stringify({
-      query,
-    }),
+    body: JSON.stringify({ query }),
     next: { revalidate: 0 },
   })
 
-  if (!res.ok) {
-    console.error('💥', res.status, res.statusText)
-    console.error('💥', await res.json())
+  if (!response.ok) {
+    console.error('💥', await response.json())
     throw new Error('Could not query TL subgraph')
   }
 
-  const response = await res.json()
-  return response.data
+  const { data } = await response.json()
+  return data
 }
