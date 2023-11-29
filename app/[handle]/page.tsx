@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ProfilePreview } from '@/app/components'
+import { Background, ProfilePreview } from '@/app/components'
 import { getTalentLayerUser } from '@/features/talent-layer'
 import { getProfileData } from '@/features/profile'
 
@@ -20,6 +20,7 @@ export default async function ProfileHandlePage({
 
   return (
     <main className='p-4 md:p-24'>
+      <Background />
       {profile ? (
         <ProfilePreview handle={handle} profileData={profile} />
       ) : (

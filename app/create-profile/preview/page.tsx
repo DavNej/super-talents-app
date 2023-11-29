@@ -6,7 +6,7 @@ import { useLocalStorage } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { toast } from 'react-toastify'
 
-import { BackLink, Button, ProfilePreview } from '@/app/components'
+import { Button, ProfilePreview, Title } from '@/app/components'
 
 import type { ProfileWithHandleType } from '@/features/profile'
 import { validateIPFSProfile } from '@/features/profile/schemas'
@@ -57,25 +57,23 @@ export default function ProfilePreviewPage() {
   }
 
   return (
-    <main className='px-6 pb-6 md:px-24 flex flex-1 place-items-center bg-avatar bg-right bg-no-repeat bg-cover'>
-      <div className='flex flex-col flex-1'>
-        <BackLink />
-        <div className='mb-7 mt-3 md:mt-7 md:mb-12 flex justify-between items-center'>
-          <h3 className='font-semibold text-4xl md:text-5xl whitespace-nowrap'>
-            Profile preview
-          </h3>
-          {isMediumScreen && <MintProfileButton />}
-        </div>
-
-        {handle && profileToUpload && (
-          <ProfilePreview
-            handle={handle}
-            profileData={profileToUpload}
-            isSigner
-          />
-        )}
-        {!isMediumScreen && <MintProfileButton />}
+    <>
+      <div className='flex justify-between items-center mt-3 mb-6'>
+        <Title className='my-0'>Profile preview</Title>
+        {isMediumScreen && <MintProfileButton />}
       </div>
-    </main>
+
+      {handle && profileToUpload && (
+        <ProfilePreview
+          handle={handle}
+          profileData={profileToUpload}
+          isSigner
+        />
+      )}
+
+      <br className='mt-6 md:mt-0' />
+
+      {!isMediumScreen && <MintProfileButton />}
+    </>
   )
 }

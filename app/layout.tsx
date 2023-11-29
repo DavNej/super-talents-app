@@ -21,13 +21,13 @@ export default function RootLayout({
     <html lang='en'>
       <body>
         <ReactQueryProvider>
-            <ParticleProvider>
-              <SmartAccountProvider>
-                <div className='flex flex-col min-h-screen bg-gray-900 font-mona-sans text-white'>
-                  {children}
-                </div>
-              </SmartAccountProvider>
-            </ParticleProvider>
+          <ParticleProvider>
+            <SmartAccountProvider>
+              <div className='flex flex-col min-h-screen font-mona-sans text-white'>
+                {children}
+              </div>
+            </SmartAccountProvider>
+          </ParticleProvider>
           <Toast />
         </ReactQueryProvider>
       </body>

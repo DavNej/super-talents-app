@@ -8,7 +8,7 @@ import {
   useAccountInfo,
 } from '@particle-network/connect-react-ui'
 
-import { LogoutButton } from '@/app/components'
+import { BackLink, Background, LogoutButton } from '@/app/components'
 import { useSmartAccount } from '@/features/smart-account'
 import { cn } from '@/utils'
 
@@ -54,7 +54,14 @@ export default function ProgressBarLayout({
         <LogoutButton />
       </div>
 
-      {children}
+      <main className='px-6 md:px-24 pb-6 md:pb-12 flex-1 place-items-center'>
+        <div className='flex flex-col flex-1'>
+          <BackLink />
+          {children}
+        </div>
+      </main>
+
+      <Background />
     </>
   )
 }

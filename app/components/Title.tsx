@@ -14,7 +14,6 @@ export default function Title({
         'text-4xl',
         'md:text-5xl',
         'my-6',
-        'md:whitespace-nowrap',
         className
       )}>
       {children}

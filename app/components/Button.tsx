@@ -33,6 +33,8 @@ export default function Button({
         'border-2',
         'border-white',
         'whitespace-nowrap',
+        'overflow-hidden',
+        'overflow-ellipsis',
         isDisabled || isLoading ? 'text-gray-400' : 'text-pink',
         className
       )}

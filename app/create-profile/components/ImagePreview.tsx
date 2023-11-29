@@ -36,7 +36,7 @@ export default function ImagePreview() {
   return (
     <>
       <div className='flex flex-col justify-center items-center'>
-        <h3 className='mt-4 md:mt-0 font-semibold text-center text-2xl md:text-4xl whitespace-nowrap'>
+        <h3 className='mt-4 md:mt-0 font-semibold text-center text-2xl md:text-4xl md:whitespace-nowrap'>
           Select avatar
         </h3>
         <div className='mt-4 grid grid-cols-2 gap-4'>

@@ -7,6 +7,7 @@ import { useAccount } from '@particle-network/connect-react-ui'
 
 import { ConnectButton } from '@/features/auth'
 import { useSmartAccount } from '@/features/smart-account'
+import { Background, Title } from '@/app/components'
 
 export default function HomePage() {
   const { connectedUser } = useSmartAccount()
@@ -21,7 +22,7 @@ export default function HomePage() {
     redirect('/create-profile/avatar')
 
   return (
-    <main className='flex-1 flex flex-col md:flex-row gap-x-4 px-5 md:px-24 py-5 md:py-0 place-items-center bg-sign-up bg-right bg-no-repeat bg-cover'>
+    <main className='flex-1 flex flex-col md:flex-row gap-x-4 px-5 md:px-24 py-5 md:py-0 place-items-center'>
       <div className='flex-col flex-1 flex md:block justify-around'>
         <div className='relative w-16 h-6 md:w-32 md:h-12'>
           <Image
@@ -33,9 +34,9 @@ export default function HomePage() {
           />
         </div>
 
-        <h3 className='font-semibold text-4xl md:text-5xl my-4 md:my-7'>
+        <Title className='my-4 md:my-7'>
           Sharing the Future of Work with Web3 and AI
-        </h3>
+        </Title>
 
         <ul>
           <li className='my-3 md:my-7'>
@@ -64,12 +65,13 @@ export default function HomePage() {
       </div>
 
       <div className='px-5 md:px-14 mt-8 md:mt-0 py-8 md:py-16 bg-gradient-to-b from-purple-500 to-pink w-full md:w-[521px] rounded-[22px] md:rounded-[50px]'>
-        <h3 className='font-semibold text-3xl md:text-5xl mb-4 md:mb-14 whitespace-nowrap'>
+        <Title className='mt-0 mb-4 md:mb-14 whitespace-nowrap text-center overflow-hidden overflow-ellipsis md:overflow-visible'>
           Let’s get started
-        </h3>
-
+        </Title>
         <ConnectButton />
       </div>
+
+      <Background image='bg-sign-up' />
     </main>
   )
 }

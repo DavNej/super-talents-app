@@ -17,7 +17,7 @@ export default function ProfilePreview({
   isSigner?: boolean
 }) {
   return (
-    <div className='mb-6 md:mb-8 rounded-[20px] md:rounded-[40px] border-pink border-[3px] md:border-4 overflow-hidden'>
+    <div className='rounded-[20px] md:rounded-[40px] border-pink border-[3px] md:border-4 overflow-hidden'>
       <div className='p-3 md:px-12 md:py-4 col-span-2 bg-gray-800 flex items-center justify-between'>
         <div className='w-[39px] h-[14px] md:w-[72px] md:h-[27px]'>
           <Image

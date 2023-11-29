@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useLocalStorage } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 
-import { Button, Loader, BackLink } from '@/app/components'
+import { Button, Loader, Title } from '@/app/components'
 import { useCreateAvatars } from '@/features/avatar'
 import type { DataUrlType } from '@/utils/data-url'
 import { breakpoints } from '@/utils'
@@ -49,40 +49,33 @@ export default function AvatarPage() {
   }
 
   return (
-    <main className='flex-1 px-6 pb-6 md:px-24 bg-avatar bg-right bg-no-repeat bg-cover'>
-      <div className='md:grid md:grid-cols-2 md:gap-x-24'>
-        <div className='col-span-2'>
-          <BackLink />
-        </div>
-        <div>
-          <h3 className='font-semibold text-4xl md:text-5xl my-7 md:my-7 whitespace-nowrap'>
-            Create <span className='hidden md:inline'>Your</span> Avatar
-          </h3>
+    <div className='md:grid md:grid-cols-2 md:gap-x-24'>
+      <div>
+        <Title>Create {isMediumScreen && 'Your '} Avatar</Title>
 
-          <UploadFile onSuccess={setUploadedPicture} />
+        <UploadFile onSuccess={setUploadedPicture} />
 
-          <p className='mt-4 ml-4 font-light text-xs opacity-70'>
-            For optimal results, please upload a high-quality picture with a
-            clean background
-          </p>
+        <p className='mt-4 ml-4 font-light text-xs opacity-70'>
+          For optimal results, please upload a high-quality picture with a clean
+          background
+        </p>
 
-          {isMediumScreen && <NextButton />}
-        </div>
-
-        {isLoading ? (
-          <div className='flex flex-col self-stretch justify-center items-center'>
-            <h3 className='mt-4 mb-2 md:my-0 font-semibold text-center text-2xl md:text-4xl whitespace-nowrap'>
-              Generating your avatar...
-            </h3>
-            <div className='mt-4 w-full flex justify-center items-center h-full rounded-[28px] backdrop-blur-xl'>
-              <Loader size={520} />
-            </div>
-          </div>
-        ) : (
-          <ImagePreview />
-        )}
-        {!isMediumScreen && <NextButton />}
+        {isMediumScreen && <NextButton />}
       </div>
-    </main>
+
+      {isLoading ? (
+        <div className='flex flex-col self-stretch justify-center items-center'>
+          <h3 className='mt-4 mb-2 md:my-0 font-semibold text-center text-2xl md:text-4xl md:whitespace-nowrap'>
+            Generating your avatar...
+          </h3>
+          <div className='mt-4 w-full flex justify-center items-center h-full rounded-[28px] backdrop-blur-xl'>
+            <Loader size={520} />
+          </div>
+        </div>
+      ) : (
+        <ImagePreview />
+      )}
+      {!isMediumScreen && <NextButton />}
+    </div>
   )
 }
