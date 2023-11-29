@@ -1,29 +1,35 @@
-import type { AxiosRequestConfig } from 'axios'
-import axios from 'axios'
-import { toast } from 'react-toastify'
-
-async function POST<T>(
-  url: string,
-  data?: any,
-  config?: AxiosRequestConfig<any>
-) {
-  try {
-    const res = await axios.post<T>(url, data, config)
-    return res.data
-  } catch (error) {
-    toast.error('🏚️ Something went wrong')
-    throw error
-  }
+const headers = {
+  'Content-Type': 'application/json',
+  // 'Content-Type': 'application/x-www-form-urlencoded',
 }
 
-async function GET<T>(url: string, config?: AxiosRequestConfig<any>) {
-  try {
-    const res = await axios.get<T>(url, config)
-    return res.data
-  } catch (error) {
-    toast.error('🏚️ Something went wrong')
-    throw error
+async function POST<T>(url: string, data?: any): Promise<T> {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+    const { message, cause } = await response.json()
+    throw new Error(message, { cause })
   }
+
+  return response.json()
+}
+
+async function GET<T>(url: string): Promise<T> {
+  const response = await fetch(url, {
+    method: 'GET',
+    headers,
+  })
+
+  if (!response.ok) {
+    const { message, cause } = await response.json()
+    throw new Error(message, { cause })
+  }
+
+  return response.json()
 }
 
 export const api = {
