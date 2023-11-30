@@ -67,7 +67,7 @@ export default function ProfilePreview({
             <h4 className='text-lg font-medium border-b-[1px] border-gray-700'>
               Skills
             </h4>
-            <div className='py-5 flex gap-2'>
+            <div className='py-5 flex gap-2 flex-wrap'>
               {profileData.skills.map(skill => (
                 <div
                   key={skill}

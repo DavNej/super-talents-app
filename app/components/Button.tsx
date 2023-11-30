@@ -22,6 +22,7 @@ export default function Button({
       type={type}
       className={cn(
         'py-3',
+        'mt-auto',
         'md:py-5',
         'px-8',
         'rounded-full',
