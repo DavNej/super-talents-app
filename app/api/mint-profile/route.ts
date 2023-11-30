@@ -42,8 +42,9 @@ export async function POST(request: Request) {
   let txHash: string
 
   try {
-    log('📓 | Get handle price')
+    log(`📓 | Get handle price of ${handle}`)
     handlePrice = await contract.getHandlePrice(handle)
+    log('📓 | handlePrice', handlePrice)
   } catch (err) {
     console.error('💥', err)
     return NextResponse.json(
@@ -81,8 +82,9 @@ export async function POST(request: Request) {
 
   try {
     log('📓 | Retrieve profile id')
-    profileId = await contract.ids(address)
-    log('📓 | profileId', profileId?.toString())
+    const id: ethers.BigNumber = await contract.ids(address)
+    profileId = id?.toNumber()
+    log('📓 | profileId :', profileId)
   } catch (err) {
     console.error('💥', err)
     return NextResponse.json(

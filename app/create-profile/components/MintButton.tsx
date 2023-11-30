@@ -34,7 +34,7 @@ export default function MintButton({
         <Link
           href={`https://mumbai.polygonscan.com/tx/${txHash}`}
           target='_blank'>
-          Profile data successfully added 🎉
+          Profile data upload success 🎉
           <br />
           See transaction in explorer
         </Link>,
@@ -60,7 +60,7 @@ export default function MintButton({
         <Link
           href={`https://mumbai.polygonscan.com/tx/${txHash}`}
           target='_blank'>
-          Profile {profileId.toString()} successfully minted 🎉
+          Profile mint success 🎉
           <br />
           See transaction in explorer
         </Link>,
