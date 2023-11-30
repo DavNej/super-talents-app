@@ -13,7 +13,7 @@ export async function pause(duration: number) {
 export async function log(message?: any, ...optionalParams: any[]) {
   if (
     process.env.NODE_ENV === 'development' ||
-    process.env.LOG_LEVEL === 'debug'
+    process.env.NEXT_PUBLIC_SUPERTALENT_DEBUG === 'true'
   ) {
     console.log(message, ...optionalParams)
   }
