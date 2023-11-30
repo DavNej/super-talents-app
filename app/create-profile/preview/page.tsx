@@ -34,13 +34,13 @@ export default function ProfilePreviewPage() {
     toast.error('Handle already exists')
   }
 
-  // if (!selectedAvatar) {
-  //   redirect('/create-profile/avatar')
-  // }
+  if (!selectedAvatar) {
+    redirect('/create-profile/avatar')
+  }
 
-  // if (!newProfile) {
-  //   redirect('/create-profile/info')
-  // }
+  if (!newProfile) {
+    redirect('/create-profile/info')
+  }
 
   const profileToUpload = validateIPFSProfile({
     ...newProfile,
