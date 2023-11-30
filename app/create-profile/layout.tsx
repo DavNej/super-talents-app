@@ -12,6 +12,8 @@ import { BackLink, Background, LogoutButton } from '@/app/components'
 import { useSmartAccount } from '@/features/smart-account'
 import { cn } from '@/utils'
 
+const adminWallets = (process.env.NEXT_PUBLIC_ADMIN_WALLETS || '').split(',')
+
 export default function ProgressBarLayout({
   children,
 }: {
@@ -28,7 +30,7 @@ export default function ProgressBarLayout({
     redirect('/')
   }
 
-  if (connectedUser?.data?.handle) {
+  if (connectedUser?.data?.handle && !adminWallets.includes(account)) {
     redirect(`/${connectedUser.data.handle}`)
   }
 

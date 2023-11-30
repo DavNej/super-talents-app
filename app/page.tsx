@@ -11,7 +11,6 @@ import { Background, Title } from '@/app/components'
 
 export default function HomePage() {
   const { connectedUser } = useSmartAccount()
-
   const account = useAccount()
 
   if (connectedUser?.data?.handle) {
