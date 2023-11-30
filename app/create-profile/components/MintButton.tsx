@@ -30,16 +30,10 @@ export default function MintButton({
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
   const updateProfileData = useUpdateProfileData({
     onSuccess(txHash) {
-      toast.success(
-        <Link
-          href={`https://mumbai.polygonscan.com/tx/${txHash}`}
-          target='_blank'>
-          Profile data upload success 🎉
-          <br />
-          See transaction in explorer
-        </Link>,
-        { autoClose: false, closeOnClick: false }
-      )
+      toast.success(<UploadSuccess txHash={txHash || ''} />, {
+        autoClose: false,
+        closeOnClick: false,
+      })
       setPinataCid('')
       setAvatars([])
       setSelectedAvatar(null)
@@ -56,16 +50,10 @@ export default function MintButton({
       uploadToIPFS.mutate({ name: handle, content: profileToUpload })
     },
     onSuccess({ profileId, txHash }) {
-      toast.success(
-        <Link
-          href={`https://mumbai.polygonscan.com/tx/${txHash}`}
-          target='_blank'>
-          Profile mint success 🎉
-          <br />
-          See transaction in explorer
-        </Link>,
-        { autoClose: false, closeOnClick: false }
-      )
+      toast.success(<MintSuccess txHash={txHash || ''} />, {
+        autoClose: false,
+        closeOnClick: false,
+      })
       updateProfileData.mutate({ profileId, cid: pinataCid })
     },
   })
@@ -90,5 +78,25 @@ export default function MintButton({
       onClick={handleClick}>
       Mint my profile NFT
     </Button>
+  )
+}
+
+function MintSuccess({ txHash }: { txHash: string }) {
+  return (
+    <Link href={`https://mumbai.polygonscan.com/tx/${txHash}`} target='_blank'>
+      Profile mint success 🎉
+      <br />
+      See transaction in explorer
+    </Link>
+  )
+}
+
+function UploadSuccess({ txHash }: { txHash: string }) {
+  return (
+    <Link href={`https://mumbai.polygonscan.com/tx/${txHash}`} target='_blank'>
+      Profile data upload success 🎉
+      <br />
+      See transaction in explorer
+    </Link>
   )
 }

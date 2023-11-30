@@ -7,6 +7,7 @@ export function cn(...input: ClassValue[]) {
 }
 
 export async function pause(duration: number) {
+  log('⏲️ | pausing for', duration)
   return new Promise<void>(resolve => setTimeout(resolve, duration))
 }
 
