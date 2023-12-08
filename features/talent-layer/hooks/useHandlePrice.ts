@@ -30,7 +30,7 @@ export default function useHandlePrice(
       try {
         log('👀 | Get handle price')
         const handlePrice: ethers.BigNumber = await contract.getHandlePrice(
-          Number(handle)
+          handle
         )
         return { handlePrice }
       } catch (err) {

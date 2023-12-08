@@ -41,6 +41,15 @@ export default function ProgressBarLayout({
           caption='Create avatar'
           activeOnPages={[
             '/create-profile/avatar',
+            '/create-profile/claim-handle',
+            '/create-profile/info',
+            '/create-profile/preview',
+          ]}
+        />
+        <NavStep
+          caption='Claim handle'
+          activeOnPages={[
+            '/create-profile/claim-handle',
             '/create-profile/info',
             '/create-profile/preview',
           ]}
@@ -56,11 +65,9 @@ export default function ProgressBarLayout({
         <LogoutButton />
       </div>
 
-      <main className='px-6 md:px-24 pb-6 md:pb-12 flex-1 place-items-center'>
-        <div className='flex flex-col flex-1'>
-          <BackLink />
-          {children}
-        </div>
+      <main className='px-6 md:px-24 pb-6 md:pb-12 flex flex-col flex-1'>
+        <BackLink />
+        <div className='flex flex-col flex-1'>{children}</div>
       </main>
 
       <Background />

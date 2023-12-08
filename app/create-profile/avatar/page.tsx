@@ -33,7 +33,7 @@ export default function AvatarPage() {
     return !!selectedAvatar ? (
       <Link
         className='mt-5 py-3 md:py-5 px-8 block w-full rounded-full uppercase font-medium text-center text-base md:text-xl bg-white text-pink'
-        href='/create-profile/info'>
+        href='/create-profile/claim-handle'>
         Next
       </Link>
     ) : (
