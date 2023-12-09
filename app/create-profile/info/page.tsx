@@ -5,25 +5,24 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
-import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { useLocalStorage } from 'usehooks-ts'
 
 import { Chip, Button, inputClassNames, Title } from '@/app/components'
 import {
   roleCaptions,
-  type ProfileWithHandleType,
   type SkillsType,
-  type FormProfileType,
+  type BaseProfileType,
 } from '@/features/profile'
-import { ProfileWithHandle } from '@/features/profile/schemas'
-import { profileIdOfHandle } from '@/features/talent-layer'
+
 import { cn } from '@/utils'
 import { useChatGPT } from '@/utils/chat-gpt'
 
-import { ChooseAboutDialog } from '../components'
+import { BaseProfile } from '@/features/profile/schemas'
 
-const initialValues: FormProfileType = {
-  handle: '',
+import { ChooseAboutDialog } from '../components'
+import { validationSchema, type ProfileFormType } from './form-validation'
+
+const initialValues: ProfileFormType = {
   name: '',
   about: '',
   skills: [],
@@ -40,53 +39,12 @@ export default function ProfileInfoPage() {
   const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [skill, setSkill] = React.useState('')
-  const [newProfile, setNewProfile] =
-    useLocalStorage<ProfileWithHandleType | null>('newProfile', null)
+  const [newProfile, setNewProfile] = useLocalStorage<BaseProfileType | null>(
+    'newProfile',
+    null
+  )
 
   const chatGPT = useChatGPT()
-  const formik = useFormik<FormProfileType>({
-    initialValues: newProfile ? newProfile : initialValues,
-    validationSchema: toFormikValidationSchema(ProfileWithHandle),
-    onSubmit: async (values, { setSubmitting, setFieldError }) => {
-      try {
-        const profileId = await profileIdOfHandle(values.handle)
-        if (!!profileId) {
-          setFieldError('handle', 'Handle is taken')
-          setSubmitting(false)
-          return
-        }
-      } catch (err) {
-        toast.error('Could not parse newProfile')
-        console.error(err)
-        setSubmitting(false)
-        return
-      }
-
-      const result = ProfileWithHandle.safeParse({
-        handle: values.handle,
-        name: values.name,
-        about: values.about,
-        skills: values.skills,
-        github: values.github || undefined,
-        otherLink: values.otherLink || undefined,
-        linkedin: values.linkedin || undefined,
-        twitter: values.twitter || undefined,
-        role: values.role,
-      })
-
-      if (result.success) {
-        setNewProfile(result.data)
-
-        //! ATTENTION
-        setSubmitting(false)
-        router.push('/create-profile/preview')
-      } else {
-        toast.error('Could not parse newProfile')
-        console.error(result.error.issues)
-        setSubmitting(false)
-      }
-    },
-  })
 
   React.useEffect(() => {
     if (chatGPT.data?.content) {
@@ -109,6 +67,35 @@ export default function ProfileInfoPage() {
     }
   }, [chatGPT.data])
 
+  const formik = useFormik<ProfileFormType>({
+    initialValues: newProfile ? newProfile : initialValues,
+    validationSchema,
+    onSubmit: async (values, { setSubmitting, setFieldError }) => {
+      const result = BaseProfile.safeParse({
+        name: values.name,
+        about: values.about,
+        skills: values.skills,
+        github: values.github,
+        otherLink: values.otherLink,
+        linkedin: values.linkedin,
+        twitter: values.twitter,
+        role: values.role,
+      })
+
+      if (result.success) {
+        setNewProfile(result.data)
+
+        //! ATTENTION
+        setSubmitting(false)
+        router.push('/create-profile/preview')
+      } else {
+        toast.error('Could not parse newProfile')
+        console.error(result.error.issues)
+        setSubmitting(false)
+      }
+    },
+  })
+
   function addSkill(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === 'Enter') {
       const newSkill = event.currentTarget.value.trim()
@@ -129,7 +116,7 @@ export default function ProfileInfoPage() {
     formik.setFieldValue('skills', newSkillSet)
   }
 
-  function fieldError(fieldName: keyof ProfileWithHandleType) {
+  function fieldError(fieldName: keyof ProfileFormType) {
     return formik.touched[fieldName] && formik.errors[fieldName]
   }
 
@@ -137,7 +124,7 @@ export default function ProfileInfoPage() {
     name,
     children,
   }: {
-    name: keyof ProfileWithHandleType
+    name: keyof ProfileFormType
     children: React.ReactNode
   }) {
     return (
@@ -159,24 +146,6 @@ export default function ProfileInfoPage() {
       <form
         onSubmit={formik.handleSubmit}
         className='md:grid md:grid-cols-2 md:gap-8'>
-        <fieldset id='handle' className='mt-5 md:mt-0'>
-          <SimpleLabel name='handle'>
-            <div className='flex justify-between'>
-              <span>Handle</span>
-            </div>
-          </SimpleLabel>
-          <input
-            className={cn(inputClassNames)}
-            onChange={e => {
-              formik.setFieldValue('handle', e.target.value.toLowerCase())
-            }}
-            value={formik.values.handle}
-            onBlur={formik.handleBlur}
-            type='text'
-            name='handle'
-            placeholder='Choose a profile handle (ex: alanturing)'
-          />
-        </fieldset>
         <fieldset id='name' className='mt-5 md:mt-0'>
           <SimpleLabel name='name'>Name</SimpleLabel>
           <input
