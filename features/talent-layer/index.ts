@@ -3,6 +3,7 @@ export { getTalentLayerUser, profileIdOfHandle } from './subgraph'
 export { default as useMintProfile } from './hooks/useMintProfile'
 export { default as useProfileIdOfHandle } from './hooks/useProfileIdOfHandle'
 export { default as useTalentLayerUser } from './hooks/useTalentLayerUser'
+export { default as useConnectedTalentLayerUser } from './hooks/useConnectedTalentLayerUser'
 export { default as useUpdateProfileData } from './hooks/useUpdateProfileData'
 export {
   platfromId,

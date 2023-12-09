@@ -9,8 +9,8 @@ import {
 } from '@particle-network/connect-react-ui'
 
 import { BackLink, Background, LogoutButton } from '@/app/components'
-import { useSmartAccount } from '@/features/smart-account'
 import { cn } from '@/utils'
+import { useConnectedTalentLayerUser } from '@/features/talent-layer'
 
 const adminWallets = (process.env.NEXT_PUBLIC_ADMIN_WALLETS || '').split(',')
 
@@ -19,7 +19,7 @@ export default function ProgressBarLayout({
 }: {
   children: React.ReactNode
 }) {
-  const { connectedUser } = useSmartAccount()
+  const connectedUser = useConnectedTalentLayerUser()
   const { account, accountLoading } = useAccountInfo()
 
   if (accountLoading) {

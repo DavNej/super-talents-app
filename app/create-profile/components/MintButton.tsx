@@ -6,10 +6,14 @@ import { toast } from 'react-toastify'
 
 import { Button } from '@/app/components'
 import { useProfileData, type ProfileWithPictureType } from '@/features/profile'
-import { useSmartAccount } from '@/features/smart-account'
 import { useUploadToIPFS } from '@/features/ipfs'
-import { useUpdateProfileData, useMintProfile } from '@/features/talent-layer'
-import { deepEqual, log } from '@/utils'
+import {
+  useUpdateProfileData,
+  useMintProfile,
+  useConnectedTalentLayerUser,
+} from '@/features/talent-layer'
+import { deepEqual } from '@/utils'
+import { useCache } from '../useCache'
 
 export default function MintButton({
   handle,
@@ -18,7 +22,7 @@ export default function MintButton({
   handle: string
   profileToUpload: ProfileWithPictureType
 }) {
-  const { smartAccountAddress } = useSmartAccount()
+  const connectedUser = useConnectedTalentLayerUser()
 
   const { pinataCid, setPinataCid, clearCache } = useCache()
   const profileData = useProfileData({ cid: pinataCid })
@@ -49,22 +53,19 @@ export default function MintButton({
   })
 
   if (updateProfileData.isSuccess) {
+    // clearCache()
     redirect(`/${handle}`)
   }
 
+  const profileId = connectedUser.data?.id
+
   function handleClick() {
-    if (!smartAccountAddress) return
-    mintProfile.mutate({ handle, address: smartAccountAddress })
+    if (!profileId) return
   }
 
   return (
     <Button
-      isLoading={
-        uploadToIPFS.isLoading ||
-        mintProfile.isLoading ||
-        updateProfileData.isLoading
-      }
-      isDisabled={!smartAccountAddress || updateProfileData.isSuccess}
+      isDisabled={!connectedUser.data || updateProfileData.isSuccess}
       onClick={handleClick}>
       Mint my profile NFT
     </Button>

@@ -2,16 +2,14 @@
 
 import React from 'react'
 import { redirect } from 'next/navigation'
-import { useLocalStorage } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
-import { toast } from 'react-toastify'
 
 import { Button, ProfilePreview, Title } from '@/app/components'
 
 import type { ProfileWithHandleType } from '@/features/profile'
 import { validateIPFSProfile } from '@/features/profile/schemas'
-import { useProfileIdOfHandle } from '@/features/talent-layer'
-import type { DataUrlType } from '@/utils/data-url'
+import { useConnectedTalentLayerUser } from '@/features/talent-layer'
+import { breakpoints } from '@/utils'
 
 import { MintButton } from '../components'
 import { useCache } from '../useCache'
@@ -23,9 +21,7 @@ export default function ProfilePreviewPage() {
   const { data: talentLayerId } = useProfileIdOfHandle({ handle })
   const isMediumScreen = useMediaQuery({ minWidth: breakpoints.md })
 
-  if (talentLayerId) {
-    toast.error('Handle already exists')
-  }
+  const connectedUser = useConnectedTalentLayerUser()
 
   if (!selectedAvatar) {
     redirect('/create-profile/avatar')

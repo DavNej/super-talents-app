@@ -6,11 +6,11 @@ import { redirect } from 'next/navigation'
 import { useAccount } from '@particle-network/connect-react-ui'
 
 import { ConnectButton } from '@/features/auth'
-import { useSmartAccount } from '@/features/smart-account'
 import { Background, Title } from '@/app/components'
+import { useConnectedTalentLayerUser } from '@/features/talent-layer'
 
 export default function HomePage() {
-  const { connectedUser } = useSmartAccount()
+  const connectedUser = useConnectedTalentLayerUser()
   const account = useAccount()
 
   if (connectedUser?.data?.handle) {

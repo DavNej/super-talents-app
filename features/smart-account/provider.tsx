@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { toast } from 'react-toastify'
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { useAccountInfo } from '@particle-network/connect-react-ui'
 import { ethers } from 'ethers'
 import {
@@ -15,8 +14,6 @@ import {
 } from '@biconomy/modules'
 import type { Transaction, UserOperation } from '@biconomy/core-types'
 
-import { getTalentLayerUser } from '@/features/talent-layer'
-import { type TalentLayerUserType } from '@/features/talent-layer/types'
 import { log } from '@/utils'
 
 import { chainId, bundler, paymaster, paymasterServiceData } from './config'
@@ -32,7 +29,6 @@ interface IContext {
         transactions: Transaction[]
       }) => Promise<string | null>)
     | undefined
-  connectedUser: UseQueryResult<TalentLayerUserType | null, unknown> | undefined
 }
 
 const initialContext: IContext = {
@@ -40,7 +36,6 @@ const initialContext: IContext = {
   smartAccount: undefined,
   sendUserOp: undefined,
   smartAccountAddress: undefined,
-  connectedUser: undefined,
 }
 
 export default function SmartAccountProvider(props: React.PropsWithChildren) {
@@ -128,27 +123,14 @@ export default function SmartAccountProvider(props: React.PropsWithChildren) {
     [smartAccount]
   )
 
-  const connectedUserQuery = useQuery<TalentLayerUserType | null>({
-    queryKey: ['connected-user', smartAccountAddress],
-    enabled: Boolean(smartAccountAddress),
-    queryFn: async () => {
-      if (!smartAccountAddress) return null
-      log('👤 | Get TL connected-user')
-
-      const data = await getTalentLayerUser({ address: smartAccountAddress })
-      return data
-    },
-  })
-
   const value = React.useMemo(
     () => ({
       signer,
       sendUserOp,
       smartAccount,
       smartAccountAddress,
-      connectedUser: connectedUserQuery,
     }),
-    [connectedUserQuery, sendUserOp, smartAccount, smartAccountAddress, signer]
+    [sendUserOp, smartAccount, smartAccountAddress, signer]
   )
 
   return <SmartAccountContext.Provider value={value} {...props} />
