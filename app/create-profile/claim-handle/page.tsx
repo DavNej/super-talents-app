@@ -12,6 +12,7 @@ import { Button, Title, inputClassNames } from '@/app/components'
 import { cn } from '@/utils'
 
 import { type HandleFormType, validationSchema } from './validation'
+import { useRouter } from 'next/navigation'
 
 export default function ClaimHandlePage() {
   const { smartAccountAddress } = useSmartAccount()
@@ -27,26 +28,22 @@ export default function ClaimHandlePage() {
     validationSchema,
     onSubmit: async (values, { setSubmitting, setFieldError }) => {
       setSubmitting(true)
-      try {
-        const address = smartAccountAddress
-        const value = handlePriceQuery.data?.handlePrice
-        if (address && value && handle && isHandleAvailable) {
-          console.log({
-            address,
-            value,
-            handle,
-          })
-          // mintProfileMutation.mutate({
-          //   address,
-          //   value,
-          //   handle,
-          // })
-        }
-        setSubmitting(false)
-        return
-      } catch (err) {
-        return
+
+      const handlePrice = handlePriceQuery.data?.handlePrice
+      if (
+        smartAccountAddress &&
+        handlePrice &&
+        values.handle &&
+        isHandleAvailable
+      ) {
+        mintProfileMutation.mutate({
+          address: smartAccountAddress,
+          value: handlePrice,
+          handle: values.handle,
+        })
       }
+      setSubmitting(false)
+      return
     },
   })
 
@@ -57,7 +54,14 @@ export default function ClaimHandlePage() {
     { enabled: Boolean(isHandleAvailable && !fieldError) }
   )
 
-  const mintProfileMutation = useMintProfile()
+  const router = useRouter()
+
+  const mintProfileMutation = useMintProfile({
+    onSettled() {
+      formik.setSubmitting(false)
+      router.push('/create-profile/info')
+    },
+  })
 
   React.useEffect(() => {
     if (!formik.touched.handle) return
@@ -114,11 +118,13 @@ export default function ClaimHandlePage() {
 
         <Button
           className='w-full'
+          isLoading={mintProfileMutation.isLoading}
           isDisabled={
             !formik.isValid ||
             !isHandleAvailable ||
             !formik.values.confirmed ||
-            formik.isSubmitting
+            formik.isSubmitting ||
+            mintProfileMutation.isSuccess
           }
           onClick={formik.handleSubmit}>
           Claim handle

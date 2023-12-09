@@ -26,7 +26,7 @@ export default function useMintProfile(options?: Options) {
           <br />
           See transaction in explorer
         </Link>,
-        { autoClose: false, closeOnClick: false }
+        { autoClose: 5000, closeOnClick: false }
       )
     },
 
