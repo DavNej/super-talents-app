@@ -11,7 +11,7 @@ import { useSmartAccount } from '@/features/smart-account'
 import { Button, Title, inputClassNames } from '@/app/components'
 import { cn } from '@/utils'
 
-import { type HandleFormType, validationSchema } from './validation'
+import { type HandleFormType, validationSchema } from './form-validation'
 import { useRouter } from 'next/navigation'
 
 export default function ClaimHandlePage() {
