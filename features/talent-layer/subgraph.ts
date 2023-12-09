@@ -14,12 +14,12 @@ export async function getTalentLayerUser({
   if (!Boolean(handle || address || id)) return null
   const query = buildUserGraphQuery({ id, address, handle })
 
-  log('👤 | Get TL user')
+  log('👤 | Get TL user', handle || id || address)
   const { users } = await querSubgraph<{ users: TalentLayerUserType[] }>(query)
   const [user] = users
 
   if (!user) {
-    log('👤 | No user found', address || handle || id)
+    log('👤 | No user found')
     return null
   }
 

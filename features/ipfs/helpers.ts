@@ -27,7 +27,9 @@ export async function uploadToIPFS({
   name: string
   content: unknown
 }) {
-  log('🪐 | Upload to IPFS')
+  log('🪐 | Uploading to IPFS')
+  log('🪐 | Name :', name)
+  log('🪐 | Content :', content)
 
   const axiosArgs = buildPinJsonArgs(content, name)
 

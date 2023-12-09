@@ -3,14 +3,12 @@ import { useMutation } from '@tanstack/react-query'
 
 import { uploadToIPFS } from './helpers'
 
-export default function useUploadToIPFS(
-  options?: UseMutationOptions<
-    string,
-    unknown,
-    { name: string; content: unknown }
-  >
-) {
-  return useMutation<string, unknown, { name: string; content: unknown }>({
+type ReturnedData = string
+type MutationParams = { name: string; content: unknown }
+type Options = UseMutationOptions<ReturnedData, unknown, MutationParams>
+
+export default function useUploadToIPFS(options?: Options) {
+  return useMutation<ReturnedData, unknown, MutationParams>({
     mutationFn: ({ name, content }) => uploadToIPFS({ name, content }),
     ...options,
   })
