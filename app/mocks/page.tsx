@@ -1,16 +1,18 @@
 'use client'
 
-import { useLocalStorage } from 'usehooks-ts'
-
 import mockAvatars from '@/mocks/avatars'
-import mockprofile, { pinataCid as mockPinataCid } from '@/mocks/profile'
+import mockprofile, { pinataCid as mockPinataCid, handle as mockHandle } from '@/mocks/profile'
+
+import { useCache } from '../create-profile/useCache'
 
 export default function MocksPage() {
-  const [, setNewProfile] = useLocalStorage('newProfile', {})
-  const [, setAvatars] = useLocalStorage('avatars', [''])
-  const [, setHandle] = useLocalStorage('handle', '')
-  const [, setPinataCid] = useLocalStorage('pinataCid', '')
-  const [, setSelectedAvatar] = useLocalStorage('selectedAvatar', '')
+  const {
+    setNewProfile,
+    setAvatars,
+    setHandle,
+    setPinataCid,
+    setSelectedAvatar,
+  } = useCache()
 
   return (
     <main className='p-4 md:p-24 bg-purple-500 flex flex-col gap-4 h-screen'>
@@ -44,8 +46,8 @@ export default function MocksPage() {
       <button
         className='border-2 border-white p-2'
         onClick={() => {
-          setHandle(mockprofile.handle)
-          console.log('🌻 setHandle', mockprofile.handle)
+          setHandle(mockHandle)
+          console.log('🌻 setHandle', mockHandle)
         }}>
         Set handle
       </button>

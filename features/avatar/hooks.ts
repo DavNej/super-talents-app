@@ -1,15 +1,15 @@
 import React from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useLocalStorage } from 'usehooks-ts'
 
 import api from '@/utils/api'
 import type { DataUrlType } from '@/utils/data-url'
+import { useCache } from '@/app/create-profile/useCache'
 
 type JobId = string
 
 export default function useCreateAvatars() {
   const [isLoading, setIsLoading] = React.useState(false)
-  const [_, setAvatars] = useLocalStorage<DataUrlType[]>('avatars', [])
+  const { setAvatars } = useCache()
 
   const createJob = useMutation<
     { jobId: JobId },

@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
-import { useLocalStorage } from 'usehooks-ts'
 
 import { Chip, Button, inputClassNames, Title } from '@/app/components'
 import {
@@ -20,6 +19,7 @@ import { useChatGPT } from '@/utils/chat-gpt'
 import { BaseProfile } from '@/features/profile/schemas'
 
 import { ChooseAboutDialog } from '../components'
+import { useCache } from '../useCache'
 import { validationSchema, type ProfileFormType } from './form-validation'
 
 const initialValues: ProfileFormType = {
@@ -39,10 +39,7 @@ export default function ProfileInfoPage() {
   const [GPTOptions, setGPTOptions] = React.useState<string[] | null>(null)
   const [openDialog, setOpenDialog] = React.useState(false)
   const [skill, setSkill] = React.useState('')
-  const [newProfile, setNewProfile] = useLocalStorage<BaseProfileType | null>(
-    'newProfile',
-    null
-  )
+  const { newProfile, setNewProfile } = useCache()
 
   const chatGPT = useChatGPT()
 

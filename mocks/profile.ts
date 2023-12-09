@@ -1,8 +1,10 @@
+import { BaseProfileType, SkillsType } from '@/features/profile'
 import aboutOptions from './about-options'
 
 export const pinataCid = 'QmWMFye4DRbqDqJ1SRPHjhJPoUXLY6d53wScwiqrB2Han3'
+export const handle = 'noah_the_wise'
 
-const skills = [
+const skills: SkillsType = [
   'HTML',
   'CSS',
   'JavaScript',
@@ -15,8 +17,7 @@ const skills = [
   'Scalability',
 ]
 
-const profile = {
-  handle: 'noah_the_wise',
+const profile: BaseProfileType = {
   name: 'Noah The Wise',
   about: aboutOptions[0],
   skills,

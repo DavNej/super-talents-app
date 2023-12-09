@@ -14,17 +14,10 @@ import { useProfileIdOfHandle } from '@/features/talent-layer'
 import type { DataUrlType } from '@/utils/data-url'
 
 import { MintButton } from '../components'
-import { breakpoints } from '@/utils'
+import { useCache } from '../useCache'
 
 export default function ProfilePreviewPage() {
-  const [newProfile] = useLocalStorage<ProfileWithHandleType | null>(
-    'newProfile',
-    null
-  )
-  const [selectedAvatar] = useLocalStorage<DataUrlType | null>(
-    'selectedAvatar',
-    null
-  )
+  const { newProfile, selectedAvatar } = useCache()
 
   const handle = newProfile?.handle || ''
   const { data: talentLayerId } = useProfileIdOfHandle({ handle })

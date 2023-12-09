@@ -2,17 +2,15 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { cn } from '@/utils'
 import { v4 as uuid } from 'uuid'
-import { useLocalStorage } from 'usehooks-ts'
 
 import { Dialog } from '@/app/components'
-import { type DataUrlType } from '@/utils/data-url'
+import { cn } from '@/utils'
+
+import { useCache } from '../useCache'
 
 export default function ImagePreview() {
-  const [avatars] = useLocalStorage<DataUrlType[]>('avatars', [])
-  const [selectedAvatar, setSelectedAvatar] =
-    useLocalStorage<DataUrlType | null>('selectedAvatar', null)
+  const { avatars, selectedAvatar, setSelectedAvatar } = useCache()
 
   const [showDialog, setShowDialog] = React.useState(false)
   const [dialogImage, setDialogImage] = React.useState(selectedAvatar)

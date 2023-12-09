@@ -2,23 +2,21 @@
 
 import React from 'react'
 import { useFormik } from 'formik'
-import { useLocalStorage } from 'usehooks-ts'
+import { useRouter } from 'next/navigation'
 
 import { useMintProfile, useTalentLayerUser } from '@/features/talent-layer'
 import useHandlePrice from '@/features/talent-layer/hooks/useHandlePrice'
 import { useSmartAccount } from '@/features/smart-account'
-
 import { Button, Title, inputClassNames } from '@/app/components'
 import { cn } from '@/utils'
 
 import { type HandleFormType, validationSchema } from './form-validation'
-import { useRouter } from 'next/navigation'
+import { useCache } from '../useCache'
 
 export default function ClaimHandlePage() {
+  const router = useRouter()
+  const { handle, setHandle } = useCache()
   const { smartAccountAddress } = useSmartAccount()
-
-  const [handle, setHandle] = useLocalStorage('handle', '')
-
   const talentLayerUserQuery = useTalentLayerUser({ handle })
 
   const isHandleAvailable = talentLayerUserQuery.data === null
@@ -53,8 +51,6 @@ export default function ClaimHandlePage() {
     { handle },
     { enabled: Boolean(isHandleAvailable && !fieldError) }
   )
-
-  const router = useRouter()
 
   const mintProfileMutation = useMintProfile({
     onSettled() {

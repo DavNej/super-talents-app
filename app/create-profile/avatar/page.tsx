@@ -3,7 +3,7 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { useLocalStorage } from 'usehooks-ts'
+import { useCache } from '../useCache'
 import { useMediaQuery } from 'react-responsive'
 
 import { Button, Loader, Title } from '@/app/components'
@@ -20,14 +20,10 @@ const UploadFile = dynamic(() => import('../components/UploadFile'), {
 export default function AvatarPage() {
   const { createAvatar, isLoading } = useCreateAvatars()
   const isMediumScreen = useMediaQuery({ minWidth: breakpoints.md })
+  const { selectedAvatar } = useCache()
 
   const [uploadedPicture, setUploadedPicture] =
     React.useState<DataUrlType | null>(null)
-
-  const [selectedAvatar] = useLocalStorage<DataUrlType | null>(
-    'selectedAvatar',
-    null
-  )
 
   function NextButton({}) {
     return !!selectedAvatar ? (

@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { useLocalStorage } from 'usehooks-ts'
 import { toast } from 'react-toastify'
 
 import { Button } from '@/app/components'
@@ -21,11 +20,7 @@ export default function MintButton({
 }) {
   const { smartAccountAddress } = useSmartAccount()
 
-  const [pinataCid, setPinataCid] = useLocalStorage('pinataCid', '')
-  const [, setAvatars] = useLocalStorage('avatars', [])
-  const [, setSelectedAvatar] = useLocalStorage('selectedAvatar', null)
-  const [, setNewProfile] = useLocalStorage('newProfile', null)
-
+  const { pinataCid, setPinataCid, clearCache } = useCache()
   const profileData = useProfileData({ cid: pinataCid })
   const uploadToIPFS = useUploadToIPFS({ onSuccess: setPinataCid })
   const updateProfileData = useUpdateProfileData({
@@ -34,13 +29,8 @@ export default function MintButton({
         autoClose: false,
         closeOnClick: false,
       })
-      // setPinataCid('')
-      // setAvatars([])
-      // setSelectedAvatar(null)
-      // setNewProfile(null)
     },
   })
-
   const mintProfile = useMintProfile({
     onMutate() {
       if (deepEqual(profileData.data, profileToUpload)) {
