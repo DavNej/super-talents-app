@@ -7,16 +7,10 @@ import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 
 import { Chip, Button, inputClassNames, Title } from '@/app/components'
-import {
-  roleCaptions,
-  type SkillsType,
-  type BaseProfileType,
-} from '@/features/profile'
+import { roleCaptions, BaseProfile, type SkillsType } from '@/features/profile'
 
 import { cn } from '@/utils'
 import { useChatGPT } from '@/utils/chat-gpt'
-
-import { BaseProfile } from '@/features/profile/schemas'
 
 import { ChooseAboutDialog } from '../components'
 import { useCache } from '../useCache'

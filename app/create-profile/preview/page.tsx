@@ -4,9 +4,7 @@ import React from 'react'
 import { redirect } from 'next/navigation'
 import { useMediaQuery } from 'react-responsive'
 
-import { Button, ProfilePreview, Title } from '@/app/components'
-
-import type { ProfileWithHandleType } from '@/features/profile'
+import { ProfilePreview, Title } from '@/app/components'
 import { validateIPFSProfile } from '@/features/profile/schemas'
 import { useConnectedTalentLayerUser } from '@/features/talent-layer'
 import { breakpoints } from '@/utils'
@@ -16,9 +14,6 @@ import { useCache } from '../useCache'
 
 export default function ProfilePreviewPage() {
   const { newProfile, selectedAvatar } = useCache()
-
-  const handle = newProfile?.handle || ''
-  const { data: talentLayerId } = useProfileIdOfHandle({ handle })
   const isMediumScreen = useMediaQuery({ minWidth: breakpoints.md })
 
   const connectedUser = useConnectedTalentLayerUser()
