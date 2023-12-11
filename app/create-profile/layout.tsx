@@ -10,7 +10,6 @@ import {
 
 import { BackLink, Background, LogoutButton } from '@/app/components'
 import { cn } from '@/utils'
-import { useConnectedTalentLayerUser } from '@/features/talent-layer'
 
 const adminWallets = (process.env.NEXT_PUBLIC_ADMIN_WALLETS || '').split(',')
 
@@ -19,7 +18,6 @@ export default function ProgressBarLayout({
 }: {
   children: React.ReactNode
 }) {
-  const connectedUser = useConnectedTalentLayerUser()
   const { account, accountLoading } = useAccountInfo()
 
   if (accountLoading) {
@@ -28,10 +26,6 @@ export default function ProgressBarLayout({
 
   if (!account) {
     redirect('/')
-  }
-
-  if (connectedUser?.data?.handle && !adminWallets.includes(account)) {
-    redirect(`/${connectedUser.data.handle}`)
   }
 
   return (

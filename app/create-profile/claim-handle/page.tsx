@@ -123,7 +123,7 @@ export default function ClaimHandlePage() {
             mintProfileMutation.isSuccess
           }
           onClick={formik.handleSubmit}>
-          Claim handle
+          Mint handle
         </Button>
       </form>
     </>
