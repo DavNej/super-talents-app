@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
 import { useMutation } from '@tanstack/react-query'
@@ -8,10 +9,10 @@ import { log } from '@/utils'
 
 import { talentLayerAddress, talentLayerInterface } from '../contract/config'
 import { buildUpdateProfileDataTx } from '../contract/utils'
-import Link from 'next/link'
+import { ProfileIdType } from '../types'
 
 type ReturnedData = { txHash: string }
-type MutationParams = { profileId: number; cid: string }
+type MutationParams = { profileId: ProfileIdType; cid: string }
 type Options = UseMutationOptions<ReturnedData, unknown, MutationParams>
 
 const errorMessage = 'Could not update profile data'
@@ -38,7 +39,6 @@ export default function useUpdateProfileData(options?: Options) {
       )
 
       const tx = await buildUpdateProfileDataTx({ contract, profileId, cid })
-
       const txHash = await sendUserOp({ transactions: [tx] })
 
       if (!txHash) {

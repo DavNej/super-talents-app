@@ -4,40 +4,67 @@ import React from 'react'
 import { redirect } from 'next/navigation'
 import { useMediaQuery } from 'react-responsive'
 
-import { ProfilePreview, Title } from '@/app/components'
-import { validateIPFSProfile } from '@/features/profile/schemas'
-import { useConnectedTalentLayerUser } from '@/features/talent-layer'
-import { breakpoints } from '@/utils'
+import {
+  useUpdateProfileData,
+  useConnectedTalentLayerUser,
+} from '@/features/talent-layer'
+import { useProfileData, validateIPFSProfile } from '@/features/profile'
+import { useUploadToIPFS } from '@/features/ipfs'
+import { ProfilePreview, Title, Button } from '@/app/components'
+import { breakpoints, deepEqual } from '@/utils'
 
-import { MintButton } from '../components'
 import { useCache } from '../useCache'
 
 export default function ProfilePreviewPage() {
-  const { newProfile, selectedAvatar } = useCache()
   const isMediumScreen = useMediaQuery({ minWidth: breakpoints.md })
 
-  const connectedUser = useConnectedTalentLayerUser()
-
-  if (!selectedAvatar) {
-    redirect('/create-profile/avatar')
-  }
-
-  if (!newProfile) {
-    redirect('/create-profile/info')
-  }
+  const { pinataCid, setPinataCid, selectedAvatar, newProfile, clearCache } =
+    useCache()
 
   const profileToUpload = validateIPFSProfile({
     ...newProfile,
     picture: selectedAvatar,
   })
 
-  const allowMint = handle && profileToUpload && !talentLayerId
+  const connectedUser = useConnectedTalentLayerUser()
+  const { id: profileId, handle } = connectedUser.data || {}
 
-  function MintProfileButton() {
-    return allowMint ? (
-      <MintButton handle={handle} profileToUpload={profileToUpload} />
-    ) : (
-      <Button isDisabled>Mint my profile NFT</Button>
+  const { data: profileData } = useProfileData({ cid: pinataCid })
+  const updateProfileDataMutation = useUpdateProfileData()
+
+  const uploadToIPFSMutation = useUploadToIPFS({
+    onSuccess(cid) {
+      setPinataCid(cid)
+      if (profileId) {
+        updateProfileDataMutation.mutate({ profileId, cid: pinataCid })
+      }
+    },
+  })
+
+  if (updateProfileDataMutation.isSuccess) {
+    // clearCache()
+    redirect(`/${handle}`)
+  }
+
+  function handleClick() {
+    if (!profileId || !handle) return
+    if (!deepEqual(profileData, profileToUpload)) {
+      uploadToIPFSMutation.mutate({ name: handle, content: profileToUpload })
+    } else {
+      updateProfileDataMutation.mutate({ profileId, cid: pinataCid })
+    }
+  }
+
+  function SubmitButton() {
+    return (
+      <Button
+        isLoading={
+          uploadToIPFSMutation.isLoading || updateProfileDataMutation.isLoading
+        }
+        isDisabled={!profileId || updateProfileDataMutation.isSuccess}
+        onClick={handleClick}>
+        Save profile info
+      </Button>
     )
   }
 
@@ -45,10 +72,10 @@ export default function ProfilePreviewPage() {
     <>
       <div className='flex justify-between items-center mt-3 mb-6'>
         <Title className='my-0'>Profile preview</Title>
-        {isMediumScreen && <MintProfileButton />}
+        {isMediumScreen && <SubmitButton />}
       </div>
 
-      {handle && profileToUpload && (
+      {profileToUpload && handle && (
         <ProfilePreview
           handle={handle}
           profileData={profileToUpload}
@@ -58,7 +85,7 @@ export default function ProfilePreviewPage() {
 
       <br className='mt-6 md:mt-0' />
 
-      {!isMediumScreen && <MintProfileButton />}
+      {!isMediumScreen && <SubmitButton />}
     </>
   )
 }

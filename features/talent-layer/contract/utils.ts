@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import type { Transaction } from '@biconomy/core-types'
 
 import { talentLayerAddress, platfromId } from './config'
+import { ProfileIdType } from '../types'
 
 export async function buildMintProfileTx({
   contract,
@@ -27,7 +28,7 @@ export async function buildUpdateProfileDataTx({
   cid,
 }: {
   contract: ethers.Contract
-  profileId: number
+  profileId: ProfileIdType
   cid: string
 }): Promise<Transaction> {
   const updateProfileDataTx =

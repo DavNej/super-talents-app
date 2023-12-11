@@ -6,8 +6,8 @@ export const Handle = z.string({
   invalid_type_error: 'Handle must be a string',
 })
 
-export const Id = z.string({
-  invalid_type_error: 'Id must be a string',
+export const profileId = z.union([z.number(), z.string()], {
+  invalid_type_error: 'Id must be a string or number',
 })
 
 export const Cid = z.string({
@@ -20,7 +20,7 @@ export const Address = z.string({
 
 export const TalentLayerUser = z.object({
   handle: Handle,
-  id: Id,
+  id: profileId,
   cid: Cid.optional(),
   address: Address,
 })
