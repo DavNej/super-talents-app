@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { ethers } from 'ethers'
 
 import {
-  platfromId,
+  platformId,
   talentLayerAddress,
   talentLayerInterface,
 } from '@/features/talent-layer'
@@ -24,11 +24,11 @@ export async function POST(request: Request) {
   const { handle, value, address } = await request.json()
 
   try {
-    log('🎫 | Minting TL handle', { address, platfromId, handle, value })
+    log('🎫 | Minting TL handle', { address, platformId, handle, value })
 
     const mintTx: ethers.ContractTransaction = await contract.mintForAddress(
       address,
-      platfromId,
+      platformId,
       handle,
       { value }
     )

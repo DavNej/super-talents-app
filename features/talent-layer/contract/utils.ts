@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import type { Transaction } from '@biconomy/core-types'
 
-import { talentLayerAddress, platfromId } from './config'
+import { talentLayerAddress, platformId } from './config'
 import { ProfileIdType } from '../types'
 
 export async function buildMintProfileTx({
@@ -13,7 +13,7 @@ export async function buildMintProfileTx({
   handle: string
   handlePrice: ethers.BigNumber
 }): Promise<Transaction> {
-  const mintTx = await contract.populateTransaction.mint(platfromId, handle)
+  const mintTx = await contract.populateTransaction.mint(platformId, handle)
 
   return {
     to: talentLayerAddress,

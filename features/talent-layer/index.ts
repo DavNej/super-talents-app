@@ -7,7 +7,7 @@ export { default as useConnectedTalentLayerUser } from './hooks/useConnectedTale
 export { default as useUpdateProfileData } from './hooks/useUpdateProfileData'
 export type { ProfileIdType } from './types'
 export {
-  platfromId,
+  platformId,
   talentLayerAddress,
   talentLayerInterface,
 } from './contract/config'
