@@ -139,41 +139,43 @@ export default function ProfileInfoPage() {
       <form
         onSubmit={formik.handleSubmit}
         className='md:grid md:grid-cols-2 md:gap-8'>
-        <fieldset id='name' className='mt-5 md:mt-0'>
-          <SimpleLabel name='name'>Name</SimpleLabel>
-          <input
-            className={cn(inputClassNames)}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            type='text'
-            name='name'
-            value={formik.values.name}
-            placeholder='Choose a Full Name (ex: Alan Turing)'
-          />
-        </fieldset>
-        <fieldset id='about' className='flex flex-col mt-5 md:mt-0'>
-          <SimpleLabel name='about'>Bio</SimpleLabel>
-          <div className={cn(inputClassNames, 'flex flex-col flex-1')}>
-            <textarea
-              className='h-96 md:h-52 bg-transparent outline-none'
-              name='about'
+        <div>
+          <fieldset id='name' className='mt-5 md:mt-0'>
+            <SimpleLabel name='name'>Name</SimpleLabel>
+            <input
+              className={cn(inputClassNames)}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.about}
-              placeholder='Write a bio or some keywords'
+              type='text'
+              name='name'
+              value={formik.values.name}
+              placeholder='Choose a Full Name (ex: Alan Turing)'
             />
-            <Button
-              className='bg-opacity-0 scale-75'
-              isDisabled={!Boolean(formik.values.about)}
-              isLoading={GPT.isLoading}
-              onClick={() => {
-                const prompt = formik.values.about
-                if (prompt) GPT.mutate(prompt)
-              }}>
-              Improve bio with AI
-            </Button>
-          </div>
-        </fieldset>
+          </fieldset>
+          <fieldset id='about' className='flex flex-col mt-5 md:mt-0'>
+            <SimpleLabel name='about'>Bio</SimpleLabel>
+            <div className={cn(inputClassNames, 'flex flex-col flex-1')}>
+              <textarea
+                className='h-96 md:h-52 bg-transparent outline-none'
+                name='about'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.about}
+                placeholder='Write a bio or some keywords'
+              />
+              <Button
+                className='bg-opacity-0 scale-75'
+                isDisabled={!Boolean(formik.values.about)}
+                isLoading={GPT.isLoading}
+                onClick={() => {
+                  const prompt = formik.values.about
+                  if (prompt) GPT.mutate(prompt)
+                }}>
+                Improve bio with AI
+              </Button>
+            </div>
+          </fieldset>
+        </div>
         <fieldset id='links' className='mt-5 md:mt-0'>
           <SimpleLabel name='linkedin'>Links (optional)</SimpleLabel>
           <input
