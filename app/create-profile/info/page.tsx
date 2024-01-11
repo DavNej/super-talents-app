@@ -10,7 +10,7 @@ import { Chip, Button, inputClassNames, Title } from '@/app/components'
 import { roleCaptions, BaseProfile, type SkillsType } from '@/features/profile'
 
 import { cn } from '@/utils'
-import { useChatGPT } from '@/utils/chat-gpt'
+import { useGPT } from '@/utils/gpt'
 
 import { ChooseAboutDialog } from '../components'
 import { useCache } from '../useCache'
@@ -35,28 +35,30 @@ export default function ProfileInfoPage() {
   const [skill, setSkill] = React.useState('')
   const { newProfile, setNewProfile } = useCache()
 
-  const chatGPT = useChatGPT()
+  const GPT = useGPT()
 
   React.useEffect(() => {
-    if (chatGPT.data?.content) {
+    const content = GPT.data?.content
+
+    if (content) {
       let options: string[]
       const regex = /(Option \d:)/
 
       try {
-        options = chatGPT.data.content
+        options = content
           .split(regex)
           .map(opt => opt.trim())
           .filter(opt => Boolean(opt) && !regex.test(opt))
       } catch (err) {
         toast.warn('Could not parse options')
-        console.log(chatGPT.data)
-        options = chatGPT.data.content.split('Option')
+        console.log(GPT.data)
+        options = content.split('Option')
       }
 
       setGPTOptions(options)
       setOpenDialog(true)
     }
-  }, [chatGPT.data])
+  }, [GPT.data])
 
   const formik = useFormik<ProfileFormType>({
     initialValues: newProfile ? newProfile : initialValues,
@@ -163,10 +165,10 @@ export default function ProfileInfoPage() {
             <Button
               className='bg-opacity-0 scale-75'
               isDisabled={!Boolean(formik.values.about)}
-              isLoading={chatGPT.isLoading}
+              isLoading={GPT.isLoading}
               onClick={() => {
                 const prompt = formik.values.about
-                if (prompt) chatGPT.mutate(prompt)
+                if (prompt) GPT.mutate(prompt)
               }}>
               Improve bio with AI
             </Button>

@@ -45,7 +45,7 @@ const systemPrompt = `
   """
   `
 
-export async function askChatGPT(prompt: string) {
+export async function askGPT(prompt: string) {
   try {
     const res = await openai.createChatCompletion({
       ...settings,
@@ -62,7 +62,7 @@ export async function askChatGPT(prompt: string) {
   }
 }
 
-export function useChatGPT() {
+export function useGPT() {
   return useMutation<ChatCompletionResponseMessage | null, unknown, string>({
     mutationFn: prompt => api.POST('/api/improve-bio', { prompt }),
   })
